@@ -1,12 +1,18 @@
 from flask import Flask
-from routes.auth import auth
 from routes.main import main
+from routes.login import login
+from dotenv import load_dotenv
+import os
 
-app = Flask(__name__)  
-app.config['SECRET_KEY'] = 'd804bf8c95bb7bf98a8eeb4c367e9d54'  
+# Načtení proměnných z .env souboru
+load_dotenv()
 
-app.register_blueprint(auth)  
-app.register_blueprint(main)  
+app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")  # Tajný klíč pro session
 
-if __name__ == "__main__":
-    app.run(debug=True)  
+# Registrace Blueprintů
+app.register_blueprint(main)
+app.register_blueprint(login)
+
+if __name__ == '__main__':
+    app.run(debug=True)
