@@ -1,18 +1,36 @@
-from flask import Flask
-from routes.main import main
-from routes.login import login
-from dotenv import load_dotenv
-import os
-
-# Načtení proměnných z .env souboru
-load_dotenv()
+from flask import Flask, render_template, redirect, url_for
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")  # Tajný klíč pro session
 
-# Registrace Blueprintů
-app.register_blueprint(main)
-app.register_blueprint(login)
+@app.route("/")
+def index():
+    return render_template("index.html")
 
-if __name__ == '__main__':
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+@app.route("/register")
+def register():
+    return render_template("register.html")
+
+@app.route("/content")
+def content():
+    #return render_template("content.html", section="home")
+    return redirect(url_for("content_section", section = "home"))
+
+@app.route("/content/<section>")
+def content_section(section):
+    templates = {
+        "home": "home.html",
+        "races": "races.html",
+        "runs": "runs.html"
+    }
+    
+    if section in templates:
+        return render_template(templates[section], section=section)
+    else:
+        return "<h2>Section Not Found</h2>", 404
+
+if __name__ == "__main__":
     app.run(debug=True)
