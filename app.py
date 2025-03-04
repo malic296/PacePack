@@ -1,22 +1,56 @@
-from flask import Flask, render_template, redirect, url_for
+import os
+from flask import Flask, render_template, redirect, url_for, flash
+from forms import LoginForm, RegisterForm
+from flask_wtf.csrf import CSRFProtect
+from dotenv import load_dotenv
+
+load_dotenv("environment.env")
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+csrf = CSRFProtect(app)
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
 
-@app.route("/register")
+        if(email == "test@gmail.com" and password == "test"):
+             flash("Login successful!", "success")
+             return redirect(url_for("content"))
+   
+        flash("Invalid username or password", "danger")
+    return render_template("login.html", form=form)
+    
+
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register.html")
+    form = RegisterForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        surname = form.surname.data
+        email = form.email.data
+        gender = form.gender.data
+        telephone = form.telephone.data
+        telephoneCode = form.telephone.data
+        postalCode = form.postalcode.data
+        country = form.country.data
+        streetName = form.streetname.data
+        if name == "admin":
+            flash("Login successful!", "success")
+            return redirect(url_for("content"))
+        flash("Invalid username or password", "danger") 
+
+    return render_template("register.html", form=form)
 
 @app.route("/content")
 def content():
-    #return render_template("content.html", section="home")
     return redirect(url_for("content_section", section = "home"))
 
 @app.route("/content/<section>")
