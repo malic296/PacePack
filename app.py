@@ -15,12 +15,18 @@ csrf = CSRFProtect(app)
 @app.route("/")
 def index():
     session["lang"] = "en"
+    session["theme"] = "light"
     return redirect(url_for("content_section", section="index"))
     
 @app.route("/set_language/<lang>")
 def set_language(lang):
     session["lang"] = lang
     return redirect(url_for("content_section", section=session["section"]))
+
+@app.route("/toggle-theme")
+def toggle_theme():
+    session["theme"] = "dark" if session.get("theme", "light") == "light" else "light"
+    return redirect(url_for("content_section", section=session.get("section", "index")))
 
 @app.route("/content/<section>", methods=["GET", "POST"])
 def content_section(section):

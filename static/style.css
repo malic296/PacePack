@@ -1,0 +1,13 @@
+body.bg-light {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+body.bg-dark {
+    background-color: #121212;
+    color: #ffffff;
+}
+.navbar {
+    transition: background-color 0.3s ease-in-out;
+}
+
