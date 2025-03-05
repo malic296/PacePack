@@ -1,6 +1,8 @@
 {% extends "content.html" %}
 {% block title %}Races - Flask App{% endblock %}
 {% block content %}
-    <h2>🏠 Races</h2>
-    <p>Welcome to the race section!</p>
+    <h2>
+        {{ textVars["title"] }}
+    </h2>
+    <p>{{ textVars["description"] }}</p>
 {% endblock %}

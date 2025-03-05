@@ -1,31 +1,15 @@
-<!DOCTYPE html>
-<html lang="cs">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PacePack - Přihlášení</title>
-    
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+{% extends "content.html" %}
+{% block title %}Races - Flask App{% endblock %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="text-center">
+        <h1 class="display-4 font-weight-bold text-primary">PacePack</h1>
+        <p class="lead text-muted">Aplikace pro sledování běžeckého výkonu.</p>
 
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
-        <div class="text-center">
-            <h1 class="display-4 font-weight-bold text-primary">PacePack</h1>
-            <p class="lead text-muted">Aplikace pro sledování běžeckého výkonu.</p>
-
-            <div class="mt-4">
-                <a href="{{ url_for('login') }}" class="btn btn-lg btn-primary mx-2">Přihlášení</a>
-                <a href="{{ url_for('register') }}" class="btn btn-lg btn-outline-primary mx-2">Registrace</a>
-            </div>
+        <div class="mt-4">
+            <a href="{{ url_for('content_section', section='login') }}" class="btn btn-lg btn-primary mx-2">Přihlášení</a>
+            <a href="{{ url_for('content_section', section='register') }}" class="btn btn-lg btn-outline-primary mx-2">Registrace</a>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
-
-</body>
-</html>
+</div>
+{% endblock %}

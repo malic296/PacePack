@@ -12,6 +12,8 @@ class RegisterForm(FlaskForm):
     """Registration Form"""
     name = StringField("First Name", validators=[DataRequired(), Length(min=2, max=50)])
     surname = StringField("Surname", validators=[DataRequired(), Length(min=2, max=50)])
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=5, max=30)])
+    confirmPassword = PasswordField("Confirm Password", validators=[DataRequired(), Length(min=5, max=30)])
     streetname = StringField("Street Name", validators=[DataRequired(), Length(min=3, max=100)])
     postalcode = IntegerField("Postal Code", validators=[DataRequired()])
     country = StringField("Country", validators=[DataRequired(), Length(min=2, max=50)])

@@ -1,0 +1,108 @@
+{
+    "pages": {
+        "home": {
+            "en": {
+                "title": "Welcome to Our Running Club",
+                "description": "Explore our community and stay updated with the latest events.",
+                "text": "Join our passionate community of runners. Whether you're a beginner or an experienced athlete, we have something for you!"
+            },
+            "cz": {
+                "title": "Vítejte v našem běžeckém klubu",
+                "description": "Prozkoumejte naši komunitu a buďte v obraze s nejnovějšími akcemi.",
+                "text": "Připojte se k naší vášnivé běžecké komunitě. Ať už jste začátečník nebo zkušený atlet, máme pro vás něco!"
+            },
+            "de": {
+                "title": "Willkommen in unserem Laufclub",
+                "description": "Entdecken Sie unsere Gemeinschaft und bleiben Sie mit den neuesten Veranstaltungen auf dem Laufenden.",
+                "text": "Schließen Sie sich unserer leidenschaftlichen Laufgemeinschaft an. Egal, ob Sie Anfänger oder erfahrener Athlet sind, wir haben etwas für Sie!"
+            }
+        },
+        "races": {
+            "en": {
+                "title": "Upcoming Races",
+                "description": "Check out our upcoming races and register now.",
+                "text": "We organize races for all skill levels. From fun runs to marathons, find the perfect race for you."
+            },
+            "cz": {
+                "title": "Nadcházející závody",
+                "description": "Podívejte se na naše nadcházející závody a zaregistrujte se nyní.",
+                "text": "Pořádáme závody pro všechny úrovně dovedností. Od zábavných běhů po maratony, najděte si ten pravý závod pro vás."
+            },
+            "de": {
+                "title": "Kommende Rennen",
+                "description": "Sehen Sie sich unsere kommenden Rennen an und melden Sie sich jetzt an.",
+                "text": "Wir organisieren Rennen für alle Fähigkeitsstufen. Vom Fun-Run bis zum Marathon finden Sie das perfekte Rennen für sich."
+            }
+        },
+        "runs": {
+            "en": {
+                "title": "Training Runs",
+                "description": "Find a group run or plan your own.",
+                "text": "Stay fit with our scheduled training runs. Join a local group or set your own pace!"
+            },
+            "cz": {
+                "title": "Tréninkové běhy",
+                "description": "Najděte skupinový běh nebo si naplánujte vlastní.",
+                "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!"
+            },
+            "de": {
+                "title": "Trainingseinheiten",
+                "description": "Finden Sie einen Gruppenlauf oder planen Sie Ihren eigenen.",
+                "text": "Bleiben Sie fit mit unseren geplanten Trainingseinheiten. Schließen Sie sich einer lokalen Gruppe an oder setzen Sie Ihr eigenes Tempo!"
+            }
+        },
+        "index": {
+            "en": {
+                "title": "Training Runs",
+                "description": "Find a group run or plan your own.",
+                "text": "Stay fit with our scheduled training runs. Join a local group or set your own pace!"
+            },
+            "cz": {
+                "title": "Tréninkové běhy",
+                "description": "Najděte skupinový běh nebo si naplánujte vlastní.",
+                "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!"
+            },
+            "de": {
+                "title": "Trainingseinheiten",
+                "description": "Finden Sie einen Gruppenlauf oder planen Sie Ihren eigenen.",
+                "text": "Bleiben Sie fit mit unseren geplanten Trainingseinheiten. Schließen Sie sich einer lokalen Gruppe an oder setzen Sie Ihr eigenes Tempo!"
+            }
+        },
+        "login": {
+            "en": {
+                "title": "Training Runs",
+                "description": "Find a group run or plan your own.",
+                "text": "Stay fit with our scheduled training runs. Join a local group or set your own pace!"
+            },
+            "cz": {
+                "title": "Tréninkové běhy",
+                "description": "Najděte skupinový běh nebo si naplánujte vlastní.",
+                "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!"
+            },
+            "de": {
+                "title": "Trainingseinheiten",
+                "description": "Finden Sie einen Gruppenlauf oder planen Sie Ihren eigenen.",
+                "text": "Bleiben Sie fit mit unseren geplanten Trainingseinheiten. Schließen Sie sich einer lokalen Gruppe an oder setzen Sie Ihr eigenes Tempo!"
+            }
+        },
+        "register": {
+            "en": {
+                "title": "Training Runs",
+                "description": "Find a group run or plan your own.",
+                "text": "Stay fit with our scheduled training runs. Join a local group or set your own pace!"
+            },
+            "cz": {
+                "title": "Tréninkové běhy",
+                "description": "Najděte skupinový běh nebo si naplánujte vlastní.",
+                "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!"
+            },
+            "de": {
+                "title": "Trainingseinheiten",
+                "description": "Finden Sie einen Gruppenlauf oder planen Sie Ihren eigenen.",
+                "text": "Bleiben Sie fit mit unseren geplanten Trainingseinheiten. Schließen Sie sich einer lokalen Gruppe an oder setzen Sie Ihr eigenes Tempo!"
+            }
+        }
+
+    }
+}
+

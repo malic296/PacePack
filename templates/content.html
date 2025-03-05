@@ -11,17 +11,32 @@
 
     <nav class="navbar navbar-dark bg-dark px-3">
         <a class="navbar-brand" href="#">Flask App</a>
-        <a href="{{ url_for('login') }}" class="btn btn-outline-light">Logout</a>
+        <div class="ml-auto">
+            <a href="{{ url_for('set_language', lang='en') }}" class="btn btn-outline-light">EN</a>
+            <a href="{{ url_for('set_language', lang='cz') }}" class="btn btn-outline-light">CZ</a>
+            <a href="{{ url_for('set_language', lang='de') }}" class="btn btn-outline-light">DE</a>
+        </div>
+        <a href="{{ url_for('content_section', section='index') }}" class="btn btn-outline-light">Logout</a>
+        
     </nav>
+    
 
     <div class="container-fluid">
         <div class="row">
             
             <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4">
                 <div class="nav flex-column nav-pills">
+                    {% if section == 'login' or section == 'register' or section == 'index'%}
+                    <a class="nav-link {% if section == 'index' %}active{% endif %}" href="{{ url_for('content_section', section='index') }}">⚙️ Index</a>
+                    <a class="nav-link {% if section == 'login' %}active{% endif %}" href="{{ url_for('content_section', section='login') }}">🏠 Login</a>
+                    <a class="nav-link {% if section == 'register' %}active{% endif %}" href="{{ url_for('content_section', section='register') }}">👤 Register</a>
+                    
+                    {%else%}
                     <a class="nav-link {% if section == 'home' %}active{% endif %}" href="{{ url_for('content_section', section='home') }}">🏠 Home</a>
                     <a class="nav-link {% if section == 'races' %}active{% endif %}" href="{{ url_for('content_section', section='races') }}">👤 Races</a>
                     <a class="nav-link {% if section == 'runs' %}active{% endif %}" href="{{ url_for('content_section', section='runs') }}">⚙️ Runs</a>
+                    {%endif%}
+                    
                 </div>
             </nav>
 
