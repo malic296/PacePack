@@ -1,0 +1,21 @@
+{% extends "content.html" %}
+
+{% block title %}{{ textVars.title }}{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">{{ textVars.heading }}</h2>
+    <p>{{ textVars.description }}</p>
+
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            <label for="verification_code" class="form-label">{{ textVars.label }}</label>
+            {{ form.code(class="form-control") }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">{{ textVars.button_text }}</button>
+    </form>
+
+    <p class="mt-3">{{ textVars.resend_text }} <a href="{{ url_for('content_section', section='register') }}">{{ textVars.resend_link_text }}</a></p>
+</div>
+{% endblock %}

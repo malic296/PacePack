@@ -101,6 +101,35 @@
                 "description": "Finden Sie einen Gruppenlauf oder planen Sie Ihren eigenen.",
                 "text": "Bleiben Sie fit mit unseren geplanten Trainingseinheiten. Schließen Sie sich einer lokalen Gruppe an oder setzen Sie Ihr eigenes Tempo!"
             }
+        },
+        "verify":{
+            "en": {
+                "title": "Verify Your Email",
+                "heading": "Email Verification",
+                "description": "We have sent a verification code to your email. Please enter the code below:",
+                "label": "Verification Code",
+                "button_text": "Verify",
+                "resend_text": "Didn't receive a code?",
+                "resend_link_text": "Resend"
+            },
+            "cz": {
+                "title": "Ověřte svůj e-mail",
+                "heading": "Ověření e-mailu",
+                "description": "Na váš e-mail byl odeslán ověřovací kód. Zadejte jej níže:",
+                "label": "Ověřovací kód",
+                "button_text": "Ověřit",
+                "resend_text": "Nedostali jste kód?",
+                "resend_link_text": "Znovu odeslat"
+            },
+            "de": {
+                "title": "Bestätigen Sie Ihre E-Mail",
+                "heading": "E-Mail-Bestätigung",
+                "description": "Ein Bestätigungscode wurde an Ihre E-Mail gesendet. Bitte geben Sie ihn unten ein:",
+                "label": "Bestätigungscode",
+                "button_text": "Bestätigen",
+                "resend_text": "Haben Sie keinen Code erhalten?",
+                "resend_link_text": "Erneut senden"
+            }         
         }
 
     }

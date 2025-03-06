@@ -1,16 +1,28 @@
 import os
 import json
-from flask import Flask, render_template, redirect, url_for, flash, session
-from forms import LoginForm, RegisterForm
+from flask import Flask, render_template, redirect, request, url_for, flash, session
+from flask_mail import Mail
+from forms import LoginForm, RegisterForm, VerificationForm
 from flask_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
-from deep_translator import GoogleTranslator
+from mailService import send_verification_code,generate_verification_code
+from datetime import datetime, timedelta
 
 load_dotenv("environment.env")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 csrf = CSRFProtect(app)
+
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+app.config['MAIL_SERVER'] = os.getenv("MAIL_SERVER")
+app.config['MAIL_PORT'] = int(os.getenv("MAIL_PORT"))
+app.config['MAIL_USE_TLS'] = os.getenv("MAIL_USE_TLS") == "True"
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_DEFAULT_SENDER")
+
+mail = Mail(app)
 
 @app.route("/")
 def index():
@@ -36,7 +48,8 @@ def content_section(section):
         "runs": "runs.html",
         "index": "index.html",
         "login": "login.html",
-        "register": "register.html"
+        "register": "register.html",
+        "verify": "verify.html"
     }
 
     with open("textVars.json", "r", encoding="utf-8") as f:
@@ -64,18 +77,46 @@ def content_section(section):
                 email = form.email.data
                 gender = form.gender.data
                 telephone = form.telephone.data
-                telephoneCode = form.telephone.data
                 postalCode = form.postalcode.data
                 country = form.country.data
                 streetName = form.streetname.data
-                if name == "admin":
-                    return redirect(url_for("content_section", section = "home"))
-            return render_template(templates[section], section=section, form=form) 
+
+                verification_code = generate_verification_code()
+                session["verification_code"] = verification_code
+                session["code_expiration"] = (datetime.now() + timedelta(minutes=2)).isoformat()
+                print(verification_code)
+                session["email"] = email
+
+                if send_verification_code(email, verification_code):
+                    flash("A verification code has been sent to your email.", "info")
+                    return redirect(url_for("content_section", section="verify"))
+                else:
+                    flash("Error sending verification email. Please try again.", "danger")
+                return render_template(templates[section], section=section, form=form)
+
+        elif section == "verify":
+            form = VerificationForm()
+            if request.method == "POST":
+                expiration_time = datetime.fromisoformat(session.get("code_expiration", "1970-01-01T00:00:00"))
+                if datetime.now() > expiration_time:
+                    flash("The verification code has expired.", "danger")
+                    return redirect(url_for("content_section", section="verify"))
+
+                entered_code = form.code.data
+                if entered_code == session.get("verification_code"):
+                    flash("Verification successful!", "success")
+                    return redirect(url_for("content_section", section="home"))
+                else:
+                    flash("Invalid code. Please try again.", "danger")
+
+            return render_template(templates[section], section=section, textVars=textVars, form=form)
+
         else:
             return render_template(templates[section], section=section, textVars=textVars)
-        
+
     else:
         return "<h2>Section Not Found</h2>", 404
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
