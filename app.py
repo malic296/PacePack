@@ -92,7 +92,8 @@ def content_section(section):
                     return redirect(url_for("content_section", section="verify"))
                 else:
                     flash("Error sending verification email. Please try again.", "danger")
-                return render_template(templates[section], section=section, form=form)
+                
+            return render_template(templates[section], section=section, form=form)
 
         elif section == "verify":
             form = VerificationForm()
