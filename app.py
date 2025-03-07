@@ -77,7 +77,18 @@ def content_section(section):
                 email = form.email.data
                 password = form.password.data
 
-                if(email == "janmalek21JM@gmail.com" and password == "test"):
+                verification_code = generate_verification_code()
+                session["verification_code"] = verification_code
+                session["code_expiration"] = (datetime.now() + timedelta(minutes=2)).isoformat()
+                session["email"] = email
+
+                if send_verification_code(email, verification_code):
+                    flash("A verification code has been sent to your email.", "info")
+                    return redirect(url_for("content_section", section="verify"))
+                else:
+                    flash("Error sending verification email. Please try again.", "danger")
+
+                if(email == "miroslav.pavlik1@seznam.cz" and password == "test"):
                     session["user_token"] = "usertokenforverification"
                     return redirect(url_for("content_section", section = "verify"))
 
