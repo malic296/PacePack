@@ -49,7 +49,8 @@ def content_section(section):
         "index": "index.html",
         "login": "login.html",
         "register": "register.html",
-        "verify": "verify.html"
+        "verify": "verify.html",
+        "myProfile": "myProfile.html"
     }
 
     with open("textVars.json", "r", encoding="utf-8") as f:

@@ -1,14 +1,49 @@
 {% extends "content.html" %}
-{% block title %}Races - Flask App{% endblock %}
+{% block title %}Home - PacePack{% endblock %}
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="text-center">
+        <!-- Header Section -->
         <h1 class="display-4 font-weight-bold text-primary">PacePack</h1>
         <p class="lead text-muted">Aplikace pro sledování běžeckého výkonu.</p>
 
+        <!-- Buttons (Login, Register) -->
         <div class="mt-4">
             <a href="{{ url_for('content_section', section='login') }}" class="btn btn-lg btn-primary mx-2">Přihlášení</a>
             <a href="{{ url_for('content_section', section='register') }}" class="btn btn-lg btn-outline-primary mx-2">Registrace</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="mt-5">
+            <h3>Overview</h3>
+            <div class="row">
+                <!-- Upcoming Races -->
+                <div class="col-md-4 mb-4">
+                    <div class="card p-4 shadow-sm">
+                        <h5>Upcoming Races</h5>
+                        <p class="text-muted">Check out the upcoming races you can join.</p>
+                        <a href="{{ url_for('content_section', section='races') }}" class="btn btn-light">View Races</a>
+                    </div>
+                </div>
+
+                <!-- My Profile -->
+                <div class="col-md-4 mb-4">
+                    <div class="card p-4 shadow-sm">
+                        <h5>My Profile</h5>
+                        <p class="text-muted">View and manage your past and upcoming races.</p>
+                        <a href="{{ url_for('content_section', section='myProfile') }}" class="btn btn-light">View Profile</a>
+                    </div>
+                </div>
+
+                <!-- Upcoming Run Clubs -->
+                <div class="col-md-4 mb-4">
+                    <div class="card p-4 shadow-sm">
+                        <h5>Upcoming Run Clubs</h5>
+                        <p class="text-muted">Join or check upcoming running clubs near you.</p>
+                        <a href="{{ url_for('content_section', section='runs') }}" class="btn btn-light">Join Run Clubs</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -130,8 +130,48 @@
                 "resend_text": "Haben Sie keinen Code erhalten?",
                 "resend_link_text": "Erneut senden"
             }         
+        },
+        "myProfile": {
+            "en": {
+                "title": "My Profile",
+                "description": "Here you can view your profile and upcoming races.",
+                "info_title": "Profile Information",
+                "name_label": "Name",
+                "email_label": "Email",
+                "city_label": "City",
+                "joined_label": "Joined",
+                "upcoming_races_title": "Upcoming Races",
+                "upcoming_race_1": "Race 1: Prague Marathon - 20th May 2025",
+                "upcoming_race_2": "Race 2: Berlin Half Marathon - 25th June 2025",
+                "upcoming_race_3": "Race 3: Vienna 10K - 15th July 2025"
+            },
+            "cz": {
+                "title": "Můj profil",
+                "description": "Zde můžete vidět svůj profil a nadcházející závody.",
+                "info_title": "Informace o profilu",
+                "name_label": "Jméno",
+                "email_label": "E-mail",
+                "city_label": "Město",
+                "joined_label": "Založeno",
+                "upcoming_races_title": "Nadcházející závody",
+                "upcoming_race_1": "Závod 1: Pražský maraton - 20. května 2025",
+                "upcoming_race_2": "Závod 2: Berlínský půlmaraton - 25. června 2025",
+                "upcoming_race_3": "Závod 3: Vídeňský 10K - 15. července 2025"
+            },
+            "de": {
+                "title": "Mein Profil",
+                "description": "Hier können Sie Ihr Profil und bevorstehende Rennen anzeigen.",
+                "info_title": "Profilinformation",
+                "name_label": "Name",
+                "email_label": "E-Mail",
+                "city_label": "Stadt",
+                "joined_label": "Beigetreten",
+                "upcoming_races_title": "Bevorstehende Rennen",
+                "upcoming_race_1": "Rennen 1: Prag Marathon - 20. Mai 2025",
+                "upcoming_race_2": "Rennen 2: Berlin Halbmarathon - 25. Juni 2025",
+                "upcoming_race_3": "Rennen 3: Wien 10K - 15. Juli 2025"
+              }
         }
-
     }
 }
 

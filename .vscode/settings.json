@@ -1,0 +1,5 @@
+{
+    "python.pythonPath": "${workspaceFolder}/venv/bin/python3",
+    "python.defaultInterpreterPath": "${workspaceFolder}/venv/bin/python3",
+    "terminal.integrated.defaultProfile.osx": "bash"
+}

@@ -1,8 +1,71 @@
 {% extends "content.html" %}
+
 {% block title %}Home - Flask App{% endblock %}
+
 {% block content %}
-    <h2>🏠 
-        {{ textVars["title"] }}
-    </h2>
-    <p>{{ textVars["description"] }}</p>
+  <h1>{{ textVars["title"]}}</h1>
+  <p class="lead">{{ textVars["description"]}}</p>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          🏃 Upcoming Races
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>Prague Marathon - 20th May 2025</li>
+            <li>Berlin Half Marathon - 25th June 2025</li>
+            <li>Vienna 10K - 15th July 2025</li>
+          </ul>
+          <a href="{{ url_for('content_section', section='races') }}" class="btn btn-primary">View Races</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          🏅 Your Runs
+        </div>
+        <div class="card-body">
+          <p>Track your runs, set new personal bests, and analyze your performance.</p>
+          <a href="{{ url_for('content_section', section='runs') }}" class="btn btn-primary">View Your Runs</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          📝 Profile Settings
+        </div>
+        <div class="card-body">
+          <p>Manage your profile details, update your preferences, or change your password.</p>
+          <a href="{{ url_for('content_section', section='myProfile') }}" class="btn btn-primary">Edit Profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Section: Motivational Message -->
+  <div class="mt-4">
+    <h2>Keep Pushing!</h2>
+    <p>You're doing amazing! Every step you take is a step closer to your goals. Whether you're preparing for a marathon or aiming to improve your run times, your commitment will pay off.</p>
+    <p class="text-muted">Remember: Consistency is the key to success.</p>
+  </div>
+
+  <!-- New Section: Your Stats -->
+  <div class="mt-4">
+    <h2>Your Running Stats</h2>
+    <p>Here's a quick look at your performance over the last month:</p>
+    <ul>
+      <li><strong>Total Distance:</strong> 150 km</li>
+      <li><strong>Total Time:</strong> 12 hours 30 minutes</li>
+      <li><strong>Average Pace:</strong> 5:00 per km</li>
+      <li><strong>Best Time:</strong> 22:30 (5 km)</li>
+    </ul>
+    <a href="{{ url_for('content_section', section='runs') }}" class="btn btn-primary">See Full Stats</a>
+  </div>
+
 {% endblock %}

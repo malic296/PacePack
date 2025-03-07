@@ -1,8 +1,47 @@
 {% extends "content.html" %}
+
 {% block title %}Races - Flask App{% endblock %}
+
 {% block content %}
-    <h2>
-        {{ textVars["title"] }}
-    </h2>
-    <p>{{ textVars["description"] }}</p>
+  <h1>{{ textVars["title"]}}</h1>
+  <p class="lead">{{ textVars["description"]}}</p>
+
+  <div class="list-group">
+    <!-- Race 1 -->
+    <div class="list-group-item">
+      <h5 class="mb-1">Prague Marathon - 20th May 2025</h5>
+      <p><strong>Date:</strong> 20th May 2025</p>
+      <p><strong>Location:</strong> Prague, Czech Republic</p>
+      <p><strong>Distance:</strong> Full Marathon (42.195 km)</p>
+      <p><strong>Description:</strong> The Prague Marathon is one of the most popular races in Central Europe, attracting runners from all over the world.</p>
+      <a href="#" class="btn btn-primary">Register Now</a>
+    </div>
+
+    <!-- Race 2 -->
+    <div class="list-group-item">
+      <h5 class="mb-1">Berlin Half Marathon - 25th June 2025</h5>
+      <p><strong>Date:</strong> 25th June 2025</p>
+      <p><strong>Location:</strong> Berlin, Germany</p>
+      <p><strong>Distance:</strong> Half Marathon (21.1 km)</p>
+      <p><strong>Description:</strong> A fast and flat course through Berlin, perfect for runners looking to achieve a personal best time.</p>
+      <a href="#" class="btn btn-primary">Register Now</a>
+    </div>
+
+    <!-- Race 3 -->
+    <div class="list-group-item">
+      <h5 class="mb-1">Vienna 10K - 15th July 2025</h5>
+      <p><strong>Date:</strong> 15th July 2025</p>
+      <p><strong>Location:</strong> Vienna, Austria</p>
+      <p><strong>Distance:</strong> 10 km</p>
+      <p><strong>Description:</strong> A scenic 10 km race through the heart of Vienna, ideal for both beginners and experienced runners.</p>
+      <a href="#" class="btn btn-primary">Register Now</a>
+    </div>
+  </div>
+
+  <!-- Add more races in the future as database data -->
+  <div class="mt-4">
+    <h3>More races coming soon...</h3>
+    <p>Stay tuned for additional race events. We will keep updating this page with new races!</p>
+  </div>
+
 {% endblock %}

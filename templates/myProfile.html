@@ -1,0 +1,30 @@
+{% extends "content.html" %}
+
+{% block title %}
+    {{ textVars["title"] }}
+{% endblock %}
+
+{% block content %}
+    <h2>👤{{ textVars["title"] }}</h2>
+    <p>{{ textVars["description"] }}</p>
+    
+    <div>
+        <strong>{{ textVars["name_label"] }}:</strong> John Doe
+    </div>
+    <div>
+        <strong>{{ textVars["email_label"] }}:</strong> john.doe@example.com
+    </div>
+    <div>
+        <strong>{{ textVars["city_label"] }}:</strong> Prague
+    </div>
+    <div>
+        <strong>{{ textVars["joined_label"] }}:</strong> January 1st, 2022
+    </div>
+    <br>
+    <h3>{{ textVars["upcoming_races_title"] }}</h3>
+    <ul>
+        <li>{{ textVars["upcoming_race_1"] }}</li>
+        <li>{{ textVars["upcoming_race_2"] }}</li>
+        <li>{{ textVars["upcoming_race_3"] }}</li>
+    </ul>
+{% endblock %}

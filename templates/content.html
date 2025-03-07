@@ -69,10 +69,15 @@
 
             {%else%}
             <a
-              class="nav-link {% if section == 'home' %}active{% endif %}"
-              href="{{ url_for('content_section', section='home') }}"
-              >🏠 Home</a
+            class="nav-link {% if section == 'home' %}active{% endif %}"
+            href="{{ url_for('content_section', section='home') }}"
+            >🏠 Home</a
             >
+            <a 
+              class="nav-link {% if section == 'myProfile' %}active{% endif %}" 
+              href="{{ url_for('content_section', section='myProfile') }}"
+              >👤 My Profile</a
+              >
             <a
               class="nav-link {% if section == 'races' %}active{% endif %}"
               href="{{ url_for('content_section', section='races') }}"
