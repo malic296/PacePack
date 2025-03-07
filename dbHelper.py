@@ -4,7 +4,7 @@ import os
 
 load_dotenv("environment.env")
 
-engine = create_engine(os.getenv("DATABASE_URL"))
+engine = create_engine(os.getenv("DARABASE_URL"))
 
 try:
     with engine.connect() as connection:

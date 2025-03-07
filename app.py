@@ -14,9 +14,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 csrf = CSRFProtect(app)
 
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['MAIL_SERVER'] = os.getenv("MAIL_SERVER")
-app.config['MAIL_PORT'] = int(os.getenv("MAIL_PORT"))
+app.config['MAIL_PORT'] = os.getenv("MAIL_PORT")
 app.config['MAIL_USE_TLS'] = os.getenv("MAIL_USE_TLS") == "True"
 app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
 app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
@@ -40,6 +39,12 @@ def toggle_theme():
     session["theme"] = "dark" if session.get("theme", "light") == "light" else "light"
     return redirect(url_for("content_section", section=session.get("section", "index")))
 
+@app.route("/logout")
+def logout():
+    session.pop("user_token", None)
+    return redirect(url_for("content_section", section = "login"))
+
+
 @app.route("/content/<section>", methods=["GET", "POST"])
 def content_section(section):
     templates = {
@@ -52,6 +57,12 @@ def content_section(section):
         "verify": "verify.html",
         "myProfile": "myProfile.html"
     }
+
+    public_sections = {"login", "register", "verify", "index"}
+
+    if section not in public_sections and "user_token" not in session:
+        flash("You need to log in first.", "warning")
+        return redirect(url_for("content_section", section="login"))
 
     with open("textVars.json", "r", encoding="utf-8") as f:
         textVars = json.load(f)
@@ -66,8 +77,9 @@ def content_section(section):
                 email = form.email.data
                 password = form.password.data
 
-                if(email == "test" and password == "test"):
-                    return redirect(url_for("content_section", section = "home"))
+                if(email == "janmalek21JM@gmail.com" and password == "test"):
+                    session["user_token"] = "usertokenforverification"
+                    return redirect(url_for("content_section", section = "verify"))
 
             return render_template(templates[section], section=section, form=form)
         elif section == "register":
@@ -85,7 +97,6 @@ def content_section(section):
                 verification_code = generate_verification_code()
                 session["verification_code"] = verification_code
                 session["code_expiration"] = (datetime.now() + timedelta(minutes=2)).isoformat()
-                print(verification_code)
                 session["email"] = email
 
                 if send_verification_code(email, verification_code):
@@ -107,6 +118,7 @@ def content_section(section):
                 entered_code = form.code.data
                 if entered_code == session.get("verification_code"):
                     flash("Verification successful!", "success")
+                    session["user_token"] = "usertokenforverification"
                     return redirect(url_for("content_section", section="home"))
                 else:
                     flash("Invalid code. Please try again.", "danger")
