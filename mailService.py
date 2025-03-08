@@ -8,7 +8,8 @@ def send_verification_code(email, verification_code):
     msg = Message("Email Verification", recipients=[email])
     msg.body = f"Your verification code is: {verification_code}"
     try:
-        mail.send(msg)
+        with mail.connect() as conn:
+            conn.send(msg)
         return True
     except SMTPException as e:
         print(f"Error sending email: {e}")

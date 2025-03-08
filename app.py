@@ -7,6 +7,10 @@ from flask_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
 from mailService import send_verification_code,generate_verification_code
 from datetime import datetime, timedelta
+from dbHelper.services.UserService import UserService
+from dbHelper.services.AddressService import AddressService
+from dbHelper.services.PasswordService import PasswordService
+from dbHelper.DBModels import User
 
 load_dotenv("environment.env")
 
@@ -20,6 +24,10 @@ app.config['MAIL_USE_TLS'] = os.getenv("MAIL_USE_TLS") == "True"
 app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
 app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_DEFAULT_SENDER")
+
+user_service = UserService()
+address_service = AddressService()
+password_service = PasswordService()
 
 mail = Mail(app)
 
@@ -109,6 +117,11 @@ def content_section(section):
                 session["verification_code"] = verification_code
                 session["code_expiration"] = (datetime.now() + timedelta(minutes=2)).isoformat()
                 session["email"] = email
+
+                # test if email is in use 
+                if user_service.isUserEmailInUse(email):
+                    flash("Provided email is already in use")
+                    return redirect(url_for("content_section", section="register"))
 
                 if send_verification_code(email, verification_code):
                     flash("A verification code has been sent to your email.", "info")
