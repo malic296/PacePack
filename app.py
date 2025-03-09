@@ -193,7 +193,7 @@ def content_section(section):
                         return redirect(url_for("content_section", section="home"))
 
                     else:
-                        # LOGGED ON
+                        # LOGGED IN
                         flash("Login was successful.", "success")
                         return redirect(url_for("content_section", section="home"))
                 else:
