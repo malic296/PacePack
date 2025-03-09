@@ -1,13 +1,13 @@
-from dbHelper.DBModels import User
+from dbHelper.DBModels import User, Password
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
+
 import os
 
 load_dotenv("environment.env")
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-print(DATABASE_URL)
 engine = create_engine(DATABASE_URL)
 
 SessionLocal = sessionmaker(bind=engine)
@@ -16,7 +16,7 @@ class UserService:
     def __init__(self):
         self.session = SessionLocal()
 
-    def add_user(self, name, surname, address_id, email, telephone, telephone_code, is_admin, can_create_runs, gender, password_id):
+    def add_user(self, name, surname, email, telephone, telephone_code, is_admin, can_create_runs, gender, password_id, address_id):
         new_user = User(
             name=name,
             surname=surname,

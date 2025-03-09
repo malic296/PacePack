@@ -7,7 +7,6 @@ import os
 load_dotenv("environment.env")
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-print(DATABASE_URL)
 engine = create_engine(DATABASE_URL)
 
 SessionLocal = sessionmaker(bind=engine)
@@ -24,7 +23,6 @@ class AddressService:
         )
         self.session.add(new_address)
         self.session.commit()
-        print(f"✅ New address inserted with ID: {new_address.id}")
         return new_address.id
 
     def close(self):

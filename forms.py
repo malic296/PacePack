@@ -20,7 +20,7 @@ class RegisterForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()],render_kw={"placeholder": "example@gmail.com"})
     telephoneCode = IntegerField("Telephone Code", validators=[DataRequired()], render_kw={"placeholder": "+123"})
     telephone = StringField("Telephone", validators=[DataRequired(), Length(min=7, max=15)], render_kw={"placeholder": "123456789"})
-    gender = RadioField("Gender", choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], validators=[DataRequired()])
+    gender = RadioField("Gender", choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], validators=[DataRequired()])
     
     submit = SubmitField("Register")
 

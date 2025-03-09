@@ -90,15 +90,17 @@ def content_section(section):
                 session["code_expiration"] = (datetime.now() + timedelta(minutes=2)).isoformat()
                 session["email"] = email
 
-                if send_verification_code(email, verification_code):
-                    flash("A verification code has been sent to your email.", "info")
-                    return redirect(url_for("content_section", section="verify"))
+                if password_service.validate_user_login(email, password):
+                    if send_verification_code(email, verification_code):
+                        session["user_email"] = email
+                        flash("A verification code has been sent to your email.", "info")
+                        return redirect(url_for("content_section", section="verify"))
+                    else:
+                        flash("Error sending verification email. Please try again.", "danger")
                 else:
-                    flash("Error sending verification email. Please try again.", "danger")
-
-                if(email == "miroslav.pavlik1@seznam.cz" and password == "test"):
-                    session["user_token"] = "usertokenforverification"
-                    return redirect(url_for("content_section", section = "verify"))
+                    flash("Wrong credentials.", "danger")
+                    return redirect(url_for("content_section", section="login"))
+                
 
             return render_template(templates[section], section=section, form=form)
         elif section == "register":
@@ -107,8 +109,11 @@ def content_section(section):
                 name = form.name.data
                 surname = form.surname.data
                 email = form.email.data
+                password = form.password.data
+                confirmPassword = form.confirmPassword.data
                 gender = form.gender.data
                 telephone = form.telephone.data
+                telephoneCode = form.telephoneCode.data
                 postalCode = form.postalcode.data
                 country = form.country.data
                 streetName = form.streetname.data
@@ -120,10 +125,30 @@ def content_section(section):
 
                 # test if email is in use 
                 if user_service.isUserEmailInUse(email):
-                    flash("Provided email is already in use")
+                    flash("Provided email is already in use", "danger")
                     return redirect(url_for("content_section", section="register"))
+                
+                # test if password was written correctly 
+                if password != confirmPassword:
+                    flash("Passwords do not match", "danger")
+                    return redirect(url_for("content_section", section="register"))
+            
+                # user registration
+                session["pending_registration"] = {
+                    "name": name,
+                    "surname": surname,
+                    "email": email,
+                    "password": password,
+                    "gender": gender,
+                    "telephone": telephone,
+                    "telephoneCode": telephoneCode,
+                    "postalCode": postalCode,
+                    "country": country,
+                    "streetName": streetName,
+                }
 
                 if send_verification_code(email, verification_code):
+                    session["user_email"] = email
                     flash("A verification code has been sent to your email.", "info")
                     return redirect(url_for("content_section", section="verify"))
                 else:
@@ -142,8 +167,35 @@ def content_section(section):
                 entered_code = form.code.data
                 if entered_code == session.get("verification_code"):
                     flash("Verification successful!", "success")
-                    session["user_token"] = "usertokenforverification"
-                    return redirect(url_for("content_section", section="home"))
+                    session["user_token"] = session["user_email"]
+                    session.pop("user_email", None)
+                    pending_registration = session.pop("pending_registration", None)
+                    if pending_registration:
+                        password_id = password_service.add_password(pending_registration["password"])
+                        address_id = address_service.add_address(
+                            pending_registration["streetName"], 
+                            pending_registration["postalCode"], 
+                            pending_registration["country"]
+                        )
+                        user_service.add_user(
+                            pending_registration["name"], 
+                            pending_registration["surname"], 
+                            pending_registration["email"], 
+                            pending_registration["telephone"], 
+                            pending_registration["telephoneCode"], 
+                            False, True, 
+                            pending_registration["gender"], 
+                            password_id, 
+                            address_id
+                        )
+                        # REGISTERED
+                        flash("Your account has been created successfully!", "success")
+                        return redirect(url_for("content_section", section="home"))
+
+                    else:
+                        # LOGGED ON
+                        flash("Login was successful.", "success")
+                        return redirect(url_for("content_section", section="home"))
                 else:
                     flash("Invalid code. Please try again.", "danger")
 
