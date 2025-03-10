@@ -9,22 +9,28 @@
     <p>{{ textVars["description"] }}</p>
     
     <div>
-        <strong>{{ textVars["name_label"] }}:</strong> John Doe
+        <strong>{{ textVars["name_label"] }}:</strong> {{ user.name }}
     </div>
     <div>
-        <strong>{{ textVars["email_label"] }}:</strong> john.doe@example.com
+        <strong>{{ textVars["surname_label"] }}:</strong> {{ user.surname }}
     </div>
     <div>
-        <strong>{{ textVars["city_label"] }}:</strong> Prague
+        <strong>{{ textVars["email_label"] }}:</strong> {{ user.email }}
     </div>
     <div>
-        <strong>{{ textVars["joined_label"] }}:</strong> January 1st, 2022
+        <strong>{{ textVars["telephone_label"] }}:</strong> +{{user.telephoneCode }}{{ user.telephone }}
+    </div>
+    <div>
+        <strong>{{ textVars["gender_label"] }}:</strong> {{ user.gender }}
+    </div>
+    <div>
+        <strong>{{ textVars["country_label"] }}:</strong> {{ user.address.country }}
+    </div>
+    <div>
+        <strong>{{ textVars["street_name_label"] }}:</strong> {{ user.address.streetname }}
+    </div>
+    <div>
+        <strong>{{ textVars["postal_code_label"] }}:</strong> {{ user.address.postalcode }}
     </div>
     <br>
-    <h3>{{ textVars["upcoming_races_title"] }}</h3>
-    <ul>
-        <li>{{ textVars["upcoming_race_1"] }}</li>
-        <li>{{ textVars["upcoming_race_2"] }}</li>
-        <li>{{ textVars["upcoming_race_3"] }}</li>
-    </ul>
 {% endblock %}

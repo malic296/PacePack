@@ -1,5 +1,6 @@
-from dbHelper.DBModels import User, Password
+from dbHelper.DBModels import User, Password, Address
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import joinedload
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 
@@ -36,6 +37,10 @@ class UserService:
     def isUserEmailInUse(self, email):
         existing_user = self.session.query(User).filter_by(email=email).first()
         return existing_user is not None
+    
+    # Returns user info with address included 
+    def getUserInfo(self, email):
+        return self.session.query(User).filter(User.email == email).options(joinedload(User.address)).first()
 
     def close(self):
         self.session.close()
