@@ -2,7 +2,7 @@ import os
 import json
 from flask import Flask, render_template, redirect, request, url_for, flash, session
 from flask_mail import Mail
-from forms import LoginForm, RegisterForm, VerificationForm
+from forms import LoginForm, RegisterForm, VerificationForm, EditProfileForm
 from flask_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
 from mailService import send_verification_code,generate_verification_code
@@ -63,7 +63,7 @@ def content_section(section):
         "login": "login.html",
         "register": "register.html",
         "verify": "verify.html",
-        "myProfile": "myProfile.html"
+        "myProfile": "myProfile.html",
     }
 
     public_sections = {"login", "register", "verify", "index"}
@@ -102,7 +102,8 @@ def content_section(section):
     else:
         return "<h2>Section Not Found</h2>", 404
     
-
+    
+# Root app methods
 def loginSection():
     form = LoginForm()
     if form.validate_on_submit():
@@ -225,11 +226,29 @@ def verifySection(textVars):
 
     return render_template("verify.html", section="verify", textVars=textVars, form=form)
 
+def myProfileSection(textVars):
+    form = EditProfileForm()  # Create form instance
+
+    if form.validate_on_submit():  # Check if form is submitted
+        name = form.name.data
+        surname = form.surname.data
+        telephone = form.telephone.data
+        gender = form.gender.data
+        country = form.country.data
+        streetname = form.streetname.data
+        postalcode = form.postalcode.data
+
+        if not user_service.updateUser(session["user_token"], name, surname, telephone, gender, country, streetname, postalcode):
+            flash("The update failed", "danger")
+        else:
+            flash("Profile updated successfully!", "success")
+
+    user = user_service.getUserInfo(session["user_token"])  # Get updated user info
+    return render_template("myProfile.html", section="myProfile", textVars=textVars, user=user, form=form)
+
 def homeSection(textVars):
     return render_template("home.html", section="home", textVars=textVars)
-def myProfileSection(textVars):
-    user = user_service.getUserInfo(session["user_token"])
-    return render_template("myProfile.html", section="myProfile", textVars=textVars, user=user)
+
 def indexSection(textVars):
     return render_template("index.html", section="index", textVars=textVars)
 def racesSection(textVars):

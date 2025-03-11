@@ -41,6 +41,28 @@ class UserService:
     # Returns user info with address included 
     def getUserInfo(self, email):
         return self.session.query(User).filter(User.email == email).options(joinedload(User.address)).first()
+    
+    def updateUser(self, email, name, surname, telephone, gender, country, streetname, postalcode):
+        user = self.session.query(User).filter(User.email==email).options(joinedload(User.address)).first()
+
+        if not user:
+            return False
+
+        # Check if user has an address
+        if not user.address:
+            return False
+        
+        user.name = name
+        user.surname = surname
+        user.telephone = telephone
+        user.gender = gender
+        user.address.country = country
+        user.address.streetname = streetname
+        user.address.postalcode = postalcode
+
+        self.session.commit()
+        return True
+
 
     def close(self):
         self.session.close()
