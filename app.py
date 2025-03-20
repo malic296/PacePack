@@ -64,6 +64,7 @@ def content_section(section):
         "register": "register.html",
         "verify": "verify.html",
         "myProfile": "myProfile.html",
+        "resend" : "verify.html"
     }
 
     public_sections = {"login", "register", "verify", "index"}
@@ -79,132 +80,6 @@ def content_section(section):
     
     if section in templates:
         session["section"] = section
-<<<<<<< HEAD
-        if section == "login" :
-            form = LoginForm()
-            if form.validate_on_submit():
-                email = form.email.data
-                password = form.password.data
-
-                verification_code = generate_verification_code()
-                session["verification_code"] = verification_code
-                session["code_expiration"] = (datetime.now() + timedelta(minutes=2)).isoformat()
-                session["email"] = email
-
-                if password_service.validate_user_login(email, password):
-                    if send_verification_code(email, verification_code):
-                        session["user_email"] = email
-                        flash("A verification code has been sent to your email.", "info")
-                        return redirect(url_for("content_section", section="verify"))
-                    else:
-                        flash("Error sending verification email. Please try again.", "danger")
-                else:
-                    flash("Wrong credentials.", "danger")
-                    return redirect(url_for("content_section", section="login"))
-                
-
-            return render_template(templates[section], section=section, form=form)
-        elif section == "register":
-            form = RegisterForm()
-            if form.validate_on_submit():
-                name = form.name.data
-                surname = form.surname.data
-                email = form.email.data
-                password = form.password.data
-                confirmPassword = form.confirmPassword.data
-                gender = form.gender.data
-                telephone = form.telephone.data
-                telephoneCode = form.telephoneCode.data
-                postalCode = form.postalcode.data
-                country = form.country.data
-                streetName = form.streetname.data
-
-                verification_code = generate_verification_code()
-                session["verification_code"] = verification_code
-                session["code_expiration"] = (datetime.now() + timedelta(minutes=2)).isoformat()
-                session["email"] = email
-
-                # test if email is in use 
-                if user_service.isUserEmailInUse(email):
-                    flash("Provided email is already in use", "danger")
-                    return redirect(url_for("content_section", section="register"))
-                
-                # test if password was written correctly 
-                if password != confirmPassword:
-                    flash("Passwords do not match", "danger")
-                    return redirect(url_for("content_section", section="register"))
-            
-                # user registration
-                session["pending_registration"] = {
-                    "name": name,
-                    "surname": surname,
-                    "email": email,
-                    "password": password,
-                    "gender": gender,
-                    "telephone": telephone,
-                    "telephoneCode": telephoneCode,
-                    "postalCode": postalCode,
-                    "country": country,
-                    "streetName": streetName,
-                }
-
-                if send_verification_code(email, verification_code):
-                    session["user_email"] = email
-                    flash("A verification code has been sent to your email.", "info")
-                    return redirect(url_for("content_section", section="verify"))
-                else:
-                    flash("Error sending verification email. Please try again.", "danger")
-                
-            return render_template(templates[section], section=section, form=form)
-
-        elif section == "verify":
-            form = VerificationForm()
-            if request.method == "POST":
-                expiration_time = datetime.fromisoformat(session.get("code_expiration", "1970-01-01T00:00:00"))
-                if datetime.now() > expiration_time:
-                    flash("The verification code has expired.", "danger")
-                    return redirect(url_for("content_section", section="verify"))
-
-                entered_code = form.code.data
-                if entered_code == session.get("verification_code"):
-                    flash("Verification successful!", "success")
-                    session["user_token"] = session["user_email"]
-                    session.pop("user_email", None)
-                    pending_registration = session.pop("pending_registration", None)
-                    if pending_registration:
-                        password_id = password_service.add_password(pending_registration["password"])
-                        address_id = address_service.add_address(
-                            pending_registration["streetName"], 
-                            pending_registration["postalCode"], 
-                            pending_registration["country"]
-                        )
-                        user_service.add_user(
-                            pending_registration["name"], 
-                            pending_registration["surname"], 
-                            pending_registration["email"], 
-                            pending_registration["telephone"], 
-                            pending_registration["telephoneCode"], 
-                            False, True, 
-                            pending_registration["gender"], 
-                            password_id, 
-                            address_id
-                        )
-                        # REGISTERED
-                        flash("Your account has been created successfully!", "success")
-                        return redirect(url_for("content_section", section="home"))
-
-                    else:
-                        # LOGGED IN
-                        flash("Login was successful.", "success")
-                        return redirect(url_for("content_section", section="home"))
-                else:
-                    flash("Invalid code. Please try again.", "danger")
-
-            return render_template(templates[section], section=section, textVars=textVars, form=form)
-
-        else:
-            return render_template(templates[section], section=section, textVars=textVars)
-=======
         match section:
             case "login":
                 return loginSection()
@@ -212,8 +87,8 @@ def content_section(section):
                 return registerSection()
             case "verify":
                 return verifySection(textVars)
->>>>>>> 26d4f8211a34b3a1f57aa96fbe4689727a2d1a3e
-
+            case "resend":
+                return resendCode()
             case "home":
                 return homeSection(textVars)
             case "myProfile":
@@ -352,6 +227,22 @@ def verifySection(textVars):
             flash("Invalid code. Please try again.", "danger")
 
     return render_template("verify.html", section="verify", textVars=textVars, form=form)
+
+def resendCode():
+    if "email" not in session:
+        flash("Session expired. Please log in again.", "warning")
+        return redirect(url_for("content_section", section="login"))
+
+    new_code = generate_verification_code()
+    session["verification_code"] = new_code
+    session["code_expiration"] = (datetime.now() + timedelta(minutes=2)).isoformat()
+
+    if send_verification_code(session["email"], new_code):
+        flash("A new verification code has been sent.", "info")
+    else:
+        flash("Error sending the verification email. Please try again.", "danger")
+
+    return redirect(url_for("content_section", section="verify"))
 
 def myProfileSection(textVars):
     form = EditProfileForm()  # Create form instance

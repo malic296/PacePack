@@ -1,2 +1,11 @@
 .env
 environment.env
+_pycahe_
+__pycache__/forms.cpython-313.pyc
+dbHelper/services/__pycache__/UserService.cpython-313.pyc
+dbHelper/services/__pycache__/PasswordService.cpython-313.pyc
+dbHelper/services/__pycache__/AddressService.cpython-313.pyc
+dbHelper/services/__pycache__/__init__.cpython-313.pyc
+dbHelper/__pycache__/DBModels.cpython-313.pyc
+dbHelper/__pycache__/__init__.cpython-313.pyc
+__pycache__/mailService.cpython-313.pyc

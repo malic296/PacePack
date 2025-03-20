@@ -131,6 +131,11 @@
                 "resend_link_text": "Erneut senden"
             }         
         },
+        "resend":{
+            "en":{},
+            "de":{},
+            "cz":{}
+        },
         "myProfile": {
             "en": {
                 "title": "My Profile",
