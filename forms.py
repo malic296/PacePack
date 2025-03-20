@@ -34,3 +34,14 @@ class VerificationForm(FlaskForm):
         ]
     )
     submit = SubmitField("Verify")
+
+
+class EditProfileForm(FlaskForm):
+    name = StringField("Name", validators=[DataRequired()])
+    surname = StringField("Surname", validators=[DataRequired()])
+    telephone = StringField("Telephone", validators=[DataRequired()])
+    gender = StringField("Gender", validators=[DataRequired()])
+    country = StringField("Country", validators=[DataRequired()])
+    streetname = StringField("Street Name", validators=[DataRequired()])
+    postalcode = StringField("Postal Code", validators=[DataRequired()])
+    submit = SubmitField("Save Changes")
