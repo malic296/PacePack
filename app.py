@@ -67,7 +67,7 @@ def content_section(section):
         "resend" : "verify.html"
     }
 
-    public_sections = {"login", "register", "verify", "index"}
+    public_sections = {"login", "register", "verify", "index","resend"}
 
     if section not in public_sections and "user_token" not in session:
         flash("You need to log in first.", "warning")
