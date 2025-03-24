@@ -72,34 +72,79 @@
             "en": {
                 "title": "Training Runs",
                 "description": "Find a group run or plan your own.",
-                "text": "Stay fit with our scheduled training runs. Join a local group or set your own pace!"
+                "text": "Stay fit with our scheduled training runs. Join a local group or set your own pace!",
+                "email": "Email",
+                "password": "Password",
+                "submit": "Submit"
             },
             "cz": {
                 "title": "Tréninkové běhy",
                 "description": "Najděte skupinový běh nebo si naplánujte vlastní.",
-                "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!"
+                "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!",
+                "email": "Email",
+                "password": "Heslo",
+                "submit": "Potvrdit"
             },
             "de": {
                 "title": "Trainingseinheiten",
                 "description": "Finden Sie einen Gruppenlauf oder planen Sie Ihren eigenen.",
-                "text": "Bleiben Sie fit mit unseren geplanten Trainingseinheiten. Schließen Sie sich einer lokalen Gruppe an oder setzen Sie Ihr eigenes Tempo!"
+                "text": "Bleiben Sie fit mit unseren geplanten Trainingseinheiten. Schließen Sie sich einer lokalen Gruppe an oder setzen Sie Ihr eigenes Tempo!",
+                "email": "Email",
+                "password": "Passwort",
+                "submit": "Einreichen"
             }
         },
         "register": {
             "en": {
-                "title": "Training Runs",
+                "title": "Register",
                 "description": "Find a group run or plan your own.",
-                "text": "Stay fit with our scheduled training runs. Join a local group or set your own pace!"
+                "text": "Stay fit with our scheduled training runs. Join a local group or set your own pace!",
+                "name": "Name",
+                "surname": "Surname",
+                "password": "Password",
+                "confirmPassword": "Confirm Password",
+                "streetname": "Street Name",
+                "postalcode": "Postal Code",
+                "country": "Country",
+                "email": "Email",
+                "telephoneCode": "Telephone Code",
+                "telephone": "Telephone",
+                "gender": "Gender",
+                "submit": "Submit"
             },
             "cz": {
-                "title": "Tréninkové běhy",
+                "title": "Registrace",
                 "description": "Najděte skupinový běh nebo si naplánujte vlastní.",
-                "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!"
+                "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!",
+                "name": "Jméno",
+                "surname": "Příjmení",
+                "password": "Heslo",
+                "confirmPassword": "Heslo znovu",
+                "streetname": "Ulice a čp.",
+                "postalcode": "PSČ",
+                "country": "Země",
+                "email": "Email",
+                "telephoneCode": "Předvolba",
+                "telephone": "Telefon",
+                "gender": "Pohlaví",
+                "submit": "Potvrdit"
             },
             "de": {
-                "title": "Trainingseinheiten",
+                "title": "Registrieren",
                 "description": "Finden Sie einen Gruppenlauf oder planen Sie Ihren eigenen.",
-                "text": "Bleiben Sie fit mit unseren geplanten Trainingseinheiten. Schließen Sie sich einer lokalen Gruppe an oder setzen Sie Ihr eigenes Tempo!"
+                "text": "Bleiben Sie fit mit unseren geplanten Trainingseinheiten. Schließen Sie sich einer lokalen Gruppe an oder setzen Sie Ihr eigenes Tempo!",
+                "name": "Name",
+                "surname": "Nachname",
+                "password": "Passwort",
+                "confirmPassword": "Passwort erneut",
+                "streetname": "Straße und Hausnr.",
+                "postalcode": "PLZ",
+                "country": "Land",
+                "email": "E-Mail",
+                "telephoneCode": "Vorwahl",
+                "telephone": "Telefon",
+                "gender": "Geschlecht",
+                "submit": "Bestätigen"
             }
         },
         "verify":{

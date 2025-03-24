@@ -33,7 +33,7 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Gender</label>
+                {{ form.gender.label(class="form-label") }}
                 <div class="d-flex gap-3">
                     {% for subfield in form.gender %}
                         <div class="form-check">

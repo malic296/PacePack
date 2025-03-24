@@ -82,9 +82,9 @@ def content_section(section):
         session["section"] = section
         match section:
             case "login":
-                return loginSection()
+                return loginSection(textVars)
             case "register":
-                return registerSection()
+                return registerSection(textVars)
             case "verify":
                 return verifySection(textVars)
             case "resend":
@@ -106,8 +106,8 @@ def content_section(section):
     
     
 # Root app methods
-def loginSection():
-    form = LoginForm()
+def loginSection(textVars):
+    form = LoginForm(lang=session.get("lang", "en"))
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
@@ -130,8 +130,8 @@ def loginSection():
         
     return render_template("login.html", section="login", form=form)
 
-def registerSection():
-    form = RegisterForm()
+def registerSection(textVars):
+    form = RegisterForm(lang=session.get("lang", "en"))
     if form.validate_on_submit():
         name = form.name.data
         surname = form.surname.data
