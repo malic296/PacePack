@@ -193,7 +193,13 @@
                 "gender_label": "Gender",
                 "country_label": "Country",
                 "street_name_label": "Street Name",
-                "postal_code_label": "Postal Code"
+                "postal_code_label": "Postal Code",
+                "edit": "Edit profile",
+                "save": "Save",
+                "cancel": "Cancel",
+                "male": "Male",
+                "female": "Female",
+                "other": "Other"
             },
             "cz": {
                 "title": "Můj profil",
@@ -206,7 +212,13 @@
                 "gender_label": "Pohlaví",
                 "country_label": "Země",
                 "street_name_label": "Název ulice",
-                "postal_code_label": "PSČ"
+                "postal_code_label": "PSČ",
+                "edit": "Upravit profil",
+                "save": "Uložit",
+                "cancel": "Zrušit",
+                "male": "Muž",
+                "female": "Žena",
+                "other": "Jiné"
             },
             "de": {
                 "title": "Mein Profil",
@@ -219,7 +231,13 @@
                 "gender_label": "Geschlecht",
                 "country_label": "Land",
                 "street_name_label": "Straßenname",
-                "postal_code_label": "Postleitzahl"
+                "postal_code_label": "Postleitzahl",
+                "edit": "Profil bearbeiten",
+                "save": "Speichern",
+                "cancel": "Stornieren",
+                "male": "Mann",
+                "female": "Frau",
+                "other": "Andere"
             }            
         }
     }

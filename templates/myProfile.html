@@ -33,7 +33,7 @@
 
     <!-- Edit Profile Button -->
     <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#editModal">
-        Edit Profile
+        {{ textVars["edit"] }}
     </button>
 
     <!-- Bootstrap Modal -->
@@ -41,7 +41,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Edit Profile</h5>
+                    <h5 class="modal-title" id="modalLabel">{{ textVars["edit"] }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="POST" action="{{ url_for('content_section', section='myProfile') }}">
@@ -72,17 +72,17 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="gender" id="gender_male" value="M" 
                                             {% if value == "M" %} checked {% endif %}>
-                                        <label class="form-check-label" for="gender_male">Male</label>
+                                        <label class="form-check-label" for="gender_male">{{ textVars["male"] }}</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="gender" id="gender_female" value="F" 
                                             {% if value == "F" %} checked {% endif %}>
-                                        <label class="form-check-label" for="gender_female">Female</label>
+                                        <label class="form-check-label" for="gender_female">{{ textVars["female"] }}</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="gender" id="gender_other" value="O" 
                                             {% if value == "O" %} checked {% endif %}>
-                                        <label class="form-check-label" for="gender_other">Other</label>
+                                        <label class="form-check-label" for="gender_other">{{ textVars["other"] }}</label>
                                     </div>
                                 </div>
                             
@@ -97,8 +97,8 @@
                         
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ textVars["cancel"]}}</button>
+                        <button type="submit" class="btn btn-success">{{ textVars["save"]}}</button>
                     </div>
                 </form>
             </div>
