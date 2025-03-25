@@ -55,15 +55,15 @@
   </div>
 
   <div class="mt-4">
-    <h2>Your Running Stats</h2>
-    <p>Here's a quick look at your performance over the last month:</p>
+    <h2>{{ textVars["stats"]}}</h2>
+    <p>{{ textVars["stats_desc"]}}</p>
     <ul>
-      <li><strong>Total Distance:</strong> 150 km</li>
-      <li><strong>Total Time:</strong> 12 hours 30 minutes</li>
-      <li><strong>Average Pace:</strong> 5:00 per km</li>
-      <li><strong>Best Time:</strong> 22:30 (5 km)</li>
+      <li><strong>{{ textVars["distance"]}}:</strong> 150 km</li>
+      <li><strong>{{ textVars["time"]}}:</strong> 12 hours 30 minutes</li>
+      <li><strong>{{ textVars["pace"]}}:</strong> 5:00 per km</li>
+      <li><strong>{{ textVars["best"]}}:</strong> 22:30 (5 km)</li>
     </ul>
-    <a href="{{ url_for('content_section', section='runs') }}" class="btn btn-primary">See Full Stats</a>
+    <a href="{{ url_for('content_section', section='runs') }}" class="btn btn-primary">{{ textVars["see_full_stats"]}}</a>
   </div>
 
 {% endblock %}

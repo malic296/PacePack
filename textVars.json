@@ -19,19 +19,31 @@
         },
         "home": {
             "en": {
-                "title": "Welcome to Our Running Club",
-                "description": "Explore our community and stay updated with the latest events.",
-                "text": "Join our passionate community of runners. Whether you're a beginner or an experienced athlete, we have something for you!"
+                "stats": "Your Running Stats",
+                "stats_desc": "Here's a quick look at your performance over the last month:",
+                "distance": "Total Distance",
+                "time": "Total Time",
+                "pace": "Avarage Pace",
+                "best": "Best Time",
+                "see_full_stats": "See Full Stats"
             },
             "cz": {
-                "title": "Vítejte v našem běžeckém klubu",
-                "description": "Prozkoumejte naši komunitu a buďte v obraze s nejnovějšími akcemi.",
-                "text": "Připojte se k naší vášnivé běžecké komunitě. Ať už jste začátečník nebo zkušený atlet, máme pro vás něco!"
+                "stats": "Vaše běžecké statistiky",
+                "stats_desc": "Rychlý pohled na váš výkon za poslední měsíc:",
+                "distance": "Celková vzdálenost",
+                "time": "Celkový čas",
+                "pace": "Průměrné tempo",
+                "best": "Nejlepší čas",
+                "see_full_stats": "Zobrazit všechny statistiky"
             },
             "de": {
-                "title": "Willkommen in unserem Laufclub",
-                "description": "Entdecken Sie unsere Gemeinschaft und bleiben Sie mit den neuesten Veranstaltungen auf dem Laufenden.",
-                "text": "Schließen Sie sich unserer leidenschaftlichen Laufgemeinschaft an. Egal, ob Sie Anfänger oder erfahrener Athlet sind, wir haben etwas für Sie!"
+                "stats": "Ihre Laufstatistiken",
+                "stats_desc": "Ein schneller Überblick über Ihre Leistung im letzten Monat:",
+                "distance": "Gesamtdistanz",
+                "time": "Gesamtzeit",
+                "pace": "Durchschnittstempo",
+                "best": "Beste Zeit",
+                "see_full_stats": "Alle Statistiken ansehen"    
             }
         },
         "races": {
