@@ -1,5 +1,22 @@
 {
     "pages": {
+        "content": {
+            "en": {
+                "index": "Main menu",
+                "login": "Login",
+                "registration": "Registration"
+            },
+            "cz": {
+                "index": "Hlavní menu",
+                "login": "Přihlášení",
+                "registration": "Registrace"
+            },
+            "de": {
+                "index": "Hauptmenü",
+                "login": "Login",
+                "registration": "Registration"
+            }
+        },
         "home": {
             "en": {
                 "title": "Welcome to Our Running Club",
@@ -53,24 +70,54 @@
         },
         "index": {
             "en": {
-                "title": "Training Runs",
-                "description": "Find a group run or plan your own.",
-                "text": "Stay fit with our scheduled training runs. Join a local group or set your own pace!"
+                "title": "Running performance tracking app",
+                "login": "Login",
+                "registration": "Registration",
+                "overview": "Overview",
+                "races": "Upcoming Races",
+                "races_desc": "Check out the upcoming races you can join.",
+                "view_races": "View Races",
+                "profile": "My Profile",
+                "profile_desc": "View and manage your past and upcoming races.",
+                "view_profile": "View Profile",
+                "run_clubs": "Upcoming Run Clubs",
+                "run_clubs_desc": "Join or check upcoming running clubs near you.",
+                "join_run_clubs": "Join Run Clubs"
             },
             "cz": {
-                "title": "Tréninkové běhy",
-                "description": "Najděte skupinový běh nebo si naplánujte vlastní.",
-                "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!"
+                "title": "Aplikace pro sledování běžeckého výkonu",
+                "login": "Přihlášení",
+                "registration": "Registrace",
+                "overview": "Přehled",
+                "races": "Nadcházející závody",
+                "races_desc": "Podívejte se na nadcházející závody, kterých se můžete zúčastnit.",
+                "view_races": "Zobrazit závody",
+                "profile": "Můj profil",
+                "profile_desc": "Zobrazte a spravujte své minulé i nadcházející závody.",
+                "view_profile": "Zobrazit profil",
+                "run_clubs": "Nadcházející běžecké kluby",
+                "run_clubs_desc": "Připojte se k nadcházejícím výběhům ve vašem okolí.",
+                "join_run_clubs": "Připojit se"
             },
             "de": {
-                "title": "Trainingseinheiten",
-                "description": "Finden Sie einen Gruppenlauf oder planen Sie Ihren eigenen.",
-                "text": "Bleiben Sie fit mit unseren geplanten Trainingseinheiten. Schließen Sie sich einer lokalen Gruppe an oder setzen Sie Ihr eigenes Tempo!"
+                "title": "App zur Laufleistungsverfolgung",
+                "login": "Login",
+                "registration": "Registration",
+                "overview": "Übersicht",
+                "races": "Bevorstehende Rennen",
+                "races_desc": "Schauen Sie sich die bevorstehenden Rennen an, an denen Sie teilnehmen können.",
+                "view_races": "Rennen ansehen",
+                "profile": "Mein Profil",
+                "profile_desc": "Sehen Sie Ihre vergangenen und kommenden Rennen ein und verwalten Sie sie.",
+                "view_profile": "Profil ansehen",
+                "run_clubs": "Bevorstehende Laufgruppen",
+                "run_clubs_desc": "Treten Sie einer Laufgruppe bei oder sehen Sie sich bevorstehende Treffen in Ihrer Nähe an.",
+                "join_run_clubs": "Laufgruppen beitreten"
             }
         },
         "login": {
             "en": {
-                "title": "Training Runs",
+                "title": "Login",
                 "description": "Find a group run or plan your own.",
                 "text": "Stay fit with our scheduled training runs. Join a local group or set your own pace!",
                 "email": "Email",
@@ -78,7 +125,7 @@
                 "submit": "Submit"
             },
             "cz": {
-                "title": "Tréninkové běhy",
+                "title": "Přihlášení",
                 "description": "Najděte skupinový běh nebo si naplánujte vlastní.",
                 "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!",
                 "email": "Email",
@@ -86,7 +133,7 @@
                 "submit": "Potvrdit"
             },
             "de": {
-                "title": "Trainingseinheiten",
+                "title": "Login",
                 "description": "Finden Sie einen Gruppenlauf oder planen Sie Ihren eigenen.",
                 "text": "Bleiben Sie fit mit unseren geplanten Trainingseinheiten. Schließen Sie sich einer lokalen Gruppe an oder setzen Sie Ihr eigenes Tempo!",
                 "email": "Email",

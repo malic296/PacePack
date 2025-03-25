@@ -128,7 +128,7 @@ def loginSection(textVars):
             flash("Wrong credentials.", "danger")
             return redirect(url_for("content_section", section="login"))
         
-    return render_template("login.html", section="login", form=form)
+    return render_template("login.html", section="login", textVars=textVars, form=form)
 
 def registerSection(textVars):
     form = RegisterForm(lang=session.get("lang", "en"))
@@ -181,7 +181,7 @@ def registerSection(textVars):
         else:
             flash("Error sending verification email. Please try again.", "danger")
 
-    return render_template("register.html", section="register", form=form)
+    return render_template("register.html", section="register", textVars=textVars, form=form)
 
 def verifySection(textVars):
     form = VerificationForm()

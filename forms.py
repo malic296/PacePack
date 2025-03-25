@@ -42,13 +42,18 @@ class RegisterForm(FlaskForm):
         self.country.label.text = get_translation("register", "country", lang)
         self.streetname.label.text = get_translation("register", "streetname", lang)
         self.submit.label.text = get_translation("register", "submit", lang)
+        male_label = get_translation("myProfile", "male", lang)
+        female_label = get_translation("myProfile", "female", lang)
+        other_label = get_translation("myProfile", "other", lang)
+        self.gender.choices = [('M', male_label), ('F', female_label), ('O', other_label)]
 
+    
     name = StringField(validators=[DataRequired()])
     surname = StringField(validators=[DataRequired()])
     email = StringField(validators=[DataRequired(), Email()])
     password = PasswordField(validators=[DataRequired()])
     confirmPassword = PasswordField(validators=[DataRequired(), EqualTo('password')])
-    gender = RadioField(choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], validators=[DataRequired()])
+    gender = RadioField(validators=[DataRequired()])
     telephone = StringField(validators=[DataRequired()])
     telephoneCode = StringField(validators=[DataRequired()])
     postalcode = StringField(validators=[DataRequired()])
