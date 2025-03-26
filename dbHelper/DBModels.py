@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, declarative_base
 
 Base = declarative_base()
@@ -45,3 +45,17 @@ class User(Base):
 
     def __repr__(self):
         return f"<User(id={self.id}, name='{self.name}', email='{self.email}')>"
+    
+class Run(Base):
+    __tablename__ = 'run'
+
+    id = Column(Integer, primary_key=True)
+    addressid = Column(Integer, ForeignKey('address.id'), nullable=False)
+    date = Column(Date, nullable=False)
+    name = Column(String(50), nullable=False)
+    description = Column(String(100), nullable=True)
+
+    address = relationship("Address", backref="runs")
+
+    def __repr__(self):
+        return f"<Run(name={self.name}, date={self.date})>"

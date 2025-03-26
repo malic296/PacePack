@@ -3,43 +3,18 @@
 {% block content %}
   <h1>{{ textVars["title"] }}</h1>
   <p class="lead">{{ textVars["description"]}} </p>
-
-  <div class="list-group">
-    <!-- Run 1 -->
-    <div class="list-group-item">
-      <h5 class="mb-1">5K Fun Run - 1st June 2025</h5>
-      <p><strong>Date:</strong> 1st June 2025</p>
-      <p><strong>Location:</strong> Central Park, New York, USA</p>
-      <p><strong>Distance:</strong> 5 km</p>
-      <p><strong>Description:</strong> A fun 5K run for all ages and abilities. Join the community in Central Park for a great time, whether you're running or walking.</p>
-      <a href="#" class="btn btn-primary">Register Now</a>
-    </div>
-
-    <!-- Run 2 -->
-    <div class="list-group-item">
-      <h5 class="mb-1">Charity 10K - 10th June 2025</h5>
-      <p><strong>Date:</strong> 10th June 2025</p>
-      <p><strong>Location:</strong> Hyde Park, London, UK</p>
-      <p><strong>Distance:</strong> 10 km</p>
-      <p><strong>Description:</strong> Join us for a 10K run to raise funds for a great cause! Every step you take will contribute to supporting local charities.</p>
-      <a href="#" class="btn btn-primary">Register Now</a>
-    </div>
-
-    <!-- Run 3 -->
-    <div class="list-group-item">
-      <h5 class="mb-1">City 15K Run - 20th July 2025</h5>
-      <p><strong>Date:</strong> 20th July 2025</p>
-      <p><strong>Location:</strong> Berlin, Germany</p>
-      <p><strong>Distance:</strong> 15 km</p>
-      <p><strong>Description:</strong> A scenic 15K route that takes you through the heart of Berlin, with beautiful views and a challenging but fun course.</p>
-      <a href="#" class="btn btn-primary">Register Now</a>
-    </div>
-  </div>
-
-  <!-- Add more runs in the future as database data -->
-  <div class="mt-4">
-    <h3>More runs coming soon...</h3>
-    <p>Stay tuned for additional running events. We will keep updating this page with new runs!</p>
-  </div>
-
+  
+    <ul>
+      {% for run in runs %}
+      <br>
+            <li>
+                <strong>{{ run.name }}</strong> - {{ run.date }} <br>
+                <em>{{ run.description }}</em>
+            </li>
+        {% else %}
+            <li>{{ textVars["text"]}}</li>
+        {% endfor %}
+    </ul>
+  
+  
 {% endblock %}

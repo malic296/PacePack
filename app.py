@@ -10,7 +10,8 @@ from datetime import datetime, timedelta
 from dbHelper.services.UserService import UserService
 from dbHelper.services.AddressService import AddressService
 from dbHelper.services.PasswordService import PasswordService
-from dbHelper.DBModels import User
+from dbHelper.services.RunService import RunService
+from dbHelper.DBModels import User, Run
 
 load_dotenv("environment.env")
 
@@ -28,6 +29,7 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_DEFAULT_SENDER")
 user_service = UserService()
 address_service = AddressService()
 password_service = PasswordService()
+run_service = RunService()
 
 mail = Mail(app)
 
@@ -271,8 +273,28 @@ def indexSection(textVars):
     return render_template("index.html", section="index", textVars=textVars)
 def racesSection(textVars):
     return render_template("races.html", section="races", textVars=textVars)
+
 def runsSection(textVars):
-    return render_template("runs.html", section="runs", textVars=textVars)
+    """Display all runs and handle creating a new one."""
+    if request.method == "POST":
+        # Get data from the form (or JSON in case of an API call)
+        address_id = request.form.get("address_id")
+        date = request.form.get("date")
+        name = request.form.get("name")
+        description = request.form.get("description")
+
+        try:
+            # Create a new run
+            new_run = run_service.create_run(address_id, date, name, description)
+            flash(f"Run '{new_run.name}' created successfully!", "success")
+            return redirect(url_for("runs_section", section="runs"))
+        except Exception as e:
+            flash(f"Error creating run: {str(e)}", "danger")
+            return redirect(url_for("runs_section", section="runs"))
+
+    # Fetch all runs to display
+    runs = run_service.get_all_runs()
+    return render_template("runs.html", section="runs", textVars=textVars, runs=runs)
 
 if __name__ == "__main__":
     app.run(debug=True)
