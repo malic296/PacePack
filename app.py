@@ -2,7 +2,7 @@ import os
 import json
 from flask import Flask, render_template, redirect, request, url_for, flash, session
 from flask_mail import Mail
-from forms import LoginForm, RegisterForm, VerificationForm, EditProfileForm
+from forms import LoginForm, RegisterForm, VerificationForm, EditProfileForm, RunForm
 from flask_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
 from mailService import send_verification_code,generate_verification_code
@@ -275,26 +275,53 @@ def racesSection(textVars):
     return render_template("races.html", section="races", textVars=textVars)
 
 def runsSection(textVars):
-    """Display all runs and handle creating a new one."""
-    if request.method == "POST":
-        # Get data from the form (or JSON in case of an API call)
-        address_id = request.form.get("address_id")
-        date = request.form.get("date")
-        name = request.form.get("name")
-        description = request.form.get("description")
+    """Display all runs and handle creating, editing, and deleting a run."""
+    form = RunForm()
 
-        try:
-            # Create a new run
-            new_run = run_service.create_run(address_id, date, name, description)
-            flash(f"Run '{new_run.name}' created successfully!", "success")
-            return redirect(url_for("runs_section", section="runs"))
-        except Exception as e:
-            flash(f"Error creating run: {str(e)}", "danger")
-            return redirect(url_for("runs_section", section="runs"))
+    if request.method == "POST":
+        if "delete_run_id" in request.form:
+            # Handle run deletion
+            run_id = request.form.get("delete_run_id")
+            deleted_run = run_service.get_run_by_id(run_id)  # Fetch run before deleting
+            if deleted_run:
+                success = run_service.delete_run(run_id)
+                if success:
+                    flash(f"Run '{deleted_run.name}' deleted successfully!", "success")
+                else:
+                    flash("Error deleting run.", "danger")
+            else:
+                flash("Run not found.", "danger")
+        else:
+            # Handle run creation or update
+            run_id = request.form.get("run_id")
+            streetname = request.form.get("streetname")
+            postalcode = request.form.get("postalcode")
+            country = request.form.get("country")
+            date = request.form.get("date")
+            name = request.form.get("name")
+            description = request.form.get("description")
+
+            if run_id:
+                try:
+                    updated_run = run_service.update_run(run_id, streetname, postalcode, country, date, name, description)
+                    flash(f"Run '{updated_run.name}' updated successfully!", "success")
+                except Exception as e:
+                    flash(f"Error updating run: {str(e)}", "danger")
+            else:
+                try:
+                    new_run = run_service.create_run(streetname, postalcode, country, date, name, description)
+                    flash(f"Run '{new_run.name}' created successfully!", "success")
+                except Exception as e:
+                    flash(f"Error creating run: {str(e)}", "danger")
+
+        return redirect(url_for("content_section", section="runs"))
 
     # Fetch all runs to display
     runs = run_service.get_all_runs()
-    return render_template("runs.html", section="runs", textVars=textVars, runs=runs)
+    return render_template("runs.html", section="runs", textVars=textVars, runs=runs, form=form)
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

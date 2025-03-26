@@ -1,20 +1,184 @@
 {% extends "content.html" %}
-{% block title %}Runs - Flask App{% endblock %}
+
+{% block title %}
+    {{ textVars["title"] }}
+{% endblock %}
+
 {% block content %}
-  <h1>{{ textVars["title"] }}</h1>
-  <p class="lead">{{ textVars["description"]}} </p>
+<div class="container mt-4">
   
-    <ul>
-      {% for run in runs %}
-      <br>
-            <li>
-                <strong>{{ run.name }}</strong> - {{ run.date }} <br>
-                <em>{{ run.description }}</em>
-            </li>
-        {% else %}
-            <li>{{ textVars["text"]}}</li>
-        {% endfor %}
-    </ul>
-  
-  
+  <div class="mb-4 d-flex justify-content-between align-items-center">
+    <div>
+        <h2 class="mb-1">{{ textVars['runs_list'] }}</h2>
+        <p class="text-muted mb-0">{{ textVars['description'] }}</p>
+    </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+        <i class="bi bi-plus-circle"></i> {{ textVars['create_run'] }}
+    </button>
+  </div>
+
+  <!-- Runs List Table -->
+  <table class="table table-striped">
+      <thead>
+          <tr>
+              <th scope="col">{{ textVars['run_name_label'] }}</th>
+              <th scope="col">{{ textVars['run_date_label'] }}</th>
+              <th scope="col">{{ textVars['description_label'] }}</th>
+              <th scope="col">{{ textVars['address_label'] }}</th>
+              <th scope="col">{{ textVars['edit'] }}</th>
+              <th scope="col">{{ textVars['delete'] }}</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for run in runs %}
+          <tr>
+              <td>{{ run.name }}</td>
+              <td>{{ run.date.strftime('%Y-%m-%d %H:%M') }}</td>
+              <td>{{ run.description }}</td>
+              <td>{{ run.address.streetname }}, {{ run.address.postalcode }}</td>
+              <td>
+                  <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRunModal{{ run.id }}" onclick="populateEditRunForm('{{ run.id }}', '{{ run.name }}', '{{ run.date }}', '{{ run.description }}', '{{ run.address.streetname }}', '{{ run.address.postalcode }}')">
+                      <i class="bi bi-pencil"></i>
+                  </button>
+              </td>
+              <td>
+                  <form method="POST" action="{{ url_for('content_section', section='runs') }}">
+                      <input type="hidden" name="delete_run" value="{{ run.id }}">
+                      <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ run.id }}">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                  </form>
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>
+
+  <!-- Create Run Modal -->
+  <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="createModalLabel">{{ textVars["create_run"] }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form method="POST" action="{{ url_for('content_section', section='runs') }}">
+                  {{ form.hidden_tag() }} 
+                  <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">{{ textVars["run_name_label"] }}</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="date" class="form-label">{{ textVars["run_date_label"] }}</label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">{{ textVars["description_label"] }}</label>
+                        <textarea class="form-control" id="description" name="description" required>{{ form.description.data }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                      <label for="streetname" class="form-label">{{ textVars["street_name_label"] }}</label>
+                      <input type="text" class="form-control" id="streetname" name="streetname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="country" class="form-label">{{ textVars["country_label"] }}</label>
+                        <input type="text" class="form-control" id="country" name="country" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postalcode" class="form-label">{{ textVars["postal_code_label"] }}</label>
+                        <input type="text" class="form-control" id="postalcode" name="postalcode" required>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ textVars["cancel"] }}</button>
+                      <button type="submit" class="btn btn-success">{{ textVars["save"] }}</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+
+  <!-- Edit Run Modals -->
+  {% for run in runs %}
+    <div class="modal fade" id="editRunModal{{ run.id }}" tabindex="-1" aria-labelledby="editRunModalLabel{{ run.id }}" aria-hidden="true">
+      <div class="modal-dialog">
+          <form method="POST" action="{{ url_for('content_section', section='runs') }}">
+            {{ form.hidden_tag() }}
+            <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="editRunModalLabel">{{ textVars['edit_run'] }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <input type="hidden" name="run_id" id="run_id" value="{{ run.id }}">
+
+                  <div class="mb-3">
+                      <label for="name" class="form-label">{{ textVars['run_name_label'] }}</label>
+                      <input type="text" class="form-control" id="name" name="name" value="{{ run.name }}" required>
+                  </div>
+
+                  <div class="mb-3">
+                      <label for="date" class="form-label">{{ textVars['run_date_label'] }}</label>
+                      <input type="date" class="form-control" id="date" name="date" value="{{ run.date }}" required>
+                  </div>
+
+                  <div class="mb-3">
+                      <label for="description" class="form-label">{{ textVars['description_label'] }}</label>
+                      <textarea class="form-control" id="description" name="description" required>{{ run.description }}</textarea>
+                  </div>
+
+                  <!-- Address Fields (Aligned vertically in smaller space) -->
+                  
+                  <div class="mb-3">
+                      <label for="streetname" class="form-label">{{ textVars['street_name_label'] }}</label>
+                      <input type="text" class="form-control" id="streetname" name="streetname" value="{{ run.address.streetname }}" required>
+                  </div>
+
+                  <div class="mb-3">
+                      <label for="postalcode" class="form-label">{{ textVars['postal_code_label'] }}</label>
+                      <input type="text" class="form-control" id="postalcode" name="postalcode" value="{{ run.address.postalcode }}" required>
+                  </div>
+                  
+
+                  <div class="mb-3">
+                      <label for="country" class="form-label">{{ textVars['country_label'] }}</label>
+                      <input type="text" class="form-control" id="country" name="country" value="{{ run.address.country }}" required>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ textVars['cancel'] }}</button>
+                    <button type="submit" class="btn btn-primary">{{ textVars['save'] }}</button>
+                </div>
+              </div>
+          </form>
+      </div>
+    </div>
+  {% endfor %}
+
+  <!-- Delete Run Modals -->
+  {% for run in runs %}
+      <div class="modal fade" id="deleteModal{{ run.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ run.id }}" aria-hidden="true">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="deleteModalLabel{{ run.id }}">{{ textVars["delete_run"] }}</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <form method="POST" action="{{ url_for('content_section', section='runs') }}">
+                    {{ form.hidden_tag() }}
+                    <input type="hidden" name="delete_run_id" value="{{ run.id }}">
+                    <div class="modal-body">
+                        <p>{{ textVars["delete_run_confirmation"] }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ textVars["cancel"] }}</button>
+                        <button type="submit" class="btn btn-danger">{{ textVars["delete"] }}</button>
+                    </div>
+                </form>
+              </div>
+          </div>
+      </div>
+  {% endfor %}
 {% endblock %}

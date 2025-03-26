@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField, RadioField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, RadioField, DateField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 import json
 from flask import session
@@ -84,3 +84,11 @@ class EditProfileForm(FlaskForm):
     streetname = StringField("Street Name", validators=[DataRequired()])
     postalcode = StringField("Postal Code", validators=[DataRequired()])
     submit = SubmitField("Save Changes")
+
+class RunForm(FlaskForm):
+    """Form for creating and editing runs."""
+    name = StringField("Run Name", validators=[DataRequired()])
+    date = DateField("Date", format='%Y-%m-%d', validators=[DataRequired()])
+    description = TextAreaField("Description", validators=[DataRequired()])
+    address_id = StringField("Address ID", validators=[DataRequired()])
+    submit = SubmitField("Save")

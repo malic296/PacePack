@@ -17,51 +17,76 @@ class RunService:
     def __init__(self):
         self.session = SessionLocal()
 
-    def create_run(self, address_id, date, name, description):
-        """Creates a new run and saves it to the database."""
-        new_run = Run(
-            addressid=address_id,
-            date=date,
-            name=name,
-            description=description
-        )
+    def create_run(self, streetname, postalcode, country, date, name, description):
+        # Check if the address already exists
+        existing_address = self.session.query(Address).filter_by(streetname=streetname, postalcode=postalcode, country=country).first()
+
+        if not existing_address:
+            new_address = Address(streetname=streetname, postalcode=postalcode, country=country)
+            self.session.add(new_address)
+            self.session.commit()
+        else:
+            new_address = existing_address
+
+        new_run = Run(addressid=new_address.id, date=date, name=name, description=description)
         self.session.add(new_run)
         self.session.commit()
-        self.session.refresh(new_run)
         return new_run
 
-    def get_run_by_id(self, run_id: int) -> Run:
+    def get_run_by_id(self, run_id):
         """Fetches a run by its ID."""
-        return self.session.query(Run).filter(Run.id == run_id).first()
+        return self.session.query(Run).filter(Run.id == run_id).options(joinedload(Run.address)).first()
 
     def get_all_runs(self):
         """Returns all runs from the database."""
         return self.session.query(Run).options(joinedload(Run.address)).all()
 
-    def update_run(self, run_id, address_id, date, name, description):
-        """Updates a run's details."""
-        run = self.get_run_by_id(run_id)
+    def update_run(self, run_id, streetname, postalcode, country, date, name, description):
+        run = self.session.query(Run).filter_by(id=run_id).first()
         if not run:
-            raise ValueError(f"Run with ID {run_id} not found.")
-        if address_id:
-            run.addressid = address_id
-        if date:
-            run.date = date
-        if name:
-            run.name = name
-        if description:
-            run.description = description
+            raise Exception("Run not found")
+
+        # Check if the address exists
+        existing_address = self.session.query(Address).filter_by(streetname=streetname, postalcode=postalcode, country=country).first()
+        
+        if not existing_address:
+            new_address = Address(streetname=streetname, postalcode=postalcode, country=country)
+            self.session.add(new_address)
+            self.session.commit()
+        else:
+            new_address = existing_address
+
+        run.addressid = new_address.id
+        run.date = date
+        run.name = name
+        run.description = description
+
         self.session.commit()
         return run
 
-    def deleteRun(self, run_id: int) -> bool:
+    def delete_run(self, run_id):
         """Deletes a run by ID."""
-        run = self.get_run_by_id(run_id)
-        if not run:
-            raise ValueError(f"Run with ID {run_id} not found.")
-        self.session.delete(run)
-        self.session.commit()
-        return True
+        try:
+            run = self.get_run_by_id(run_id)
+            if not run:
+                raise ValueError(f"Run with ID {run_id} not found.")
+            
+            address_id = run.addressid
+            self.session.delete(run)
+            self.session.commit()
+
+            # Check if the address is still used
+            address_in_use = self.session.query(Run).filter_by(addressid=address_id).first()
+            if not address_in_use:
+                address = self.session.query(Address).filter_by(id=address_id).first()
+                if address:
+                    self.session.delete(address)
+                    self.session.commit()
+
+            return True
+
+        except Exception as e:
+            raise Exception(f"Failed to delete run: {str(e)}")
     
     def close(self):
         self.session.close()
