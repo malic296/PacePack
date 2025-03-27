@@ -37,7 +37,7 @@
           {% for run in runs %}
           <tr>
               <td>{{ run.name }}</td>
-              <td>{{ run.date.strftime('%Y-%m-%d %H:%M') }}</td>
+              <td>{{ run.date.strftime('%d-%m-%Y') }}</td>
               <td>{{ run.description }}</td>
               <td>{{ run.address.streetname }}, {{ run.address.postalcode }}</td>
               {% if g.current_user.isadmin or (g.current_user.id == run.user_id) %}
