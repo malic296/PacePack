@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, render_template, redirect, request, url_for, flash, session
+from flask import Flask, render_template, redirect, request, url_for, flash, session, g
 from flask_mail import Mail
 from forms import LoginForm, RegisterForm, VerificationForm, EditProfileForm, RunForm
 from flask_wtf.csrf import CSRFProtect
@@ -32,6 +32,12 @@ password_service = PasswordService()
 run_service = RunService()
 
 mail = Mail(app)
+
+@app.before_request
+def load_current_user():
+    """Load the current user before each request."""
+    g.current_user = get_current_user()
+    print(f"Current User: {g.current_user}")  # Debugging line
 
 @app.route("/")
 def index():
@@ -127,7 +133,7 @@ def loginSection(textVars):
             else:
                 flash("Error sending verification email. Please try again.", "danger")
         else:
-            flash("Wrong credentials.", "danger")
+            flash("Wrong email or password.", "danger")
             return redirect(url_for("content_section", section="login"))
         
     return render_template("login.html", section="login", textVars=textVars, form=form)
@@ -309,7 +315,7 @@ def runsSection(textVars):
                     flash(f"Error updating run: {str(e)}", "danger")
             else:
                 try:
-                    new_run = run_service.create_run(streetname, postalcode, country, date, name, description)
+                    new_run = run_service.create_run(streetname, postalcode, country, date, name, description, g.current_user.id)
                     flash(f"Run '{new_run.name}' created successfully!", "success")
                 except Exception as e:
                     flash(f"Error creating run: {str(e)}", "danger")
@@ -319,6 +325,14 @@ def runsSection(textVars):
     # Fetch all runs to display
     runs = run_service.get_all_runs()
     return render_template("runs.html", section="runs", textVars=textVars, runs=runs, form=form)
+
+def get_current_user():
+    user_token = session.get("user_token")
+    if user_token:
+        user = user_service.getUserInfo(user_token)
+        print(f"User {user.name} is admin: {user.isadmin}")  # Check if user info is being returned
+        return user
+    return None
 
 
 

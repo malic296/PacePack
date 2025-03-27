@@ -54,8 +54,10 @@ class Run(Base):
     date = Column(Date, nullable=False)
     name = Column(String(50), nullable=False)
     description = Column(String(100), nullable=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     address = relationship("Address", backref="runs")
+    user = relationship("User")
 
     def __repr__(self):
         return f"<Run(name={self.name}, date={self.date})>"

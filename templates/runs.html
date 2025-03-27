@@ -12,9 +12,11 @@
         <h2 class="mb-1">{{ textVars['runs_list'] }}</h2>
         <p class="text-muted mb-0">{{ textVars['description'] }}</p>
     </div>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
-        <i class="bi bi-plus-circle"></i> {{ textVars['create_run'] }}
-    </button>
+    {% if g.current_user.isadmin or g.current_user.cancreateruns %}
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+          <i class="bi bi-plus-circle"></i> {{ textVars['create_run'] }}
+      </button>
+    {% endif %}
   </div>
 
   <!-- Runs List Table -->
@@ -25,8 +27,10 @@
               <th scope="col">{{ textVars['run_date_label'] }}</th>
               <th scope="col">{{ textVars['description_label'] }}</th>
               <th scope="col">{{ textVars['address_label'] }}</th>
+              {% if g.current_user.isadmin or g.current_user.cancreateruns %}
               <th scope="col">{{ textVars['edit'] }}</th>
               <th scope="col">{{ textVars['delete'] }}</th>
+              {% endif %}
           </tr>
       </thead>
       <tbody>
@@ -36,11 +40,14 @@
               <td>{{ run.date.strftime('%Y-%m-%d %H:%M') }}</td>
               <td>{{ run.description }}</td>
               <td>{{ run.address.streetname }}, {{ run.address.postalcode }}</td>
+              {% if g.current_user.isadmin or (g.current_user.id == run.user_id) %}
+              <!-- Admin or user who created the run can edit it -->
               <td>
                   <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRunModal{{ run.id }}" onclick="populateEditRunForm('{{ run.id }}', '{{ run.name }}', '{{ run.date }}', '{{ run.description }}', '{{ run.address.streetname }}', '{{ run.address.postalcode }}')">
                       <i class="bi bi-pencil"></i>
                   </button>
               </td>
+              <!-- Admin or user who created the run can delete it -->
               <td>
                   <form method="POST" action="{{ url_for('content_section', section='runs') }}">
                       <input type="hidden" name="delete_run" value="{{ run.id }}">
@@ -49,6 +56,11 @@
                       </button>
                   </form>
               </td>
+              {% else %}
+              <!-- Empty space to maintain alignment for runs created by others -->
+              <td class="empty-cell"></td>
+              <td class="empty-cell"></td>
+              {% endif %}
           </tr>
           {% endfor %}
       </tbody>
