@@ -17,7 +17,7 @@ class RunService:
     def __init__(self):
         self.session = SessionLocal()
 
-    def create_run(self, streetname, postalcode, country, date, name, description, user_id):
+    def create_run(self, streetname, postalcode, country, date, name, description):
         # Check if the address already exists
         existing_address = self.session.query(Address).filter_by(streetname=streetname, postalcode=postalcode, country=country).first()
 
@@ -28,7 +28,7 @@ class RunService:
         else:
             new_address = existing_address
 
-        new_run = Run(addressid=new_address.id, date=date, name=name, description=description, user_id=user_id)
+        new_run = Run(addressid=new_address.id, date=date, name=name, description=description)
         self.session.add(new_run)
         self.session.commit()
         return new_run

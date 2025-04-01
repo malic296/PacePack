@@ -11,6 +11,7 @@ from dbHelper.services.UserService import UserService
 from dbHelper.services.AddressService import AddressService
 from dbHelper.services.PasswordService import PasswordService
 from dbHelper.services.RunService import RunService
+from dbHelper.services.UserRunService import UserRunService
 from dbHelper.DBModels import User, Run
 
 load_dotenv("environment.env")
@@ -30,14 +31,13 @@ user_service = UserService()
 address_service = AddressService()
 password_service = PasswordService()
 run_service = RunService()
+user_run_service = UserRunService()
 
 mail = Mail(app)
 
 @app.before_request
 def load_current_user():
-    """Load the current user before each request."""
     g.current_user = get_current_user()
-    print(f"Current User: {g.current_user}")  # Debugging line
 
 @app.route("/")
 def index():
@@ -315,8 +315,9 @@ def runsSection(textVars):
                     flash(f"Error updating run: {str(e)}", "danger")
             else:
                 try:
-                    new_run = run_service.create_run(streetname, postalcode, country, date, name, description, g.current_user.id)
+                    new_run = run_service.create_run(streetname, postalcode, country, date, name, description)
                     flash(f"Run '{new_run.name}' created successfully!", "success")
+                    user_run_service.create_run_and_add_creator(g.current_user.id, new_run.id)
                 except Exception as e:
                     flash(f"Error creating run: {str(e)}", "danger")
 
@@ -324,7 +325,7 @@ def runsSection(textVars):
 
     # Fetch all runs to display
     runs = run_service.get_all_runs()
-    return render_template("runs.html", section="runs", textVars=textVars, runs=runs, form=form)
+    return render_template("runs.html", section="runs", textVars=textVars, runs=runs, form=form, user_run_service=user_run_service)
 
 def get_current_user():
     user_token = session.get("user_token")

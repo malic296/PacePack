@@ -40,7 +40,8 @@
               <td>{{ run.date.strftime('%d-%m-%Y') }}</td>
               <td>{{ run.description }}</td>
               <td>{{ run.address.streetname }}, {{ run.address.postalcode }}</td>
-              {% if g.current_user.isadmin or (g.current_user.id == run.user_id) %}
+              {% set user_run = user_run_service.get_user_run_by_run_id(run.id) %}
+              {% if g.current_user.isadmin or user_run %}
               <!-- Admin or user who created the run can edit it -->
               <td>
                   <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRunModal{{ run.id }}" onclick="populateEditRunForm('{{ run.id }}', '{{ run.name }}', '{{ run.date }}', '{{ run.description }}', '{{ run.address.streetname }}', '{{ run.address.postalcode }}')">

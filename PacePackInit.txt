@@ -1,0 +1,428 @@
+-- Drop all tables if they exist to start with a clean slate
+DROP TABLE IF EXISTS user_race CASCADE;
+DROP TABLE IF EXISTS user_run CASCADE;
+DROP TABLE IF EXISTS payment CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS sponsor CASCADE;
+DROP TABLE IF EXISTS race CASCADE;
+DROP TABLE IF EXISTS team CASCADE;
+DROP TABLE IF EXISTS passwords CASCADE;
+DROP TABLE IF EXISTS category CASCADE;
+DROP TABLE IF EXISTS address CASCADE;
+DROP TABLE IF EXISTS run CASCADE;
+
+-- Create the address table to store address information
+CREATE TABLE address (
+    id         SERIAL PRIMARY KEY,          -- Unique identifier for each address
+    streetname VARCHAR(50) NOT NULL,        -- Street name of the address
+    postalcode VARCHAR(50) NOT NULL,        -- Postal code of the address
+    country    VARCHAR(50) NOT NULL         -- Country of the address
+);
+
+-- Create the category table to store race categories and gender
+CREATE TABLE category (
+    id       SERIAL PRIMARY KEY,            -- Unique identifier for each category
+    category VARCHAR(50) NOT NULL,          -- Name of the category (e.g., Marathon, Half Marathon)
+    gender   CHAR(1) NOT NULL               -- Gender associated with the category (M/F)
+);
+
+-- Create the passwords table to store hashed passwords and salts
+CREATE TABLE passwords (
+    id           SERIAL PRIMARY KEY,        -- Unique identifier for each password entry
+    passwordhash VARCHAR(100) NOT NULL,     -- Hashed password
+    passwordsalt VARCHAR(100) NOT NULL      -- Salt used for hashing
+);
+
+-- Create the payment table to store payment information
+CREATE TABLE payment (
+    id        SERIAL PRIMARY KEY,           -- Unique identifier for each payment
+    price     INTEGER NOT NULL,             -- Amount paid
+    state     CHAR(1) NOT NULL,             -- Payment state (e.g., 'P' for Paid)
+    date      DATE NOT NULL,                -- Date of the payment
+    userid    INTEGER NOT NULL              -- ID of the user making the payment
+);
+
+-- Create the sponsor table to store sponsor information
+CREATE TABLE sponsor (
+    id          SERIAL PRIMARY KEY,         -- Unique identifier for each sponsor
+    name        VARCHAR(30) NOT NULL,       -- Name of the sponsor
+    email       VARCHAR(30) NOT NULL,       -- Email of the sponsor
+    passwordid  INTEGER NOT NULL REFERENCES passwords(id)  -- Reference to the sponsor's password
+);
+
+-- Create the team table to store team information
+CREATE TABLE team (
+    id   SERIAL PRIMARY KEY,               -- Unique identifier for each team
+    name VARCHAR(50) NOT NULL              -- Name of the team
+);
+
+-- Create the users table to store user information
+CREATE TABLE users (
+    id            SERIAL PRIMARY KEY,       -- Unique identifier for each user
+    name          VARCHAR(20) NOT NULL,     -- First name of the user
+    surname       VARCHAR(20) NOT NULL,     -- Last name of the user
+    addressid     INTEGER NOT NULL REFERENCES address(id),  -- Reference to the user's address
+    email         VARCHAR(30) NOT NULL,     -- Email of the user
+    telephone     VARCHAR(15),              -- Telephone number of the user
+    telephonecode VARCHAR(5),               -- Telephone country code
+    isadmin       BOOLEAN NOT NULL,         -- Whether the user is an admin
+    canCreateRuns BOOLEAN NOT NULL,         -- Whether the user can create runs
+    gender        CHAR(1) NOT NULL,         -- Gender of the user (M/F)
+    passwordid    INTEGER NOT NULL REFERENCES passwords(id),  -- Reference to the user's password
+    teamid        INTEGER REFERENCES team(id)
+);
+
+-- Create the race table to store race information
+CREATE TABLE race (
+    id          SERIAL PRIMARY KEY,         -- Unique identifier for each race
+    date        DATE NOT NULL,              -- Date of the race
+    capacity    INTEGER NOT NULL,           -- Maximum number of participants
+    state       INTEGER NOT NULL,           -- State of the race (e.g., active, canceled)
+    name        VARCHAR(50) NOT NULL,       -- Name of the race
+    description VARCHAR(100),               -- Description of the race
+    sponsorid   INTEGER NOT NULL REFERENCES sponsor(id),  -- Reference to the sponsor
+    categoryid  INTEGER NOT NULL REFERENCES category(id),  -- Reference to the category
+    addressid   INTEGER NOT NULL REFERENCES address(id)   -- Reference to the address
+);
+
+-- Create the user_race table to link users to races they participate in
+CREATE TABLE user_race (
+    iduserrace     SERIAL PRIMARY KEY,      -- Unique identifier for each user-race entry
+    paymentid      INTEGER NOT NULL REFERENCES payment(id),  -- Reference to the payment
+    userracenumber INTEGER NOT NULL,        -- User's race number
+    time           INTERVAL,                -- Time taken by the user to complete the race
+    raceid         INTEGER NOT NULL REFERENCES race(id)  -- Reference to the race
+);
+
+-- Create the run table to store run information
+CREATE TABLE run (
+    id          SERIAL PRIMARY KEY,         -- Unique identifier for each run
+    addressid   INTEGER NOT NULL REFERENCES address(id),  -- Reference to the address
+    date        DATE NOT NULL,              -- Date of the run
+    name        VARCHAR(50) NOT NULL,       -- Name of the run
+    description VARCHAR(100)                -- Description of the run
+);
+
+-- Create the user_run table to link users to runs they participate in
+CREATE TABLE user_run (
+    id        SERIAL PRIMARY KEY,           -- Unique identifier for each user-run entry
+    userid    INTEGER NOT NULL REFERENCES users(id),  -- Reference to the user
+    runid     INTEGER NOT NULL REFERENCES run(id),     -- Reference to the run
+    iscreator BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+-- Insert initial data into the category table
+INSERT INTO category (category, gender) VALUES ('Maraton', 'M');
+INSERT INTO category (category, gender) VALUES ('Půlmaraton', 'M');
+INSERT INTO category (category, gender) VALUES ('10 km běh', 'M');
+INSERT INTO category (category, gender) VALUES ('Maraton', 'F');
+INSERT INTO category (category, gender) VALUES ('Půlmaraton', 'F');
+INSERT INTO category (category, gender) VALUES ('10 km běh', 'F');
+
+-- Insert initial data into the team table
+INSERT INTO team (name) VALUES ('Red Team');
+INSERT INTO team (name) VALUES ('Blue Team');
+INSERT INTO team (name) VALUES ('Yellow Team');
+
+-- Insert test data into the address table
+INSERT INTO address (streetname, postalcode, country) VALUES ('Main Street', '12345', 'USA');
+INSERT INTO address (streetname, postalcode, country) VALUES ('Broadway', '67890', 'USA');
+INSERT INTO address (streetname, postalcode, country) VALUES ('Elm Street', '54321', 'Canada');
+
+-- Insert test data into the passwords table
+INSERT INTO passwords (passwordhash, passwordsalt) VALUES ('hash1', 'salt1');
+INSERT INTO passwords (passwordhash, passwordsalt) VALUES ('hash2', 'salt2');
+INSERT INTO passwords (passwordhash, passwordsalt) VALUES ('hash3', 'salt3');
+
+-- Insert test data into the users table
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid)
+VALUES ('John', 'Doe', 1, 'john.doe@example.com', '123456789', '+1', TRUE, TRUE, 'M', 1);
+
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid)
+VALUES ('Jane', 'Smith', 2, 'jane.smith@example.com', '987654321', '+1', FALSE, TRUE, 'F', 2);
+
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid)
+VALUES ('Alice', 'Johnson', 3, 'alice.johnson@example.com', '555555555', '+1', FALSE, FALSE, 'F', 3);
+
+-- Insert test data into the sponsor table
+INSERT INTO sponsor (name, email, passwordid) VALUES ('Sponsor1', 'sponsor1@example.com', 1);
+INSERT INTO sponsor (name, email, passwordid) VALUES ('Sponsor2', 'sponsor2@example.com', 2);
+
+-- Insert test data into the race table
+INSERT INTO race (date, capacity, state, name, description, sponsorid, categoryid, addressid)
+VALUES ('2023-12-01', 100, 1, 'Marathon 2023', 'Annual city marathon', 1, 1, 1);
+
+INSERT INTO race (date, capacity, state, name, description, sponsorid, categoryid, addressid)
+VALUES ('2023-11-15', 50, 1, 'Half Marathon 2023', 'Half marathon event', 2, 2, 2);
+
+-- Insert test data into the payment table
+INSERT INTO payment (price, state, date, userid) VALUES (50, 'P', '2023-10-01', 1);
+INSERT INTO payment (price, state, date, userid) VALUES (30, 'P', '2023-10-02', 2);
+
+-- Insert test data into the user_race table
+INSERT INTO user_race (paymentid, userracenumber, raceid) VALUES (1, 101, 1);
+INSERT INTO user_race (paymentid, userracenumber, raceid) VALUES (2, 102, 2);
+
+-- Insert test data into the run table
+INSERT INTO run (addressid, date, name, description) VALUES (1, '2023-10-10', 'Morning Run', '5 km morning run');
+INSERT INTO run (addressid, date, name, description) VALUES (2, '2023-10-12', 'Evening Run', '10 km evening run');
+
+-- Insert test data into the user_run table
+INSERT INTO user_run (userid, runid) VALUES (1, 1);
+INSERT INTO user_run (userid, runid) VALUES (2, 2);
+
+-- Create an index on the email column in the users table for faster lookups
+CREATE INDEX idx_users_email ON users(email);
+
+-- Create an index on the date column in the race table for faster lookups
+CREATE INDEX idx_race_date ON race(date);
+
+-- Create a composite index on the category and gender columns in the category table
+CREATE INDEX idx_category_gender ON category(category, gender);
+
+-- Create an index on the name column in the sponsor table for faster lookups
+CREATE INDEX idx_sponsor_name ON sponsor(name);
+
+-- Create an index on the streetname column in the address table for faster lookups
+CREATE INDEX idx_address_streetname ON address(streetname);
+
+-- Create a view to display user information along with their address and password details
+CREATE VIEW usersInfo AS
+SELECT 
+    u.id AS user_id,
+    u.name AS first_name,
+    u.surname AS last_name,
+    a.streetname AS street,
+    a.postalcode AS postal_code,
+    a.country AS country,
+    u.email AS email,
+    u.telephone AS phone,
+    u.telephonecode AS phone_code,
+    u.isadmin AS is_admin,
+    u.canCreateRuns AS can_create_runs,
+    u.gender AS gender,
+    p.passwordhash AS password_hash,
+    p.passwordsalt AS password_salt
+FROM 
+    users u
+JOIN 
+    address a ON u.addressid = a.id
+JOIN 
+    passwords p ON u.passwordid = p.id;
+
+-- Create a view to display all races along with their details
+CREATE VIEW allRace AS
+SELECT 
+    r.id AS race_id,
+    r.name AS race_name,
+    r.date AS race_date,
+    r.capacity AS race_capacity,
+    r.state AS race_state,
+    r.description AS race_description,
+    s.name AS sponsor_name,
+    c.category AS race_category,
+    c.gender AS race_gender,
+    a.streetname AS race_street,
+    a.postalcode AS race_postal_code,
+    a.country AS race_country
+FROM 
+    race r
+JOIN 
+    sponsor s ON r.sponsorid = s.id
+JOIN 
+    category c ON r.categoryid = c.id
+JOIN 
+    address a ON r.addressid = a.id;
+
+-- Create a view to display all runs along with their details
+CREATE VIEW allRuns AS
+SELECT 
+    run.id AS run_id,
+    run.name AS run_name,
+    run.date AS run_date,
+    run.description AS run_description,
+    a.streetname AS run_street,
+    a.postalcode AS run_postal_code,
+    a.country AS run_country
+FROM 
+    run
+JOIN 
+    address a ON run.addressid = a.id;
+
+-- Create a function to get the full name of a user by their ID
+CREATE OR REPLACE FUNCTION get_user_full_name(user_id INT)
+RETURNS VARCHAR(50) AS $$
+DECLARE
+    full_name VARCHAR(50);
+BEGIN
+    SELECT CONCAT(name, ' ', surname) INTO full_name
+    FROM users
+    WHERE id = user_id;
+
+    RETURN full_name;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a function to calculate the total payment made by a user
+CREATE OR REPLACE FUNCTION calculate_total_payment_for_user(user_id INT)
+RETURNS INTEGER AS $$
+DECLARE
+    total_payment INTEGER;
+BEGIN
+    SELECT COALESCE(SUM(price), 0) INTO total_payment
+    FROM payment
+    WHERE userid = user_id;
+
+    RETURN total_payment;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a procedure to add a new user
+CREATE OR REPLACE PROCEDURE add_user(
+    user_name VARCHAR(20),
+    user_surname VARCHAR(20),
+    user_addressid INT,
+    user_email VARCHAR(30),
+    user_telephone VARCHAR(15),
+    user_telephonecode VARCHAR(5),
+    user_isadmin BOOLEAN,
+    user_canCreateRuns BOOLEAN,
+    user_gender CHAR(1),
+    user_passwordid INT
+) AS $$
+BEGIN
+    -- Check if the email already exists
+    IF EXISTS (SELECT 1 FROM users WHERE email = user_email) THEN
+        RAISE EXCEPTION 'Email % already exists.', user_email;
+    END IF;
+
+    -- Insert the new user
+    INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid)
+    VALUES (user_name, user_surname, user_addressid, user_email, user_telephone, user_telephonecode, user_isadmin, user_canCreateRuns, user_gender, user_passwordid);
+
+    RAISE NOTICE 'User % % added successfully.', user_name, user_surname;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a procedure to update the capacity of a race
+CREATE OR REPLACE PROCEDURE update_race_capacity(
+    race_id INT,
+    new_capacity INT
+) AS $$
+DECLARE
+    current_participants INT;
+BEGIN
+    -- Get the current number of participants
+    SELECT COUNT(*) INTO current_participants
+    FROM user_race
+    WHERE raceid = race_id;
+
+    -- Check if the new capacity is valid
+    IF new_capacity < current_participants THEN
+        RAISE EXCEPTION 'New capacity (%) cannot be less than the current number of participants (%).', new_capacity, current_participants;
+    END IF;
+
+    -- Update the race capacity
+    UPDATE race
+    SET capacity = new_capacity
+    WHERE id = race_id;
+
+    RAISE NOTICE 'Capacity of race % updated to %.', race_id, new_capacity;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a procedure to register a user for a race
+CREATE OR REPLACE PROCEDURE register_user_for_race(
+    user_id INT,
+    race_id INT,
+    payment_price INT,
+    payment_state CHAR(1),
+    payment_date DATE
+) AS $$
+DECLARE
+    race_capacity INT;
+    current_participants INT;
+    user_racenumber INT;
+BEGIN
+    -- Check if the race exists
+    IF NOT EXISTS (SELECT 1 FROM race WHERE id = race_id) THEN
+        RAISE EXCEPTION 'Race with ID % does not exist.', race_id;
+    END IF;
+
+    -- Check if the user exists
+    IF NOT EXISTS (SELECT 1 FROM users WHERE id = user_id) THEN
+        RAISE EXCEPTION 'User with ID % does not exist.', user_id;
+    END IF;
+
+    -- Get race capacity and current participants
+    SELECT capacity INTO race_capacity FROM race WHERE id = race_id;
+    SELECT COUNT(*) INTO current_participants FROM user_race WHERE raceid = race_id;
+
+    -- Check if the race is full
+    IF current_participants >= race_capacity THEN
+        RAISE EXCEPTION 'Race with ID % is full.', race_id;
+    END IF;
+
+    -- Create a payment record
+    INSERT INTO payment (price, state, date, userid)
+    VALUES (payment_price, payment_state, payment_date, user_id)
+    RETURNING id INTO user_racenumber;
+
+    -- Register the user for the race
+    INSERT INTO user_race (paymentid, userracenumber, raceid)
+    VALUES (user_racenumber, user_racenumber, race_id);
+
+    RAISE NOTICE 'User % successfully registered for race %.', user_id, race_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a function to check if a race has reached its capacity
+CREATE OR REPLACE FUNCTION check_race_capacity()
+RETURNS TRIGGER AS $$
+DECLARE
+    race_capacity INT;
+    current_participants INT;
+BEGIN
+    -- Get the race capacity
+    SELECT capacity INTO race_capacity
+    FROM race
+    WHERE id = NEW.raceid;
+
+    -- Get the current number of participants
+    SELECT COUNT(*) INTO current_participants
+    FROM user_race
+    WHERE raceid = NEW.raceid;
+
+    -- Check if the race is full
+    IF current_participants >= race_capacity THEN
+        RAISE EXCEPTION 'Race with ID % is full. Cannot register more participants.', NEW.raceid;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger to enforce race capacity before inserting a new user_race entry
+CREATE TRIGGER enforce_race_capacity
+BEFORE INSERT ON user_race
+FOR EACH ROW
+EXECUTE FUNCTION check_race_capacity();
+
+-- Create a function to update the payment state after a user registers for a race
+CREATE OR REPLACE FUNCTION update_payment_state()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Update the payment state to 'Paid'
+    UPDATE payment
+    SET state = 'P'
+    WHERE id = NEW.paymentid;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger to update the payment state after a user registers for a race
+CREATE TRIGGER after_race_registration
+AFTER INSERT ON user_race
+FOR EACH ROW
+EXECUTE FUNCTION update_payment_state();

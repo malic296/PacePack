@@ -54,10 +54,22 @@ class Run(Base):
     date = Column(Date, nullable=False)
     name = Column(String(50), nullable=False)
     description = Column(String(100), nullable=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     address = relationship("Address", backref="runs")
-    user = relationship("User")
 
     def __repr__(self):
         return f"<Run(name={self.name}, date={self.date})>"
+    
+class UserRun(Base):
+    __tablename__ = 'user_run'
+
+    id = Column(Integer, primary_key=True)
+    userid = Column(Integer, ForeignKey('users.id'), nullable=False)
+    runid = Column(Integer, ForeignKey('run.id'), nullable=False)
+    iscreator = Column(Boolean, default=False)  # True if the user is the creator
+
+    user = relationship("User", backref="user_runs")
+    run = relationship("Run", backref="user_runs")
+
+    def __repr__(self):
+        return f"<UserRun(user_id={self.user_id}, run_id={self.run_id}, is_creator={self.is_creator})>"
