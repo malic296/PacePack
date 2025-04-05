@@ -83,7 +83,15 @@
                 "postal_code_label": "Postal Code",
                 "cancel": "Cancel",
                 "save": "Save",
-                "delete": "Delete"
+                "delete": "Delete",
+                "name": "Name",
+                "date": "Date",
+                "address":"Address",
+                "sort_by": "Sort by",
+                "order": "Order",
+                "asc": "Ascending",
+                "desc": "Descending",
+                "sort": "Sort"
             },
             "cz": {
                 "title": "Tréninkové běhy",
@@ -104,7 +112,15 @@
                 "postal_code_label": "PSČ",
                 "cancel": "Zrušit",
                 "save": "Uložit",
-                "delete": "Smazat"
+                "delete": "Smazat",
+                "name": "Jméno",
+                "date": "Datum",
+                "address":"Adresa",
+                "sort_by": "Seřadit podle",
+                "order": "Pořadí",
+                "asc": "Rostoucí",
+                "desc": "Klesající",
+                "sort": "Seřadit"
             },
             "de": {
                 "title": "Trainingseinheiten",
@@ -125,7 +141,15 @@
                 "postal_code_label": "Postleitzahl",
                 "cancel": "Abbrechen",
                 "save": "Speichern",
-                "delete": "Löschen"
+                "delete": "Löschen",
+                "name": "Name",
+                "date": "Datum",
+                "address":"Adresse",
+                "sort_by": "Sortieren nach",
+                "order": "Reihenfolge",
+                "asc": "Aufsteigend",
+                "desc": "Absteigend",
+                "sort": "Sortieren"
             }
         },
         "run_detail": {

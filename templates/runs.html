@@ -22,28 +22,28 @@
     <div class="sorting d-flex justify-content-end p-3">
         <form method="GET" action="{{ url_for('content_section', section='runs') }}" class="d-flex gap-3 align-items-center">
             <div class="form-group mb-0">
-                <label for="sort_by" class="form-label">Sort by:</label>
+                <label for="sort_by" class="form-label">{{ textVars['sort_by'] }}:</label>
                 <select id="sort_by" name="sort_by" class="form-select form-select-sm">
-                    <option value="name" {% if request.args.get('sort_by') == 'name' %}selected{% endif %}>Name</option>
-                    <option value="date" {% if request.args.get('sort_by') == 'date' %}selected{% endif %}>Date</option>
-                    <option value="address" {% if request.args.get('sort_by') == 'address' %}selected{% endif %}>Address</option>
+                    <option value="name" {% if request.args.get('sort_by') == 'name' %}selected{% endif %}>{{ textVars['name'] }}</option>
+                    <option value="date" {% if request.args.get('sort_by') == 'date' %}selected{% endif %}>{{ textVars['date'] }}</option>
+                    <option value="address" {% if request.args.get('sort_by') == 'address' %}selected{% endif %}>{{ textVars['address'] }}</option>
                 </select>
             </div>
     
             <div class="form-group mb-0">
-                <label for="order" class="form-label">Order:</label>
+                <label for="order" class="form-label">{{ textVars['order'] }}:</label>
                 <select id="order" name="order" class="form-select form-select-sm">
                     <option value="asc" {% if request.args.get('order') == 'asc' %}selected{% endif %}>
-                        <i class="fas fa-arrow-up"></i> Ascending
+                        <i class="fas fa-arrow-up"></i> {{ textVars['asc'] }}
                     </option>
                     <option value="desc" {% if request.args.get('order') == 'desc' %}selected{% endif %}>
-                        <i class="fas fa-arrow-down"></i> Descending
+                        <i class="fas fa-arrow-down"></i> {{ textVars['desc'] }}
                     </option>
                     
                 </select>
             </div>
     
-            <button type="submit" class="btn btn-primary btn-sm">Sort</button>
+            <button type="submit" class="btn btn-primary btn-sm">{{ textVars['sort'] }}</button>
         </form>
     </div>
     
