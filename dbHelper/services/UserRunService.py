@@ -59,9 +59,19 @@ class UserRunService:
         
         # If a user is found, return the user_run or user details
         return user_run
+    
+    def get_users_by_run_id(self, run_id):
+        return self.session.query(UserRun).filter_by(runid=run_id).all()
+    
+    # In your UserService class
+
+    def get_user_by_id(self, user_id):
+        try:
+            return self.session.query(User).filter_by(id=user_id).first()
+        except Exception as e:
+            print(f"Error fetching user by ID: {e}")
+            return None
+
 
     def close(self):
-        """
-        Closes the session.
-        """
         self.session.close()

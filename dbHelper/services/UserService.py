@@ -63,6 +63,13 @@ class UserService:
         self.session.commit()
         return True
 
+    def get_user_by_id(self, user_id):
+        try:
+            return self.session.query(User).filter_by(id=user_id).first()
+        except Exception as e:
+            print(f"Error fetching user by ID: {e}")
+            return None
+
 
     def close(self):
         self.session.close()

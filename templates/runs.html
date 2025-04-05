@@ -36,10 +36,12 @@
       <tbody>
           {% for run in runs %}
           <tr>
-              <td>{{ run.name }}</td>
+              <td><a href="{{ url_for('content_section', section='runs/' ~ run.id) }}">{{ run.name }}</a></td>
               <td>{{ run.date.strftime('%d-%m-%Y') }}</td>
               <td>{{ run.description }}</td>
               <td>{{ run.address.streetname }}, {{ run.address.postalcode }}</td>
+
+              
               {% set user_run = user_run_service.get_user_run_by_run_id(run.id) %}
               {% if g.current_user.isadmin or user_run %}
               <!-- Admin or user who created the run can edit it -->

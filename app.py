@@ -61,7 +61,7 @@ def logout():
     return redirect(url_for("content_section", section = "login"))
 
 
-@app.route("/content/<section>", methods=["GET", "POST"])
+@app.route("/content/<path:section>", methods=["GET", "POST"])
 def content_section(section):
     templates = {
         "home": "home.html",
@@ -72,7 +72,8 @@ def content_section(section):
         "register": "register.html",
         "verify": "verify.html",
         "myProfile": "myProfile.html",
-        "resend" : "verify.html"
+        "resend" : "verify.html",
+        "run_detail" : "run_detail.html"
     }
 
     public_sections = {"login", "register", "verify", "index","resend"}
@@ -84,7 +85,12 @@ def content_section(section):
     with open("textVars.json", "r", encoding="utf-8") as f:
         textVars = json.load(f)
 
+    if section.startswith("runs/"):
+        run_id = int(section.split("/")[1])  # Extract the run_id from the URL
+        section = "run_detail"  # We map the 'runs/ID' to the 'run_detail' section
+
     textVars = textVars["pages"][section][session["lang"]]
+
     
     if section in templates:
         session["section"] = section
@@ -107,6 +113,8 @@ def content_section(section):
                 return racesSection(textVars)
             case "runs":
                 return runsSection(textVars)
+            case "run_detail":
+                return runDetailSection(textVars, run_id)
             case _:
                 return "<h2>Section Not Found</h2>", 404
     else:
@@ -326,6 +334,25 @@ def runsSection(textVars):
     # Fetch all runs to display
     runs = run_service.get_all_runs()
     return render_template("runs.html", section="runs", textVars=textVars, runs=runs, form=form, user_run_service=user_run_service)
+
+def runDetailSection(textVars, run_id):
+    run = run_service.get_run_by_id(run_id)
+    if not run:
+        return "<h2>Run not found</h2>", 404
+
+    user_runs = user_run_service.get_users_by_run_id(run_id)
+    users = [user_service.get_user_by_id(user_run.userid) for user_run in user_runs]
+
+
+    return render_template(
+        "run_detail.html",
+        section="runs",
+        textVars=textVars,
+        run=run,
+        users=users,
+        user_runs=user_runs
+    )
+
 
 def get_current_user():
     user_token = session.get("user_token")

@@ -128,6 +128,44 @@
                 "delete": "Löschen"
             }
         },
+        "run_detail": {
+            "en": {
+                "title": "Run Detail",
+                "back": "Back to Runs",
+                "join": "Join this run",
+                "leave": "Leave this run",
+                "edit": "Edit run",
+                "delete": "Delete run",
+                "participants": "Participants",
+                "date": "Date",
+                "description": "Description",
+                "address": "Address"
+            },
+            "cz": {
+                "title": "Detail Běhu",
+                "back": "Zpět na běhy",
+                "join": "Připojit se k běhu",
+                "leave": "Odejít z běhu",
+                "edit": "Upravit běh",
+                "delete": "Smazat běh",
+                "participants": "Účastníci",
+                "date": "Datum",
+                "description": "Popis",
+                "address": "Adresa"
+            },
+            "de": {
+                "title": "Lauf Detail",
+                "back": "Zurück zu den Läufen",
+                "join": "An diesem Lauf teilnehmen",
+                "leave": "Lauf verlassen",
+                "edit": "Lauf bearbeiten",
+                "delete": "Lauf löschen",
+                "participants": "Teilnehmer",
+                "date": "Datum",
+                "description": "Beschreibung",
+                "address": "Adresse"
+            }
+        },
         "index": {
             "en": {
                 "title": "Running performance tracking app",
