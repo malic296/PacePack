@@ -334,7 +334,7 @@ def runsSection(textVars):
     
 
     # Get the sorting parameters from the request
-    sort_by = request.args.get("sort_by", "name")  # Default sort by name
+    sort_by = request.args.get("sort_by", "date")  # Default sort by name
     order = request.args.get("order", "asc")  # Default order is ascending
 
     # Fetch all runs
