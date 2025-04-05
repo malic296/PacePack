@@ -88,7 +88,16 @@ class EditProfileForm(FlaskForm):
 class RunForm(FlaskForm):
     """Form for creating and editing runs."""
     name = StringField("Run Name", validators=[DataRequired()])
-    date = DateField("Date", format='%Y-%m-%d', validators=[DataRequired()])
+    date = DateField("Date", format='%d-%m-%Y', validators=[DataRequired()])
     description = TextAreaField("Description", validators=[DataRequired()])
     address_id = StringField("Address ID", validators=[DataRequired()])
     submit = SubmitField("Save")
+
+class RaceForm(FlaskForm):
+    name = StringField("Race Name", validators=[DataRequired()])
+    date = DateField("Date", format='%d-%m-%Y', validators=[DataRequired()])
+    capacity = IntegerField("Capacity", validators=[DataRequired()])
+    description = TextAreaField("Description", validators=[DataRequired()])
+    sponsor_id = IntegerField("Sponsor ID", validators=[DataRequired()])
+    category_id = IntegerField("Category ID", validators=[DataRequired()])
+    address_id = StringField("Address ID", validators=[DataRequired()])

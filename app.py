@@ -2,7 +2,7 @@ import os
 import json
 from flask import Flask, render_template, redirect, request, url_for, flash, session, g
 from flask_mail import Mail
-from forms import LoginForm, RegisterForm, VerificationForm, EditProfileForm, RunForm
+from forms import LoginForm, RegisterForm, VerificationForm, EditProfileForm, RunForm, RaceForm
 from flask_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
 from mailService import send_verification_code,generate_verification_code
@@ -12,7 +12,10 @@ from dbHelper.services.AddressService import AddressService
 from dbHelper.services.PasswordService import PasswordService
 from dbHelper.services.RunService import RunService
 from dbHelper.services.UserRunService import UserRunService
-from dbHelper.DBModels import User, Run
+from dbHelper.services.TeamService import TeamService
+from dbHelper.services.PaymentService import PaymentService
+from dbHelper.services.RaceService import RaceService
+from dbHelper.services.UserRaceService import UserRaceService
 
 load_dotenv("environment.env")
 
@@ -32,6 +35,10 @@ address_service = AddressService()
 password_service = PasswordService()
 run_service = RunService()
 user_run_service = UserRunService()
+team_service = TeamService()
+payment_service = PaymentService()
+race_service = RaceService()
+user_race_service = UserRaceService()
 
 mail = Mail(app)
 
@@ -73,7 +80,8 @@ def content_section(section):
         "verify": "verify.html",
         "myProfile": "myProfile.html",
         "resend" : "verify.html",
-        "run_detail" : "run_detail.html"
+        "run_detail" : "run_detail.html",
+        "race_detail" : "race_detail.html"
     }
 
     public_sections = {"login", "register", "verify", "index","resend"}
@@ -88,6 +96,9 @@ def content_section(section):
     if section.startswith("runs/"):
         run_id = int(section.split("/")[1])  # Extract the run_id from the URL
         section = "run_detail"  # We map the 'runs/ID' to the 'run_detail' section
+    elif section.startswith("races/"):
+        race_id = int(section.split("/")[1])
+        section = "race_detail"
 
     textVars = textVars["pages"][section][session["lang"]]
 
@@ -115,6 +126,8 @@ def content_section(section):
                 return runsSection(textVars)
             case "run_detail":
                 return runDetailSection(textVars, run_id)
+            case "race_detail":
+                return raceDetailSection(textVars, race_id)
             case _:
                 return "<h2>Section Not Found</h2>", 404
     else:
@@ -285,8 +298,74 @@ def homeSection(textVars):
 
 def indexSection(textVars):
     return render_template("index.html", section="index", textVars=textVars)
+
+# TODO: 
 def racesSection(textVars):
-    return render_template("races.html", section="races", textVars=textVars)
+    form = RaceForm()
+
+    if request.method == "POST":
+        if "delete_race_id" in request.form:
+            # Handle run deletion
+            race_id = request.form.get("delete_race_id")
+            deleted_race = race_service.get_race_by_id(race_id)  # Fetch race before deleting
+            if deleted_race:
+                success = race_service.delete_race(race_id)
+                if success:
+                    flash(f"Race '{deleted_race.name}' deleted successfully!", "success")
+                else:
+                    flash("Error deleting race.", "danger")
+            else:
+                flash("Race not found.", "danger")
+        else:
+            # Handle race creation or update
+            race_id = request.form.get("race_id")
+            streetname = request.form.get("streetname")
+            postalcode = request.form.get("postalcode")
+            country = request.form.get("country")
+            date = request.form.get("date")
+            name = request.form.get("name")
+            description = request.form.get("description")
+
+            if race_id:
+                try:
+                   # TODO 
+                    updated_race = race_service.update_race(race_id, streetname, postalcode, country, date, name, description)
+                    flash(f"Race '{updated_race.name}' updated successfully!", "success")
+                except Exception as e:
+                    flash(f"Error updating race: {str(e)}", "danger")
+            else:
+                try:
+                    new_race = race_service.add_race(streetname, postalcode, country, date, name, description)
+                    flash(f"Race '{new_race.name}' created successfully!", "success")
+                    user_race_service.create_race_and_add_creator(g.current_user.id, new_race.id)
+                except Exception as e:
+                    flash(f"Error creating race: {str(e)}", "danger")
+
+        return redirect(url_for("content_section", section="races"))
+    
+    # Get the sorting parameters from the request
+    sort_by = request.args.get("sort_by", "date")  # Default sort by name
+    order = request.args.get("order", "asc")  # Default order is ascending
+
+    # Fetch all races
+    races = race_service.get_all_races()
+
+    # Sorting logic
+    if sort_by == "name":
+        races = sorted(races, key=lambda race: race.name.lower())  # Sort by name
+    elif sort_by == "date":
+        races = sorted(races, key=lambda race: race.date)  # Sort by date
+    elif sort_by == "address":
+        races = sorted(races, key=lambda race: race.address.streetname.lower())  # Sort by address
+
+    # Apply the sorting order (ascending or descending)
+    if order == "desc":
+        races.reverse()  # Reverse the order for descending
+
+    # Fetch all addresses for the "group by address" dropdown
+    addresses = address_service.get_all_addresses()
+
+    return render_template("races.html", section="races", textVars=textVars, races=races, form=form, user_race_service=user_race_service, addresses=addresses)
 
 def runsSection(textVars):
     """Display all runs and handle creating, editing, and deleting a run."""
@@ -375,6 +454,22 @@ def runDetailSection(textVars, run_id):
         user_runs=user_runs
     )
 
+def raceDetailSection(textVars, race_id):
+    race = race_service.get_race_by_id(race_id)
+    if not race:
+        return "<h2>Race not found</h2>", 404
+    
+    user_races = user_race_service.get_users_by_race_id(race_id)
+    users = [user_service.get_user_by_id(user_race.userid) for user_race in user_races]
+
+    return render_template(
+        "race_detail.html",
+        section="races",
+        textVars=textVars,
+        race=race,
+        users=users,
+        user_races=user_races
+    )
 
 def get_current_user():
     user_token = session.get("user_token")
