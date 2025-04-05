@@ -1,80 +1,161 @@
-{% extends "content.html" %}
-{% block title %}Races - Flask App{% endblock %}
+{% extends "content.html" %} 
+{% block title %}Register - PacePack{% endblock %} 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="text-center">{{ textVars["title"] }}</h1>
+<div class="registration-container">
+  <h1 class="registration-heading">
+    <i class="bi bi-person-plus me-2"></i>{{ textVars["title"] }}
+  </h1>
+  
+  <div class="registration-form">
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      
+      <!-- Personal Information Section -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <i class="bi bi-person me-2"></i>{{ textVars["personal_info"] }}
+        </h3>
+        
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="mb-3">
+              {{ form.name.label(class="form-label") }}
+              <div class="input-with-icon">
+                <i class="bi bi-person-badge input-icon"></i>
+                {{ form.name(class="form-control icon-input") }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="mb-3">
+              {{ form.surname.label(class="form-label") }}
+              <div class="input-with-icon">
+                <i class="bi bi-person input-icon"></i>
+                {{ form.surname(class="form-control icon-input") }}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          {{ form.gender.label(class="form-label") }}
+          <div class="d-flex gap-4">
+            {% for subfield in form.gender %}
+              <div class="form-check">
+                {{ subfield(class="form-check-input") }}
+                {{ subfield.label(class="form-check-label") }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Account Information Section -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <i class="bi bi-shield-lock me-2"></i>{{ textVars["account_info"] }}
+        </h3>
+        
+        <div class="mb-3">
+          {{ form.email.label(class="form-label") }}
+          <div class="input-with-icon">
+            <i class="bi bi-envelope input-icon"></i>
+            {{ form.email(class="form-control icon-input") }}
+          </div>
+        </div>
+        
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="mb-3">
+              {{ form.password.label(class="form-label") }}
+              <div class="input-with-icon">
+                <i class="bi bi-lock input-icon"></i>
+                {{ form.password(class="form-control icon-input") }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="mb-3">
+              {{ form.confirmPassword.label(class="form-label") }}
+              <div class="input-with-icon">
+                <i class="bi bi-lock-fill input-icon"></i>
+                {{ form.confirmPassword(class="form-control icon-input") }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Contact Information Section -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <i class="bi bi-geo-alt me-2"></i>{{ textVars["contact_info"]}}
+        </h3>
+        
+        <div class="mb-3">
+          {{ form.streetname.label(class="form-label") }}
+          <div class="input-with-icon">
+            <i class="bi bi-house input-icon"></i>
+            {{ form.streetname(class="form-control icon-input") }}
+          </div>
+        </div>
+        
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="mb-3">
+              {{ form.postalcode.label(class="form-label") }}
+              <div class="input-with-icon">
+                <i class="bi bi-mailbox input-icon"></i>
+                {{ form.postalcode(class="form-control icon-input") }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="mb-3">
+              {{ form.country.label(class="form-label") }}
+              <div class="input-with-icon">
+                <i class="bi bi-globe input-icon"></i>
+                {{ form.country(class="form-control icon-input") }}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="mb-3">
+              {{ form.telephoneCode.label(class="form-label") }}
+              <div class="input-with-icon">
+                <i class="bi bi-plus-circle input-icon"></i>
+                {{ form.telephoneCode(class="form-control icon-input") }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-8">
+            <div class="mb-3">
+              {{ form.telephone.label(class="form-label") }}
+              <div class="input-with-icon">
+                <i class="bi bi-telephone input-icon"></i>
+                {{ form.telephone(class="form-control icon-input") }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Submit Button -->
+      <div class="d-grid mt-4">
+        {{ form.submit(class="btn btn-register") }}
+      </div>
+    </form>
     
-    <div class="card p-4 shadow-sm mx-auto" style="max-width: 500px;">
-        <form method="POST">
-            {{ form.hidden_tag() }} 
-
-            <div class="mb-3">
-                {{ form.name.label(class="form-label") }}
-                {{ form.name(class="form-control") }}
-            </div>
-            
-            <div class="mb-3">
-                {{ form.surname.label(class="form-label") }}
-                {{ form.surname(class="form-control") }}
-            </div>
-
-            <div class="mb-3">
-                {{ form.password.label(class="form-label") }}
-                {{ form.password(class="form-control") }}
-            </div>
-            <div class="mb-3">
-                {{ form.confirmPassword.label(class="form-label") }}
-                {{ form.confirmPassword(class="form-control") }}
-            </div>
-
-            <div class="mb-3">
-                {{ form.email.label(class="form-label") }}
-                {{ form.email(class="form-control") }}
-            </div>
-
-            <div class="mb-3">
-                {{ form.gender.label(class="form-label") }}
-                <div class="d-flex gap-3">
-                    {% for subfield in form.gender %}
-                        <div class="form-check">
-                            {{ subfield(class="form-check-input") }}
-                            {{ subfield.label(class="form-check-label") }}
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-            
-            <div class="mb-3">
-                {{ form.streetname.label(class="form-label") }}
-                {{ form.streetname(class="form-control") }}
-            </div>
-            
-            <div class="mb-3">
-                {{ form.postalcode.label(class="form-label") }}
-                {{ form.postalcode(class="form-control") }}
-            </div>
-            
-            <div class="mb-3">
-                {{ form.country.label(class="form-label") }}
-                {{ form.country(class="form-control") }}
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    {{ form.telephoneCode.label(class="form-label") }}
-                    {{ form.telephoneCode(class="form-control") }}
-                </div>
-                <div class="col-md-6 mb-3">
-                    {{ form.telephone.label(class="form-label") }}
-                    {{ form.telephone(class="form-control") }}
-                </div>
-            </div>
-
-            <div class="d-grid">
-                {{ form.submit(class="btn btn-primary") }}
-            </div>
-        </form>
+    <div class="registration-footer">
+      <p>{{ textVars["already_have_account"] }} <a href="{{ url_for('content_section', section='login') }}">{{ textVars["login_here"] }}</a></p>
     </div>
-
+  </div>
 </div>
 {% endblock %}

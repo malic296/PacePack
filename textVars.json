@@ -244,7 +244,11 @@
                 "text": "Stay fit with our scheduled training runs. Join a local group or set your own pace!",
                 "email": "Email",
                 "password": "Password",
-                "submit": "Submit"
+                "submit": "Submit",
+                "no_account":"Don't have an account?",
+                "register_now":"Register now",
+                "forgotpass":"Forgot your password?"
+                
             },
             "cz": {
                 "title": "Přihlášení",
@@ -252,7 +256,10 @@
                 "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!",
                 "email": "Email",
                 "password": "Heslo",
-                "submit": "Potvrdit"
+                "submit": "Potvrdit",
+                "no_account":"Nemáte účet?",
+                "register_now":"Zaregistrujte se nyní",
+                "forgotpass":"Zapomněli jste heslo?"
             },
             "de": {
                 "title": "Login",
@@ -260,7 +267,10 @@
                 "text": "Bleiben Sie fit mit unseren geplanten Trainingseinheiten. Schließen Sie sich einer lokalen Gruppe an oder setzen Sie Ihr eigenes Tempo!",
                 "email": "Email",
                 "password": "Passwort",
-                "submit": "Einreichen"
+                "submit": "Einreichen",
+                "no_account":"Sie haben kein Konto?",
+                "register_now":"Jetzt registrieren",
+                "forgotpass":"Passwort vergessen?"
             }
         },
         "register": {
@@ -279,7 +289,14 @@
                 "telephoneCode": "Telephone Code",
                 "telephone": "Telephone",
                 "gender": "Gender",
-                "submit": "Submit"
+                "submit": "Submit",
+                "already_have_account":"Already have an account?",
+                "login_here":"Login here",
+                "personal_info":"Personal Information",
+                "account_info":"Account Information",
+                "contact_info":"Contact Information"
+
+
             },
             "cz": {
                 "title": "Registrace",
@@ -296,7 +313,16 @@
                 "telephoneCode": "Předvolba",
                 "telephone": "Telefon",
                 "gender": "Pohlaví",
-                "submit": "Potvrdit"
+                "submit": "Potvrdit",
+                "already_have_account":"Už máte účet?",
+                "login_here":"Přihlaste se zde",
+                "personal_info":"Osobní údaje",
+                "account_info":"Údaje o účtu",
+                "contact_info":"Kontaktní údaje"
+
+
+
+
             },
             "de": {
                 "title": "Registrieren",
@@ -313,7 +339,13 @@
                 "telephoneCode": "Vorwahl",
                 "telephone": "Telefon",
                 "gender": "Geschlecht",
-                "submit": "Bestätigen"
+                "submit": "Bestätigen",
+                "already_have_account":"Sie haben schon ein Konto?",
+                "login_here":"Hier einloggen",
+                "personal_info":"Persönliche Informationen",
+                "account_info":"Kontoinformationen",
+                "contact_info":"Kontaktinformationen"
+
             }
         },
         "verify":{

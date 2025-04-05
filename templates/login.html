@@ -1,24 +1,40 @@
-{% extends "content.html" %}
-{% block title %}Races - Flask App{% endblock %}
+{% extends "content.html" %} 
+{% block title %}Login - PacePack{% endblock %} 
 {% block content %}
-    <h2 class="text-center mb-4">🔐 {{ textVars["title"] }}</h2>
-    
+<div class="login-container">
+  <h2 class="login-heading">
+    <i class="bi bi-shield-lock login-icon"></i>{{ textVars["title"] }}
+  </h2>
+  
+  <div class="login-form">
     <form action="" method="post">
-        {{ form.hidden_tag() }}
-
-        <div class="mb-3">
-            {{ form.email.label(class="form-label") }}
-            {{ form.email(class="form-control", placeholder="Enter your username") }}
+      {{ form.hidden_tag() }}
+      
+      <div class="input-group">
+        <div class="position-relative">
+          <i class="bi bi-envelope input-icon"></i>
+          {{ form.email.label(class="form-label") }}
+          {{ form.email(class="form-control icon-input", placeholder="name@example.com") }}
         </div>
-
-        <div class="mb-3">
-            {{ form.password.label(class="form-label") }}
-            {{ form.password(class="form-control", placeholder="Enter your password") }}
+      </div>
+      
+      <div class="input-group">
+        <div class="position-relative">
+          <i class="bi bi-lock input-icon"></i>
+          {{ form.password.label(class="form-label") }}
+          {{ form.password(class="form-control icon-input", placeholder="••••••••") }}
         </div>
-
-        <div class="d-grid">
-            {{ form.submit(class="btn btn-primary") }}
-        </div>
+      </div>
+      
+      <div class="d-grid gap-2">
+        {{ form.submit(class="btn btn-login") }}
+      </div>
     </form>
-
+    
+    <div class="login-footer">
+      <p>{{ textVars["no_account"] }} <a href="{{ url_for('content_section', section='register') }}">{{ textVars["register_now"] }}</a></p>
+      <p><a href="#">{{ textVars["forgotpass"] }}</a></p>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -1,50 +1,70 @@
-{% extends "content.html" %}
-{% block title %}Home - PacePack{% endblock %}
+{% extends "content.html" %} 
+{% block title %}Home - PacePack{% endblock %} 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="text-center">
-        <!-- Header Section -->
-        <h1 class="display-4 font-weight-bold text-primary">PacePack</h1>
-        <p class="lead text-muted">{{ textVars["title"]}}.</p>
-
-        <!-- Buttons (Login, Register) -->
-        <div class="mt-4">
-            <a href="{{ url_for('content_section', section='login') }}" class="btn btn-lg btn-primary mx-2">{{ textVars["login"]}}</a>
-            <a href="{{ url_for('content_section', section='register') }}" class="btn btn-lg btn-outline-primary mx-2">{{ textVars["registration"]}}</a>
-        </div>
-
-        <!-- Main Content -->
-        <div class="mt-5">
-            <h3>{{ textVars["overview"]}}</h3>
-            <div class="row">
-                <!-- Upcoming Races -->
-                <div class="col-md-4 mb-4">
-                    <div class="card p-4 shadow-sm">
-                        <h5>{{ textVars["races"]}}</h5>
-                        <p class="text-muted">{{ textVars["races_desc"]}}</p>
-                        <a href="{{ url_for('content_section', section='races') }}" class="btn btn-light">{{ textVars["view_races"]}}</a>
-                    </div>
-                </div>
-
-                <!-- My Profile -->
-                <div class="col-md-4 mb-4">
-                    <div class="card p-4 shadow-sm">
-                        <h5>{{ textVars["profile"]}}</h5>
-                        <p class="text-muted">{{ textVars["profile_desc"]}}</p>
-                        <a href="{{ url_for('content_section', section='myProfile') }}" class="btn btn-light">{{ textVars["view_profile"]}}</a>
-                    </div>
-                </div>
-
-                <!-- Upcoming Run Clubs -->
-                <div class="col-md-4 mb-4">
-                    <div class="card p-4 shadow-sm">
-                        <h5>{{ textVars["run_clubs"]}}</h5>
-                        <p class="text-muted">{{ textVars["run_clubs_desc"]}}</p>
-                        <a href="{{ url_for('content_section', section='runs') }}" class="btn btn-light">{{ textVars["join_run_clubs"]}}</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1 class="display-title">PacePack</h1>
+    <p class="lead-text">{{ textVars["title"] }}</p>
+    
+    <!-- Call to Action Buttons -->
+    <div class="mb-5">
+      <a href="{{ url_for('content_section', section='login') }}" class="btn btn-primary btn-action me-3">
+        <i class="bi bi-box-arrow-in-right me-2"></i>{{ textVars["login"] }}
+      </a>
+      <a href="{{ url_for('content_section', section='register') }}" class="btn btn-outline-primary btn-action">
+        <i class="bi bi-person-plus me-2"></i>{{ textVars["registration"] }}
+      </a>
     </div>
+  </div>
+  
+  <!-- Features Section -->
+  <div class="feature-section">
+    <h3 class="text-center mb-4">{{ textVars["overview"] }}</h3>
+    
+    <div class="row g-4">
+      <!-- Races Card -->
+      <div class="col-md-4">
+        <div class="card feature-card h-100">
+          <div class="card-body text-center p-4">
+            <i class="bi bi-trophy feature-icon"></i>
+            <h5>{{ textVars["races"] }}</h5>
+            <p>{{ textVars["races_desc"] }}</p>
+            <a href="{{ url_for('content_section', section='races') }}" class="btn">
+              <i class="bi bi-arrow-right me-1"></i>{{ textVars["view_races"] }}
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Profile Card -->
+      <div class="col-md-4">
+        <div class="card feature-card h-100">
+          <div class="card-body text-center p-4">
+            <i class="bi bi-person-badge feature-icon"></i>
+            <h5>{{ textVars["profile"] }}</h5>
+            <p>{{ textVars["profile_desc"] }}</p>
+            <a href="{{ url_for('content_section', section='myProfile') }}" class="btn">
+              <i class="bi bi-arrow-right me-1"></i>{{ textVars["view_profile"] }}
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Run Clubs Card -->
+      <div class="col-md-4">
+        <div class="card feature-card h-100">
+          <div class="card-body text-center p-4">
+            <i class="bi bi-people feature-icon"></i>
+            <h5>{{ textVars["run_clubs"] }}</h5>
+            <p>{{ textVars["run_clubs_desc"] }}</p>
+            <a href="{{ url_for('content_section', section='runs') }}" class="btn">
+              <i class="bi bi-arrow-right me-1"></i>{{ textVars["join_run_clubs"] }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

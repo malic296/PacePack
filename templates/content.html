@@ -5,97 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Pace Pack{% endblock %}</title>
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link 
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" 
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   </head>
-  <body class="bg-light {% if session.get('theme', 'light') == 'dark' %}bg-dark text-light{% else %}text-dark{% endif %}">
-    <nav class="navbar navbar-dark bg-dark px-3">
-      <a class="navbar-brand" href="#">Pace Pack</a>
-      <div class="ml-auto">
-        <a
-          href="{{ url_for('set_language', lang='en') }}"
-          class="btn btn-outline-light"
-          >EN</a
-        >
-        <a
-          href="{{ url_for('set_language', lang='cz') }}"
-          class="btn btn-outline-light"
-          >CZ</a
-        >
-        <a
-          href="{{ url_for('set_language', lang='de') }}"
-          class="btn btn-outline-light"
-          >DE</a
-        >
-        <a href="{{ url_for('toggle_theme') }}" class="btn btn-outline-light">
-            {{ "🌙 Dark Mode" if session.get('theme', 'light') == "light" else "☀️ Light Mode" }}
-        </a>
-    </div>
+  <body class="{% if session.get('theme', 'light') == 'dark' %}dark bg-dark text-light{% else %}light bg-light text-dark{% endif %}">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Pace Pack</a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <div class="ms-auto d-flex align-items-center">
+            <div class="language-selector me-2">
+              <a href="{{ url_for('set_language', lang='en') }}" class="btn btn-outline-light btn-sm">EN</a>
+              <a href="{{ url_for('set_language', lang='cz') }}" class="btn btn-outline-light btn-sm">CZ</a>
+              <a href="{{ url_for('set_language', lang='de') }}" class="btn btn-outline-light btn-sm">DE</a>
+            </div>
+            
+            <a href="{{ url_for('toggle_theme') }}" class="btn btn-outline-light theme-toggle me-2">
+              <i class="bi {% if session.get('theme', 'light') == 'light' %}bi-moon-stars{% else %}bi-sun{% endif %}"></i>
+              <span class="d-none d-md-inline">
+                {{ "Dark Mode" if session.get('theme', 'light') == "light" else "Light Mode" }}
+              </span>
+            </a>
+            
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger logout-btn">
+              <i class="bi bi-box-arrow-right"></i>
+              <span class="d-none d-md-inline">Logout</span>
+            </a>
+          </div>
+        </div>
       </div>
-      <a href="{{ url_for('logout') }}" class="btn btn-outline-light">
-        Logout
-      </a>
     </nav>
 
     <div class="container-fluid">
       <div class="row">
-        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4">
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar py-4">
           <div class="nav flex-column nav-pills">
-            {% if section == 'login' or section == 'register' or section ==
-            'index'%}
-            <a
-              class="nav-link {% if section == 'index' %}active{% endif %}"
-              href="{{ url_for('content_section', section='index') }}"
-              >⚙️ Index</a
-            >
-            <a
-              class="nav-link {% if section == 'login' %}active{% endif %}"
-              href="{{ url_for('content_section', section='login') }}"
-              >🏠 Login</a
-            >
-            <a
-              class="nav-link {% if section == 'register' %}active{% endif %}"
-              href="{{ url_for('content_section', section='register') }}"
-              >👤 Register</a
-            >
-
+            {% if section == 'login' or section == 'register' or section == 'index'%}
+            <a class="nav-link {% if section == 'index' %}active{% endif %}" href="{{ url_for('content_section', section='index') }}">
+              <i class="bi bi-gear-fill"></i> Index
+            </a>
+            <a class="nav-link {% if section == 'login' %}active{% endif %}" href="{{ url_for('content_section', section='login') }}">
+              <i class="bi bi-house-door-fill"></i> Login
+            </a>
+            <a class="nav-link {% if section == 'register' %}active{% endif %}" href="{{ url_for('content_section', section='register') }}">
+              <i class="bi bi-person-fill"></i> Register
+            </a>
             {%else%}
-            <a
-            class="nav-link {% if section == 'home' %}active{% endif %}"
-            href="{{ url_for('content_section', section='home') }}"
-            >🏠 Home</a
-            >
-            <a 
-              class="nav-link {% if section == 'myProfile' %}active{% endif %}" 
-              href="{{ url_for('content_section', section='myProfile') }}"
-              >👤 My Profile</a
-              >
-            <a
-              class="nav-link {% if section == 'races' %}active{% endif %}"
-              href="{{ url_for('content_section', section='races') }}"
-              >👤 Races</a
-            >
-            <a
-              class="nav-link {% if section == 'runs' %}active{% endif %}"
-              href="{{ url_for('content_section', section='runs') }}"
-              >⚙️ Runs</a
-            >
+            <a class="nav-link {% if section == 'home' %}active{% endif %}" href="{{ url_for('content_section', section='home') }}">
+              <i class="bi bi-house-door-fill"></i> Home
+            </a>
+            <a class="nav-link {% if section == 'myProfile' %}active{% endif %}" href="{{ url_for('content_section', section='myProfile') }}">
+              <i class="bi bi-person-fill"></i> My Profile
+            </a>
+            <a class="nav-link {% if section == 'races' %}active{% endif %}" href="{{ url_for('content_section', section='races') }}">
+              <i class="bi bi-trophy-fill"></i> Races
+            </a>
+            <a class="nav-link {% if section == 'runs' %}active{% endif %}" href="{{ url_for('content_section', section='runs') }}">
+              <i class="bi bi-activity"></i> Runs
+            </a>
             {%endif%}
           </div>
         </nav>
 
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-          
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
               <div class="flash-messages">
@@ -107,13 +85,37 @@
                 {% endfor %}
               </div>
             {% endif %}
-         
-            {% endwith %}
-          <div class="card p-4">{% block content%}{% endblock %}</div>
+          {% endwith %}
+          
+          <div class="card p-4 mb-4">
+            {% block content %}{% endblock %}
+          </div>
         </main>
       </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Auto-hide flash messages 
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          const alerts = document.querySelectorAll('.alert');
+          alerts.forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+          });
+        }, 5000);
+        
+        // Mobile sidebar toggle
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        const sidebar = document.querySelector('.sidebar');
+        
+        if (navbarToggler && sidebar) {
+          navbarToggler.addEventListener('click', function() {
+            sidebar.classList.toggle('show');
+          });
+        }
+      });
+    </script>
   </body>
 </html>
