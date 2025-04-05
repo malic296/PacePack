@@ -331,9 +331,31 @@ def runsSection(textVars):
 
         return redirect(url_for("content_section", section="runs"))
 
-    # Fetch all runs to display
+    
+
+    # Get the sorting parameters from the request
+    sort_by = request.args.get("sort_by", "name")  # Default sort by name
+    order = request.args.get("order", "asc")  # Default order is ascending
+
+    # Fetch all runs
     runs = run_service.get_all_runs()
-    return render_template("runs.html", section="runs", textVars=textVars, runs=runs, form=form, user_run_service=user_run_service)
+
+    # Sorting logic
+    if sort_by == "name":
+        runs = sorted(runs, key=lambda run: run.name.lower())  # Sort by name
+    elif sort_by == "date":
+        runs = sorted(runs, key=lambda run: run.date)  # Sort by date
+    elif sort_by == "address":
+        runs = sorted(runs, key=lambda run: run.address.streetname.lower())  # Sort by address
+
+    # Apply the sorting order (ascending or descending)
+    if order == "desc":
+        runs.reverse()  # Reverse the order for descending
+
+    # Fetch all addresses for the "group by address" dropdown
+    addresses = address_service.get_all_addresses()
+
+    return render_template("runs.html", section="runs", textVars=textVars, runs=runs, form=form, user_run_service=user_run_service, addresses=addresses)
 
 def runDetailSection(textVars, run_id):
     run = run_service.get_run_by_id(run_id)

@@ -7,68 +7,99 @@
 {% block content %}
 <div class="container mt-4">
   
-  <div class="mb-4 d-flex justify-content-between align-items-center">
-    <div>
-        <h2 class="mb-1">{{ textVars['runs_list'] }}</h2>
-        <p class="text-muted mb-0">{{ textVars['description'] }}</p>
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="mb-1">{{ textVars['runs_list'] }}</h2>
+            <p class="text-muted mb-0">{{ textVars['description'] }}</p>
+        </div>
+        {% if g.current_user.isadmin or g.current_user.cancreateruns %}
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+            <i class="bi bi-plus-circle"></i> {{ textVars['create_run'] }}
+        </button>
+        {% endif %}
     </div>
-    {% if g.current_user.isadmin or g.current_user.cancreateruns %}
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
-          <i class="bi bi-plus-circle"></i> {{ textVars['create_run'] }}
-      </button>
-    {% endif %}
-  </div>
 
-  <!-- Runs List Table -->
-  <table class="table table-striped">
-      <thead>
-          <tr>
-              <th scope="col">{{ textVars['run_name_label'] }}</th>
-              <th scope="col">{{ textVars['run_date_label'] }}</th>
-              <th scope="col">{{ textVars['description_label'] }}</th>
-              <th scope="col">{{ textVars['address_label'] }}</th>
-              {% if g.current_user.isadmin or g.current_user.cancreateruns %}
-              <th scope="col">{{ textVars['edit'] }}</th>
-              <th scope="col">{{ textVars['delete'] }}</th>
-              {% endif %}
-          </tr>
-      </thead>
-      <tbody>
-          {% for run in runs %}
-          <tr>
-              <td><a href="{{ url_for('content_section', section='runs/' ~ run.id) }}">{{ run.name }}</a></td>
-              <td>{{ run.date.strftime('%d-%m-%Y') }}</td>
-              <td>{{ run.description }}</td>
-              <td>{{ run.address.streetname }}, {{ run.address.postalcode }}</td>
+    <div class="sorting d-flex justify-content-end p-3">
+        <form method="GET" action="{{ url_for('content_section', section='runs') }}" class="d-flex gap-3 align-items-center">
+            <div class="form-group mb-0">
+                <label for="sort_by" class="form-label">Sort by:</label>
+                <select id="sort_by" name="sort_by" class="form-select form-select-sm">
+                    <option value="name" {% if request.args.get('sort_by') == 'name' %}selected{% endif %}>Name</option>
+                    <option value="date" {% if request.args.get('sort_by') == 'date' %}selected{% endif %}>Date</option>
+                    <option value="address" {% if request.args.get('sort_by') == 'address' %}selected{% endif %}>Address</option>
+                </select>
+            </div>
+    
+            <div class="form-group mb-0">
+                <label for="order" class="form-label">Order:</label>
+                <select id="order" name="order" class="form-select form-select-sm">
+                    <option value="asc" {% if request.args.get('order') == 'asc' %}selected{% endif %}>
+                        <i class="fas fa-arrow-up"></i> Ascending
+                    </option>
+                    <option value="desc" {% if request.args.get('order') == 'desc' %}selected{% endif %}>
+                        <i class="fas fa-arrow-down"></i> Descending
+                    </option>
+                    
+                </select>
+            </div>
+    
+            <button type="submit" class="btn btn-primary btn-sm">Sort</button>
+        </form>
+    </div>
+    
+    
 
-              
-              {% set user_run = user_run_service.get_user_run_by_run_id(run.id) %}
-              {% if g.current_user.isadmin or user_run %}
-              <!-- Admin or user who created the run can edit it -->
-              <td>
-                  <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRunModal{{ run.id }}" onclick="populateEditRunForm('{{ run.id }}', '{{ run.name }}', '{{ run.date }}', '{{ run.description }}', '{{ run.address.streetname }}', '{{ run.address.postalcode }}')">
-                      <i class="bi bi-pencil"></i>
-                  </button>
-              </td>
-              <!-- Admin or user who created the run can delete it -->
-              <td>
-                  <form method="POST" action="{{ url_for('content_section', section='runs') }}">
-                      <input type="hidden" name="delete_run" value="{{ run.id }}">
-                      <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ run.id }}">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                  </form>
-              </td>
-              {% else %}
-              <!-- Empty space to maintain alignment for runs created by others -->
-              <td class="empty-cell"></td>
-              <td class="empty-cell"></td>
-              {% endif %}
-          </tr>
-          {% endfor %}
-      </tbody>
-  </table>
-</div>
+
+    <!-- Runs List Table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">{{ textVars['run_name_label'] }}</th>
+                <th scope="col">{{ textVars['run_date_label'] }}</th>
+                <th scope="col">{{ textVars['description_label'] }}</th>
+                <th scope="col">{{ textVars['address_label'] }}</th>
+                {% if g.current_user.isadmin or g.current_user.cancreateruns %}
+                <th scope="col">{{ textVars['edit'] }}</th>
+                <th scope="col">{{ textVars['delete'] }}</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for run in runs %}
+            <tr>
+                <td><a href="{{ url_for('content_section', section='runs/' ~ run.id) }}">{{ run.name }}</a></td>
+                <td>{{ run.date.strftime('%d-%m-%Y') }}</td>
+                <td>{{ run.description }}</td>
+                <td>{{ run.address.streetname }}, {{ run.address.postalcode }}</td>
+
+                
+                {% set user_run = user_run_service.get_user_run_by_run_id(run.id) %}
+                {% if g.current_user.isadmin or user_run %}
+                <!-- Admin or user who created the run can edit it -->
+                <td>
+                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRunModal{{ run.id }}" onclick="populateEditRunForm('{{ run.id }}', '{{ run.name }}', '{{ run.date }}', '{{ run.description }}', '{{ run.address.streetname }}', '{{ run.address.postalcode }}')">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </td>
+                <!-- Admin or user who created the run can delete it -->
+                <td>
+                    <form method="POST" action="{{ url_for('content_section', section='runs') }}">
+                        <input type="hidden" name="delete_run" value="{{ run.id }}">
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ run.id }}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </td>
+                {% else %}
+                <!-- Empty space to maintain alignment for runs created by others -->
+                <td class="empty-cell"></td>
+                <td class="empty-cell"></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
 
   <!-- Create Run Modal -->
   <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">

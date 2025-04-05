@@ -24,6 +24,9 @@ class AddressService:
         self.session.add(new_address)
         self.session.commit()
         return new_address.id
+    
+    def get_all_addresses(self):
+        return self.session.query(Address).all()
 
     def close(self):
         self.session.close()
