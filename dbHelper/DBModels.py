@@ -148,9 +148,11 @@ class UserRace(Base):
     userracenumber = Column(Integer, nullable=False)
     time = Column(Interval, nullable=True)
     raceid = Column(Integer, ForeignKey('race.id'), nullable=False)
+    userid = Column(Integer, ForeignKey('users.id'), nullable=False)
 
     payment = relationship("Payment")
     race = relationship("Race")
+    user = relationship("User", backref="user_races")
 
     def __repr__(self):
-        return f"<UserRace(iduserrace={self.iduserrace}, number={self.userracenumber}, time={self.time}, raceid={self.raceid})>"
+        return f"<UserRace(iduserrace={self.iduserrace}, number={self.userracenumber}, time={self.time}, raceid={self.raceid}, userid={self.userid})>"

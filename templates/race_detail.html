@@ -5,7 +5,25 @@
 {% endblock %}
 
 {% block content %}
+<div class="card p-4">
+    <h2 class="text-xl font-bold mb-4">{{ race.name }}</h2>
+    <p><strong>{{ textVars['date'] }}:</strong> {{ race.date }}</p>
+    <p><strong>{{ textVars['description'] }}:</strong> {{ race.description }}</p>
 
-<h2>Race detail</h2>
+    <hr class="my-4">
 
+    <h3 class="text-lg font-semibold">{{ textVars['participants'] }}:</h3>
+    <ul class="list-disc list-inside">
+        {% for user_race in user_races %}
+            {% set user = users[loop.index0] %}
+            <li>
+                {{ user.name }}
+                {{ user.surname }} 
+                {% if user_race.iscreator %}
+                    (Creator)
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}

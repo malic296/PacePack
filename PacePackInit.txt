@@ -91,7 +91,8 @@ CREATE TABLE user_race (
     paymentid      INTEGER NOT NULL REFERENCES payment(id),  -- Reference to the payment
     userracenumber INTEGER NOT NULL,        -- User's race number
     time           INTERVAL,                -- Time taken by the user to complete the race
-    raceid         INTEGER NOT NULL REFERENCES race(id)  -- Reference to the race
+    raceid         INTEGER NOT NULL REFERENCES race(id),  -- Reference to the race
+    userid         INTEGER NOT NULL REFERENCES users(id)  -- Reference to the user
 );
 
 -- Create the run table to store run information
@@ -136,13 +137,13 @@ INSERT INTO passwords (passwordhash, passwordsalt) VALUES ('hash3', 'salt3');
 
 -- Insert test data into the users table
 INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid)
-VALUES ('John', 'Doe', 1, 'john.doe@example.com', '123456789', '+1', TRUE, TRUE, 'M', 1);
+VALUES ('John', 'Doe', 1, 'john.doe@example.com', '123456789', '1', TRUE, TRUE, 'M', 1);
 
 INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid)
-VALUES ('Jane', 'Smith', 2, 'jane.smith@example.com', '987654321', '+1', FALSE, TRUE, 'F', 2);
+VALUES ('Jane', 'Smith', 2, 'jane.smith@example.com', '987654321', '1', FALSE, TRUE, 'F', 2);
 
 INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid)
-VALUES ('Alice', 'Johnson', 3, 'alice.johnson@example.com', '555555555', '+1', FALSE, FALSE, 'F', 3);
+VALUES ('Alice', 'Johnson', 3, 'alice.johnson@example.com', '555555555', '1', FALSE, FALSE, 'F', 3);
 
 -- Insert test data into the sponsor table
 INSERT INTO sponsor (name, email, passwordid) VALUES ('Sponsor1', 'sponsor1@example.com', 1);
@@ -160,8 +161,10 @@ INSERT INTO payment (price, state, date, userid) VALUES (50, 'P', '2023-10-01', 
 INSERT INTO payment (price, state, date, userid) VALUES (30, 'P', '2023-10-02', 2);
 
 -- Insert test data into the user_race table
-INSERT INTO user_race (paymentid, userracenumber, raceid) VALUES (1, 101, 1);
-INSERT INTO user_race (paymentid, userracenumber, raceid) VALUES (2, 102, 2);
+INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (1, 101, 1, 1);
+INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (1, 102, 1, 2);
+INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (2, 10, 2, 1);
+INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (2, 11, 2, 2);
 
 -- Insert test data into the run table
 INSERT INTO run (addressid, date, name, description) VALUES (1, '2023-10-10', 'Morning Run', '5 km morning run');

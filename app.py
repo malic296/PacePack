@@ -439,7 +439,8 @@ def runsSection(textVars):
 def runDetailSection(textVars, run_id):
     run = run_service.get_run_by_id(run_id)
     if not run:
-        return "<h2>Run not found</h2>", 404
+        flash("Run not found.", "danger")
+        return redirect(url_for("content_section", section="runs"))
 
     user_runs = user_run_service.get_users_by_run_id(run_id)
     users = [user_service.get_user_by_id(user_run.userid) for user_run in user_runs]
@@ -447,7 +448,7 @@ def runDetailSection(textVars, run_id):
 
     return render_template(
         "run_detail.html",
-        section="runs",
+        section=f"runs/{run_id}",
         textVars=textVars,
         run=run,
         users=users,
@@ -464,7 +465,7 @@ def raceDetailSection(textVars, race_id):
 
     return render_template(
         "race_detail.html",
-        section="races",
+        section=f"races/{race_id}",
         textVars=textVars,
         race=race,
         users=users,
@@ -475,8 +476,12 @@ def get_current_user():
     user_token = session.get("user_token")
     if user_token:
         user = user_service.getUserInfo(user_token)
-        print(f"User {user.name} is admin: {user.isadmin}")  # Check if user info is being returned
-        return user
+        if user is None:
+            print("Invalid user ID in session, logging out.")
+            session.pop("user_id", None)
+        else:
+            print(f"User {user.name} is admin: {user.isadmin}")  # Check if user info is being returned
+            return user
     return None
 
 

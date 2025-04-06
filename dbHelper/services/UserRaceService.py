@@ -15,12 +15,13 @@ class UserRaceService:
     def __init__(self):
         self.session = SessionLocal()
 
-    def add_user_race(self, paymentid, userracenumber, time, raceid):
+    def add_user_race(self, paymentid, userracenumber, time, raceid, userid):
         new_user_race = UserRace(
             paymentid=paymentid,
             userracenumber=userracenumber,
             time=time,
-            raceid=raceid
+            raceid=raceid,
+            userid=userid
         )
         self.session.add(new_user_race)
         self.session.commit()
