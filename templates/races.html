@@ -73,15 +73,14 @@
                 <td>{{ race.address.streetname }}, {{ race.address.postalcode }}</td>
 
                 
-                {% set user_race = user_race_service.get_user_race_by_id(race.id) %}
-                {% if g.current_user.isadmin or user_race %}
-                <!-- Admin or user who created the run can edit it -->
+                {% if g.current_user.isadmin %}
+                <!-- Admin can edit it -->
                 <td>
                     <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRunModal{{ race.id }}" onclick="populateEditRaceForm('{{ race.id }}', '{{ race.name }}', '{{ race.date }}', '{{ race.description }}', '{{ race.address.streetname }}', '{{ race.address.postalcode }}')">
                         <i class="bi bi-pencil"></i>
                     </button>
                 </td>
-                <!-- Admin or user who created the run can delete it -->
+                <!-- Admin can delete it -->
                 <td>
                     <form method="POST" action="{{ url_for('content_section', section='races') }}">
                         <input type="hidden" name="delete_race" value="{{ race.id }}">
