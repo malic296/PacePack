@@ -430,7 +430,15 @@
   }
   
   .input-icon {
-    position: absolute;
+    position: relative;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #95a5a6;
+    z-index: 10;
+  }
+  .input-login-icon {
+    position: relative;
     left: 15px;
     top: 50%;
     transform: translateY(-50%);
