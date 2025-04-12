@@ -1,0 +1,7 @@
+flask
+flask-wtf
+flask-mail
+python-dotenv
+sqlalchemy
+psycopg2-binary
+email-validator
