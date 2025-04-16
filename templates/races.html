@@ -56,6 +56,7 @@
             <tr>
                 <th scope="col">{{ textVars['race_name_label'] }}</th>
                 <th scope="col">{{ textVars['race_date_label'] }}</th>
+                <th scope="col">{{ textVars['race_time_label'] }}</th>
                 <th scope="col">{{ textVars['description_label'] }}</th>
                 <th scope="col">{{ textVars['address_label'] }}</th>
                 {% if g.current_user.isadmin %}
@@ -69,6 +70,7 @@
             <tr>
                 <td><a href="{{ url_for('content_section', section='races/' ~ race.id) }}">{{ race.name }}</a></td>
                 <td>{{ race.date.strftime('%d-%m-%Y') }}</td>
+                <td>{{ race.time.strftime('%H:%M') }}</td>
                 <td>{{ race.description }}</td>
                 <td>{{ race.address.streetname }}, {{ race.address.postalcode }}</td>
 
@@ -116,8 +118,12 @@
                         <input type="text" class="form-control" id="name" name="name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="date" class="form-label">{{ textVars["rae_date_label"] }}</label>
+                        <label for="date" class="form-label">{{ textVars["race_date_label"] }}</label>
                         <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="time" class="form-label">{{ textVars['race_time_label'] }}</label>
+                        <input type="time" class="form-control" id="time" name="time" required>
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">{{ textVars["description_label"] }}</label>
@@ -145,9 +151,9 @@
       </div>
   </div>
 
-  <!-- Edit Run Modals -->
-  {% for run in runs %}
-    <div class="modal fade" id="editRunModal{{ run.id }}" tabindex="-1" aria-labelledby="editRunModalLabel{{ run.id }}" aria-hidden="true">
+  <!-- Edit Race Modals -->
+  {% for race in races %}
+    <div class="modal fade" id="editRunModal{{ race.id }}" tabindex="-1" aria-labelledby="editRunModalLabel{{ race.id }}" aria-hidden="true">
       <div class="modal-dialog">
           <form method="POST" action="{{ url_for('content_section', section='runs') }}">
             {{ form.hidden_tag() }}
@@ -157,39 +163,44 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                  <input type="hidden" name="run_id" id="run_id" value="{{ run.id }}">
+                  <input type="hidden" name="run_id" id="run_id" value="{{ race.id }}">
 
                   <div class="mb-3">
-                      <label for="name" class="form-label">{{ textVars['run_name_label'] }}</label>
-                      <input type="text" class="form-control" id="name" name="name" value="{{ run.name }}" required>
+                      <label for="name" class="form-label">{{ textVars['race_name_label'] }}</label>
+                      <input type="text" class="form-control" id="name" name="name" value="{{ race.name }}" required>
                   </div>
 
                   <div class="mb-3">
-                      <label for="date" class="form-label">{{ textVars['run_date_label'] }}</label>
-                      <input type="date" class="form-control" id="date" name="date" value="{{ run.date }}" required>
+                      <label for="date" class="form-label">{{ textVars['race_date_label'] }}</label>
+                      <input type="date" class="form-control" id="date" name="date" value="{{ race.date }}" required>
+                  </div>
+
+                  <div class="mb-3">
+                      <label for="time" class="form-label">{{ textVars['race_time_label'] }}</label>
+                      <input type="time" class="form-control" id="time" name="time" value="{{ race.time }}" required>
                   </div>
 
                   <div class="mb-3">
                       <label for="description" class="form-label">{{ textVars['description_label'] }}</label>
-                      <textarea class="form-control" id="description" name="description" required>{{ run.description }}</textarea>
+                      <textarea class="form-control" id="description" name="description" required>{{ race.description }}</textarea>
                   </div>
 
                   <!-- Address Fields (Aligned vertically in smaller space) -->
                   
                   <div class="mb-3">
                       <label for="streetname" class="form-label">{{ textVars['street_name_label'] }}</label>
-                      <input type="text" class="form-control" id="streetname" name="streetname" value="{{ run.address.streetname }}" required>
+                      <input type="text" class="form-control" id="streetname" name="streetname" value="{{ race.address.streetname }}" required>
                   </div>
 
                   <div class="mb-3">
                       <label for="postalcode" class="form-label">{{ textVars['postal_code_label'] }}</label>
-                      <input type="text" class="form-control" id="postalcode" name="postalcode" value="{{ run.address.postalcode }}" required>
+                      <input type="text" class="form-control" id="postalcode" name="postalcode" value="{{ race.address.postalcode }}" required>
                   </div>
                   
 
                   <div class="mb-3">
                       <label for="country" class="form-label">{{ textVars['country_label'] }}</label>
-                      <input type="text" class="form-control" id="country" name="country" value="{{ run.address.country }}" required>
+                      <input type="text" class="form-control" id="country" name="country" value="{{ race.address.country }}" required>
                   </div>
                 </div>
                 <div class="modal-footer">

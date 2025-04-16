@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, IntegerField, Radio
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 import json
 from flask import session
+from wtforms.fields import TimeField
 
 with open("textVars.json", "r", encoding="utf-8") as file:
     translations = json.load(file)
@@ -89,6 +90,7 @@ class RunForm(FlaskForm):
     """Form for creating and editing runs."""
     name = StringField("Run Name", validators=[DataRequired()])
     date = DateField("Date", format='%d-%m-%Y', validators=[DataRequired()])
+    time = TimeField("Start Time", format='%H:%M', validators=[DataRequired()])
     description = TextAreaField("Description", validators=[DataRequired()])
     address_id = StringField("Address ID", validators=[DataRequired()])
     submit = SubmitField("Save")
@@ -96,6 +98,7 @@ class RunForm(FlaskForm):
 class RaceForm(FlaskForm):
     name = StringField("Race Name", validators=[DataRequired()])
     date = DateField("Date", format='%d-%m-%Y', validators=[DataRequired()])
+    time = TimeField("Start Time", format='%H:%M', validators=[DataRequired()])
     capacity = IntegerField("Capacity", validators=[DataRequired()])
     description = TextAreaField("Description", validators=[DataRequired()])
     sponsor_id = IntegerField("Sponsor ID", validators=[DataRequired()])

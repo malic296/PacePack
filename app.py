@@ -323,19 +323,20 @@ def racesSection(textVars):
             postalcode = request.form.get("postalcode")
             country = request.form.get("country")
             date = request.form.get("date")
+            time = request.form.get("time")
             name = request.form.get("name")
             description = request.form.get("description")
 
             if race_id:
                 try:
                    # TODO 
-                    updated_race = race_service.update_race(race_id, streetname, postalcode, country, date, name, description)
+                    updated_race = race_service.update_race(race_id, streetname, postalcode, country, date, time, name, description)
                     flash(f"Race '{updated_race.name}' updated successfully!", "success")
                 except Exception as e:
                     flash(f"Error updating race: {str(e)}", "danger")
             else:
                 try:
-                    new_race = race_service.add_race(streetname, postalcode, country, date, name, description)
+                    new_race = race_service.add_race(streetname, postalcode, country, date, time, name, description)
                     flash(f"Race '{new_race.name}' created successfully!", "success")
                     user_race_service.create_race_and_add_creator(g.current_user.id, new_race.id)
                 except Exception as e:
@@ -391,18 +392,19 @@ def runsSection(textVars):
             postalcode = request.form.get("postalcode")
             country = request.form.get("country")
             date = request.form.get("date")
+            time = request.form.get("time")
             name = request.form.get("name")
             description = request.form.get("description")
 
             if run_id:
                 try:
-                    updated_run = run_service.update_run(run_id, streetname, postalcode, country, date, name, description)
+                    updated_run = run_service.update_run(run_id, streetname, postalcode, country, date, time, name, description)
                     flash(f"Run '{updated_run.name}' updated successfully!", "success")
                 except Exception as e:
                     flash(f"Error updating run: {str(e)}", "danger")
             else:
                 try:
-                    new_run = run_service.create_run(streetname, postalcode, country, date, name, description)
+                    new_run = run_service.create_run(streetname, postalcode, country, date, time, name, description)
                     flash(f"Run '{new_run.name}' created successfully!", "success")
                     user_run_service.create_run_and_add_creator(g.current_user.id, new_run.id)
                 except Exception as e:

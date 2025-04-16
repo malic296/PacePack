@@ -15,9 +15,10 @@ class RaceService:
     def __init__(self):
         self.session = SessionLocal()
 
-    def add_race(self, date, capacity, state, name, description, sponsorid, categoryid, addressid):
+    def add_race(self, date, time, capacity, state, name, description, sponsorid, categoryid, addressid):
         new_race = Race(
             date=date,
+            time=time,
             capacity=capacity,
             state=state,
             name=name,
@@ -45,10 +46,11 @@ class RaceService:
     def get_races_by_address(self, address_id):
         return self.session.query(Race).filter(Race.addressid == address_id).all()
 
-    def update_race(self, race_id, date=None, capacity=None, state=None, name=None, description=None, sponsorid=None, categoryid=None, addressid=None):
+    def update_race(self, race_id, date=None, time=None, capacity=None, state=None, name=None, description=None, sponsorid=None, categoryid=None, addressid=None):
         race = self.get_race_by_id(race_id)
         if race:
             if date: race.date = date
+            if time: race.time = time
             if capacity: race.capacity = capacity
             if state: race.state = state
             if name: race.name = name

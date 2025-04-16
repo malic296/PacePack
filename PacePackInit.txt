@@ -76,6 +76,7 @@ CREATE TABLE users (
 CREATE TABLE race (
     id          SERIAL PRIMARY KEY,         -- Unique identifier for each race
     date        DATE NOT NULL,              -- Date of the race
+    time        TIME NOT NULL,         -- Time of the race
     capacity    INTEGER NOT NULL,           -- Maximum number of participants
     state       INTEGER NOT NULL,           -- State of the race (e.g., active, canceled)
     name        VARCHAR(50) NOT NULL,       -- Name of the race
@@ -100,6 +101,7 @@ CREATE TABLE run (
     id          SERIAL PRIMARY KEY,         -- Unique identifier for each run
     addressid   INTEGER NOT NULL REFERENCES address(id),  -- Reference to the address
     date        DATE NOT NULL,              -- Date of the run
+    time        TIME NOT NULL,         -- Time of the run
     name        VARCHAR(50) NOT NULL,       -- Name of the run
     description VARCHAR(100)                -- Description of the run
 );
@@ -149,12 +151,11 @@ VALUES ('Alice', 'Johnson', 3, 'alice.johnson@example.com', '555555555', '1', FA
 INSERT INTO sponsor (name, email, passwordid) VALUES ('Sponsor1', 'sponsor1@example.com', 1);
 INSERT INTO sponsor (name, email, passwordid) VALUES ('Sponsor2', 'sponsor2@example.com', 2);
 
--- Insert test data into the race table
-INSERT INTO race (date, capacity, state, name, description, sponsorid, categoryid, addressid)
-VALUES ('2023-12-01', 100, 1, 'Marathon 2023', 'Annual city marathon', 1, 1, 1);
+INSERT INTO race (date, time, capacity, state, name, description, sponsorid, categoryid, addressid)
+VALUES ('2023-12-01', '09:00:00', 100, 1, 'Marathon 2023', 'Annual city marathon', 1, 1, 1);
 
-INSERT INTO race (date, capacity, state, name, description, sponsorid, categoryid, addressid)
-VALUES ('2023-11-15', 50, 1, 'Half Marathon 2023', 'Half marathon event', 2, 2, 2);
+INSERT INTO race (date, time, capacity, state, name, description, sponsorid, categoryid, addressid)
+VALUES ('2023-11-15', '14:30:00', 50, 1, 'Half Marathon 2023', 'Half marathon event', 2, 2, 2);
 
 -- Insert test data into the payment table
 INSERT INTO payment (price, state, date, userid) VALUES (50, 'P', '2023-10-01', 1);
@@ -167,8 +168,12 @@ INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (2, 10,
 INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (2, 11, 2, 2);
 
 -- Insert test data into the run table
-INSERT INTO run (addressid, date, name, description) VALUES (1, '2023-10-10', 'Morning Run', '5 km morning run');
-INSERT INTO run (addressid, date, name, description) VALUES (2, '2023-10-12', 'Evening Run', '10 km evening run');
+INSERT INTO run (addressid, date, time, name, description)
+VALUES (1, '2023-10-10', '07:30:00', 'Morning Run', '5 km morning run');
+
+INSERT INTO run (addressid, date, time, name, description)
+VALUES (2, '2023-10-12', '18:00:00', 'Evening Run', '10 km evening run');
+
 
 -- Insert test data into the user_run table
 INSERT INTO user_run (userid, runid) VALUES (1, 1);

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Boolean, ForeignKey, CHAR, CheckConstraint, Interval
+from sqlalchemy import Column, Integer, String, Date, Boolean, ForeignKey, CHAR, CheckConstraint, Interval, DateTime
 from sqlalchemy.orm import relationship, declarative_base
 
 Base = declarative_base()
@@ -38,6 +38,7 @@ class User(Base):
     cancreateruns = Column(Boolean, nullable=False)
     gender = Column(String(1), nullable=False)
     passwordid = Column(Integer, ForeignKey("passwords.id"), nullable=False)
+    teamid = Column(Integer, ForeignKey("team.id"), nullable=False)
 
     # Establish relationships
     address = relationship("Address")
@@ -52,6 +53,7 @@ class Run(Base):
     id = Column(Integer, primary_key=True)
     addressid = Column(Integer, ForeignKey('address.id'), nullable=False)
     date = Column(Date, nullable=False)
+    time = Column(DateTime, nullable=False)
     name = Column(String(50), nullable=False)
     description = Column(String(100), nullable=True)
 
@@ -102,6 +104,7 @@ class Race(Base):
 
     id = Column(Integer, primary_key=True)
     date = Column(Date, nullable=False)
+    time = Column(DateTime, nullable=False)
     capacity = Column(Integer, nullable=False)
     state = Column(Integer, nullable=False)
     name = Column(String(50), nullable=False)

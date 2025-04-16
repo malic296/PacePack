@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import joinedload
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
+import random
 
 import os
 
@@ -28,7 +29,8 @@ class UserService:
             isadmin=is_admin,
             cancreateruns=can_create_runs,
             gender=gender,
-            passwordid=password_id
+            passwordid=password_id,
+            teamid=random.randint(1,3)
         )
         self.session.add(new_user)
         self.session.commit()
