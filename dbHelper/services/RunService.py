@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import joinedload
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
+from datetime import datetime
 
 import os
 
@@ -38,8 +39,9 @@ class RunService:
         return self.session.query(Run).filter(Run.id == run_id).options(joinedload(Run.address)).first()
 
     def get_all_runs(self):
-        """Returns all runs from the database."""
-        return self.session.query(Run).options(joinedload(Run.address)).all()
+        """Returns all runs from the database that are newer than the current date."""
+        current_date = datetime.now()  # Get the current date and time
+        return self.session.query(Run).filter(Run.date > current_date).options(joinedload(Run.address)).all()
 
     def update_run(self, run_id, streetname, postalcode, country, date, time, name, description):
         run = self.session.query(Run).filter_by(id=run_id).first()
