@@ -71,6 +71,24 @@ class UserRunService:
         except Exception as e:
             print(f"Error fetching user by ID: {e}")
             return None
+        
+    def register_user_to_run(self, runId, userId):
+        try:
+            existing = self.session.query(UserRun).filter_by(userid=userId, runid=runId).first()
+
+            if existing:
+                return False  
+
+            new_registration = UserRun(userid=userId, runid=runId)
+            self.session.add(new_registration)
+            self.session.commit()
+            return True
+
+        except Exception as e:
+            print(f"Error registering user {userId} for run {runId}: {e}")
+            self.session.rollback()  
+            return False
+
 
 
     def close(self):

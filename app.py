@@ -57,6 +57,15 @@ def set_language(lang):
     session["lang"] = lang
     return redirect(url_for("content_section", section=session["section"]))
 
+@app.route("/register_user/<userid>/<runid>")
+def register_user(userid, runid):
+    added = user_run_service.register_user_to_run(userId=userid, runId=runid)
+    if added:
+        flash("Registration successful", "success")
+    else:
+        flash("Already registered for this run", "warning")
+    return redirect(url_for("content_section", section=session["section"]))
+
 @app.route("/toggle-theme")
 def toggle_theme():
     session["theme"] = "dark" if session.get("theme", "light") == "light" else "light"

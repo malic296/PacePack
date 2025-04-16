@@ -59,10 +59,12 @@
                 <th scope="col">{{ textVars['run_time_label'] }}</th>
                 <th scope="col">{{ textVars['description_label'] }}</th>
                 <th scope="col">{{ textVars['address_label'] }}</th>
+                <th scope="col">{{ textVars['actions'] }}</th>
                 {% if g.current_user.isadmin or g.current_user.cancreateruns %}
                 <th scope="col">{{ textVars['edit'] }}</th>
                 <th scope="col">{{ textVars['delete'] }}</th>
                 {% endif %}
+                
             </tr>
         </thead>
         <tbody>
@@ -92,11 +94,20 @@
                         </button>
                     </form>
                 </td>
+                
                 {% else %}
                 <!-- Empty space to maintain alignment for runs created by others -->
                 <td class="empty-cell"></td>
                 <td class="empty-cell"></td>
                 {% endif %}
+                <td>
+                    {% set register_url = url_for('register_user', userid=g.current_user.id, runid=run.id) %}
+
+                    <button class="btn btn-warning btn-sm" onclick="window.location.href='{{ register_url }}'">
+                        <i class="bi bi-person-plus"></i>
+                    </button>
+                </td>
+                
             </tr>
             {% endfor %}
         </tbody>
