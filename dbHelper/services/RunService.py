@@ -43,6 +43,12 @@ class RunService:
         current_date = datetime.now()
         print(current_date)  
         return self.session.query(Run).filter(Run.date + Run.time >= current_date).options(joinedload(Run.address)).all()
+    
+    def get_past_runs(self):
+        current_datetime = datetime.now()
+        return (self.session.query(Run).filter(Run.date + Run.time < current_datetime).options(joinedload(Run.address)).all())
+
+
 
     def update_run(self, run_id, streetname, postalcode, country, date, time, name, description):
         run = self.session.query(Run).filter_by(id=run_id).first()

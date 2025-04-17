@@ -6,7 +6,7 @@ from forms import LoginForm, RegisterForm, VerificationForm, EditProfileForm, Ru
 from flask_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
 from mailService import send_verification_code,generate_verification_code
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from dbHelper.services.UserService import UserService
 from dbHelper.services.AddressService import AddressService
 from dbHelper.services.PasswordService import PasswordService
@@ -315,7 +315,26 @@ def myProfileSection(textVars):
     return render_template("myProfile.html", section="myProfile", textVars=textVars, user=user, form=form)
 
 def homeSection(textVars):
-    return render_template("home.html", section="home", textVars=textVars)
+    user_id = g.current_user.id
+    all_runs = run_service.get_all_runs() # není to all ale jen budoucí (celou dobu jsem si toho nevšiml xDDDDD) pak ten comm smaž
+    past_runs = run_service.get_past_runs()
+
+    run_count = len(past_runs)
+    
+
+    user_upcoming_runs = []
+    for run in all_runs:
+        user_run = user_run_service.get_user_run_by_run_id_and_user_id(run.id, user_id)
+        if user_run:
+            user_upcoming_runs.append({
+            "run": run,
+            "is_creator": user_run.iscreator
+                })
+    print("RUNCOUNT", run_count)
+   
+
+    return render_template("home.html",section="home",textVars=textVars,upcoming_runs=user_upcoming_runs, run_count = run_count)
+
 
 def indexSection(textVars):
     return render_template("index.html", section="index", textVars=textVars)

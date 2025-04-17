@@ -72,6 +72,7 @@
               </span>
             </a>
 
+            {% if section not in ['login', 'register', 'index', 'verify'] %}
             <a
               href="{{ url_for('logout') }}"
               class="btn btn-outline-danger logout-btn"
@@ -79,6 +80,7 @@
               <i class="bi bi-box-arrow-right"></i>
               <span class="d-none d-md-inline">Logout</span>
             </a>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -89,7 +91,7 @@
         <nav class="col-md-3 col-lg-2 d-md-block sidebar py-4">
           <div class="nav flex-column nav-pills">
             {% if section == 'login' or section == 'register' or section ==
-            'index'%}
+            'index' or section == 'verify'%}
             <a
               class="nav-link {% if section == 'index' %}active{% endif %}"
               href="{{ url_for('content_section', section='index') }}"

@@ -25,7 +25,8 @@
                 "time": "Total Time",
                 "pace": "Avarage Pace",
                 "best": "Best Time",
-                "see_full_stats": "See Full Stats"
+                "see_full_stats": "See Full Stats",
+                "runs_count": "Number of Your Runs"
             },
             "cz": {
                 "stats": "Vaše běžecké statistiky",
@@ -34,7 +35,9 @@
                 "time": "Celkový čas",
                 "pace": "Průměrné tempo",
                 "best": "Nejlepší čas",
-                "see_full_stats": "Zobrazit všechny statistiky"
+                "see_full_stats": "Zobrazit všechny statistiky",
+                "runs_count": "Počet tvých běhů"
+                
             },
             "de": {
                 "stats": "Ihre Laufstatistiken",
@@ -43,7 +46,8 @@
                 "time": "Gesamtzeit",
                 "pace": "Durchschnittstempo",
                 "best": "Beste Zeit",
-                "see_full_stats": "Alle Statistiken ansehen"    
+                "see_full_stats": "Alle Statistiken ansehen",
+                "runs_count": "Anzahl deiner Läufe"    
             }
         },
         "races": {
