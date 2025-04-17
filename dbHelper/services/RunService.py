@@ -42,8 +42,7 @@ class RunService:
         """Returns all runs from the database that are newer than the current date."""
         current_date = datetime.now()
         print(current_date)  
-        #return self.session.query(Run).filter(Run.date + Run.time >= current_date).options(joinedload(Run.address)).all()
-        return self.session.query(Run).options(joinedload(Run.address)).all()
+        return self.session.query(Run).filter(Run.date + Run.time >= current_date).options(joinedload(Run.address)).all()
 
     def update_run(self, run_id, streetname, postalcode, country, date, time, name, description):
         run = self.session.query(Run).filter_by(id=run_id).first()
