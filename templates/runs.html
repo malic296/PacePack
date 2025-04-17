@@ -77,35 +77,47 @@
                 <td>{{ run.address.streetname }}, {{ run.address.postalcode }}</td>
                 <td>
                     {% set register_url = url_for('register_user', userid=g.current_user.id, runid=run.id) %}
-
-                    <button class="btn btn-warning btn-sm" onclick="window.location.href='{{ register_url }}'">
-                        <i class="bi bi-person-plus"></i>
-                    </button>
+                    {% set user_run = user_run_service.get_user_run_by_run_id_and_user_id(run.id, g.current_user.id) %}
+                    {% set run = run_service.get_run_by_id(run.id) %}
+                
+                    {% if user_run.iscreator or run.date < now.date() or run.time < now.time() %}
+                        
+                    {% else %}
+                        {% if run.id in user_registered_run_ids %}
+                            {% set unregister_url = url_for('unregister_user', userid=g.current_user.id, runid=run.id) %}
+                            <button class="btn btn-danger btn-sm" onclick="window.location.href='{{ unregister_url }}'">
+                                <i class="bi bi-person-dash"></i>
+                            </button>
+                        {% else %}
+                            {% set register_url = url_for('register_user', userid=g.current_user.id, runid=run.id) %}
+                            <button class="btn btn-success btn-sm" onclick="window.location.href='{{ register_url }}'">
+                                <i class="bi bi-person-plus"></i>
+                            </button>
+                        {% endif %}
+                    {% endif %}
                 </td>
                 
-                {% set user_run = user_run_service.get_user_run_by_run_id(run.id) %}
-                {% if g.current_user.isadmin or user_run %}
-                <!-- Admin or user who created the run can edit it -->
-                <td>
-                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRunModal{{ run.id }}" onclick="populateEditRunForm('{{ run.id }}', '{{ run.name }}', '{{ run.date }}', '{{ run.description }}', '{{ run.address.streetname }}', '{{ run.address.postalcode }}')">
-                        <i class="bi bi-pencil"></i>
-                    </button>
-                </td>
-                <!-- Admin or user who created the run can delete it -->
-                <td>
-                    <form method="POST" action="{{ url_for('content_section', section='runs') }}">
-                        <input type="hidden" name="delete_run" value="{{ run.id }}">
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ run.id }}">
-                            <i class="bi bi-trash"></i>
+                
+                {% set user_run = user_run_service.get_user_run_by_run_id_and_user_id(run.id, g.current_user.id) %}
+                {% if g.current_user.isadmin or (user_run and user_run.iscreator) %}
+                    <td>
+                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRunModal{{ run.id }}" onclick="populateEditRunForm('{{ run.id }}', '{{ run.name }}', '{{ run.date }}', '{{ run.description }}', '{{ run.address.streetname }}', '{{ run.address.postalcode }}')">
+                            <i class="bi bi-pencil"></i>
                         </button>
-                    </form>
-                </td>
-                
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('content_section', section='runs') }}">
+                            <input type="hidden" name="delete_run" value="{{ run.id }}">
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ run.id }}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
                 {% else %}
-                <!-- Empty space to maintain alignment for runs created by others -->
-                <td class="empty-cell"></td>
-                <td class="empty-cell"></td>
+                    <td class="empty-cell"></td>
+                    <td class="empty-cell"></td>
                 {% endif %}
+
                 
             </tr>
             {% endfor %}

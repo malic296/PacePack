@@ -63,7 +63,16 @@ def register_user(userid, runid):
     if added:
         flash("Registration successful", "success")
     else:
-        flash("Already registered for this run", "warning")
+        flash("error", "danger")
+    return redirect(url_for("content_section", section=session["section"]))
+
+@app.route("/unregister_user/<userid>/<runid>")
+def unregister_user(userid, runid):
+    removed = user_run_service.unregister_user_from_run(userId=userid, runId=runid)
+    if removed:
+        flash("Unregistration successful", "success")
+    else:
+        flash("error", "danger")
     return redirect(url_for("content_section", section=session["section"]))
 
 @app.route("/toggle-theme")
@@ -83,6 +92,7 @@ def content_section(section):
         "home": "home.html",
         "races": "races.html",
         "runs": "runs.html",
+        "teams": "teams.html",
         "index": "index.html",
         "login": "login.html",
         "register": "register.html",
@@ -133,6 +143,8 @@ def content_section(section):
                 return racesSection(textVars)
             case "runs":
                 return runsSection(textVars)
+            case "teams":
+                return teamsSection(textVars)
             case "run_detail":
                 return runDetailSection(textVars, run_id)
             case "race_detail":
@@ -377,6 +389,10 @@ def racesSection(textVars):
 
     return render_template("races.html", section="races", textVars=textVars, races=races, form=form, user_race_service=user_race_service, addresses=addresses)
 
+def teamsSection(textVars):
+    teamScores = team_service.get_team_activity_counts()
+    return render_template("teams.html", section="teams", textVars=textVars, teamScores=teamScores)
+
 def runsSection(textVars):
     """Display all runs and handle creating, editing, and deleting a run."""
     form = RunForm()
@@ -445,7 +461,10 @@ def runsSection(textVars):
     # Fetch all addresses for the "group by address" dropdown
     addresses = address_service.get_all_addresses()
 
-    return render_template("runs.html", section="runs", textVars=textVars, runs=runs, form=form, user_run_service=user_run_service, addresses=addresses)
+    now = datetime.now()
+
+    user_registered_run_ids = [ur.runid for ur in user_run_service.get_user_runs(g.current_user.id)]
+    return render_template("runs.html", section="runs", textVars=textVars, runs=runs, form=form, user_run_service=user_run_service,run_service=run_service, addresses=addresses, user_registered_run_ids = user_registered_run_ids, now=now)
 
 def runDetailSection(textVars, run_id):
     run = run_service.get_run_by_id(run_id)

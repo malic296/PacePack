@@ -1,8 +1,16 @@
-from dbHelper.DBModels import Team
+from dbHelper.DBModels import Team, User, UserRun, Race
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, or_
 from dotenv import load_dotenv
 import os
+
+from sqlalchemy import func, select, and_, cast, DateTime
+from sqlalchemy.orm import aliased
+from datetime import datetime
+
+from sqlalchemy.sql import literal_column
+
+from sqlalchemy import case
 
 load_dotenv("environment.env")
 
@@ -34,6 +42,24 @@ class TeamService:
             self.session.commit()
             return True
         return False
+
+    def get_team_activity_counts(self):
+        race_datetime = Race.date + Race.time
+
+        stmt = (
+            self.session.query(
+                Team.id.label("team_id"),
+                func.count(UserRun.id).label("activity_count")
+            )
+            .join(User, User.teamid == Team.id)
+            .join(UserRun, UserRun.userid == User.id)
+            .join(Race, Race.id == UserRun.runid)
+            .filter(race_datetime < datetime.now())  
+            .group_by(Team.id)
+        )
+
+        return self.session.execute(stmt).fetchall()
+
 
     def close(self):
         self.session.close()

@@ -1,4 +1,4 @@
-from dbHelper.DBModels import User, Password, Address, Run
+from dbHelper.DBModels import User, Password, Address, Run, UserRun
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import joinedload
 from sqlalchemy import create_engine
@@ -40,15 +40,16 @@ class RunService:
 
     def get_all_runs(self):
         """Returns all runs from the database that are newer than the current date."""
-        current_date = datetime.now()  # Get the current date and time
-        return self.session.query(Run).filter(Run.date > current_date).options(joinedload(Run.address)).all()
+        current_date = datetime.now()
+        print(current_date)  
+        #return self.session.query(Run).filter(Run.date + Run.time >= current_date).options(joinedload(Run.address)).all()
+        return self.session.query(Run).options(joinedload(Run.address)).all()
 
     def update_run(self, run_id, streetname, postalcode, country, date, time, name, description):
         run = self.session.query(Run).filter_by(id=run_id).first()
         if not run:
             raise Exception("Run not found")
 
-        # Check if the address exists
         existing_address = self.session.query(Address).filter_by(streetname=streetname, postalcode=postalcode, country=country).first()
         
         if not existing_address:
@@ -75,10 +76,12 @@ class RunService:
                 raise ValueError(f"Run with ID {run_id} not found.")
             
             address_id = run.addressid
+
+            self.session.query(UserRun).filter_by(runid=run_id).delete()
+
             self.session.delete(run)
             self.session.commit()
 
-            # Check if the address is still used
             address_in_use = self.session.query(Run).filter_by(addressid=address_id).first()
             if not address_in_use:
                 address = self.session.query(Address).filter_by(id=address_id).first()
@@ -89,7 +92,9 @@ class RunService:
             return True
 
         except Exception as e:
-            raise Exception(f"Failed to delete run: {str(e)}")
+            self.session.rollback()
+            return False
+
     
     def close(self):
         self.session.close()

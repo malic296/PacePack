@@ -133,6 +133,12 @@
             >
               <i class="bi bi-activity"></i> Runs
             </a>
+            <a
+              class="nav-link {% if section == 'teams' %}active{% endif %}"
+              href="{{ url_for('content_section', section='teams') }}"
+            >
+              <i class="bi bi-shield-check"></i> Teams
+            </a>
             {%endif%}
           </div>
         </nav>

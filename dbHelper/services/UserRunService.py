@@ -51,7 +51,21 @@ class UserRunService:
         Returns the user who is the creator for the given run ID.
         """
         # Query the user_run table for the run_id where is_creator is True
-        user_run = self.session.query(UserRun).filter(UserRun.runid == run_id, UserRun.iscreator == True).first()
+        user_run = self.session.query(UserRun).filter(UserRun.runid == run_id).first()
+        
+        # If no user is found, return None
+        if user_run is None:
+            return None
+        
+        # If a user is found, return the user_run or user details
+        return user_run
+    
+    def get_user_run_by_run_id_and_user_id(self, run_id, user_id):
+        """
+        Returns the user who is the creator for the given run ID.
+        """
+        # Query the user_run table for the run_id where is_creator is True
+        user_run = self.session.query(UserRun).filter(UserRun.runid == run_id, UserRun.userid == user_id).first()
         
         # If no user is found, return None
         if user_run is None:
@@ -87,6 +101,19 @@ class UserRunService:
         except Exception as e:
             print(f"Error registering user {userId} for run {runId}: {e}")
             self.session.rollback()  
+            return False
+        
+    def unregister_user_from_run(self, runId, userId):
+        try:
+            existing = self.session.query(UserRun).filter_by(userid=userId, runid=runId).first()
+            if not existing:
+                return False
+            self.session.delete(existing)
+            self.session.commit()
+            return True
+        except Exception as e:
+            print(f"Error unregistering user {userId} from run {runId}: {e}")
+            self.session.rollback()
             return False
 
 
