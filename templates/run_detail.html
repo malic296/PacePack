@@ -25,5 +25,26 @@
             </li>
         {% endfor %}
     </ul>
+    {% if g.current_user %}
+    <div class="d-flex justify-content-end mt-4">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {% if not already_registered %}
+                <button type="submit" name="sign_up" class="btn btn-success">
+                    {{ textVars['sign_up'] }}
+                </button>
+            {% else %}
+                {% set user_run = user_runs | selectattr('userid', 'equalto', g.current_user.id) | list | first %}
+                {% if user_run and not user_run.iscreator %}
+                    <button type="submit" name="sign_off" class="btn btn-danger">
+                        {{ textVars['sign_off'] }}
+                    </button>
+                {% else %}
+                    <div class="alert alert-info">{{ textVars['creator_flash'] }}</div>
+                {% endif %}
+            {% endif %}
+        </form>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

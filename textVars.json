@@ -289,7 +289,10 @@
                 "participants": "Participants",
                 "date": "Date",
                 "description": "Description",
-                "address": "Address"
+                "address": "Address",
+                "sign_up": "Sign Up",
+                "sign_off": "Sign Off",
+                "creator_flash": "You are the creator of this run."
             },
             "cz": {
                 "title": "Detail Běhu",
@@ -301,7 +304,10 @@
                 "participants": "Účastníci",
                 "date": "Datum",
                 "description": "Popis",
-                "address": "Adresa"
+                "address": "Adresa",
+                "sign_up": "Přihlásit se",
+                "sign_off": "Odhlásit se",
+                "creator_flash": "Jste autorem tohoto běhu"
             },
             "de": {
                 "title": "Lauf Detail",
@@ -313,7 +319,10 @@
                 "participants": "Teilnehmer",
                 "date": "Datum",
                 "description": "Beschreibung",
-                "address": "Adresse"
+                "address": "Adresse",
+                "sign_up": "Anmelden",
+                "sign_off": "Abmelden",
+                "creator_flash": "Du bist der Ersteller diese Lauf."
             }
         },
         "index": {
@@ -577,7 +586,19 @@
                 "female": "Frau",
                 "other": "Andere"
             }            
+        },
+        "sponsors": {
+            "en": {
+                "title": "Sponsors"
+            },
+            "cz": {
+                "title": "Sponzoři"
+            },
+            "de": {
+                "title": "Sponsoren"
+            }
         }
+
     }
 }
 

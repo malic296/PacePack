@@ -2,7 +2,7 @@ import os
 import json
 from flask import Flask, render_template, redirect, request, url_for, flash, session, g
 from flask_mail import Mail
-from forms import LoginForm, RegisterForm, VerificationForm, EditProfileForm, RunForm, RaceForm
+from forms import LoginForm, RegisterForm, VerificationForm, EditProfileForm, RunForm, RaceForm, EmptyForm
 from flask_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
 from mailService import send_verification_code,generate_verification_code
@@ -16,6 +16,7 @@ from dbHelper.services.TeamService import TeamService
 from dbHelper.services.PaymentService import PaymentService
 from dbHelper.services.RaceService import RaceService
 from dbHelper.services.UserRaceService import UserRaceService
+from dbHelper.services.SponsorService import SponsorService
 
 load_dotenv("environment.env")
 
@@ -39,6 +40,7 @@ team_service = TeamService()
 payment_service = PaymentService()
 race_service = RaceService()
 user_race_service = UserRaceService()
+sponsor_service = SponsorService()
 
 mail = Mail(app)
 
@@ -100,7 +102,8 @@ def content_section(section):
         "myProfile": "myProfile.html",
         "resend" : "verify.html",
         "run_detail" : "run_detail.html",
-        "race_detail" : "race_detail.html"
+        "race_detail" : "race_detail.html",
+        "sponsors" : "sponsors.html"
     }
 
     public_sections = {"login", "register", "verify", "index","resend"}
@@ -149,6 +152,8 @@ def content_section(section):
                 return runDetailSection(textVars, run_id)
             case "race_detail":
                 return raceDetailSection(textVars, race_id)
+            case "sponsors" :
+                return sponsorsSection(textVars)
             case _:
                 return "<h2>Section Not Found</h2>", 404
     else:
@@ -490,10 +495,35 @@ def runDetailSection(textVars, run_id):
     if not run:
         flash("Run not found.", "danger")
         return redirect(url_for("content_section", section="runs"))
+    
+    form = EmptyForm()
+    
+    if request.method == "POST" and form.validate_on_submit():
+        if "sign_up" in request.form:
+            if not g.current_user:
+                flash("You need to log in first.", "warning")
+                return redirect(url_for("content_section", section="login"))
+
+            already_registered = user_run_service.get_user_run_by_run_id_and_user_id(run_id, g.current_user.id)
+            if already_registered:
+                flash("You're already signed up for this run.", "warning")
+            else:
+                user_run_service.register_user_to_run(g.current_user.id, run_id)
+                flash("You've been signed up for the run!", "success")
+
+        elif "sign_off" in request.form:
+            user_run = user_run_service.get_user_run_by_run_id_and_user_id(run_id, g.current_user.id)
+            if user_run and not user_run.iscreator:
+                user_run_service.unregister_user_from_run(g.current_user.id, run_id)
+                flash("You've been signed off from the run.", "info")
+            else:
+                flash("You can't sign off as the creator.", "danger")
+
+        return redirect(url_for("content_section", section=f"runs/{run_id}"))
 
     user_runs = user_run_service.get_users_by_run_id(run_id)
     users = [user_service.get_user_by_id(user_run.userid) for user_run in user_runs]
-
+    already_registered = any(u.id == g.current_user.id for u in users) if g.current_user else False
 
     return render_template(
         "run_detail.html",
@@ -501,7 +531,9 @@ def runDetailSection(textVars, run_id):
         textVars=textVars,
         run=run,
         users=users,
-        user_runs=user_runs
+        user_runs=user_runs,
+        already_registered=already_registered,
+        form=form
     )
 
 def raceDetailSection(textVars, race_id):
@@ -520,6 +552,14 @@ def raceDetailSection(textVars, race_id):
         users=users,
         user_races=user_races
     )
+
+def sponsorsSection(textVars):
+    if not g.current_user or not g.current_user.isadmin:
+        flash("Access denied. Admins only.", "danger")
+        return redirect(url_for("content_section", section="home"))
+
+    sponsors = sponsor_service.get_all_sponsors()
+    return render_template("sponsors.html", section="sponsors", textVars=textVars, sponsors=sponsors)
 
 def get_current_user():
     user_token = session.get("user_token")

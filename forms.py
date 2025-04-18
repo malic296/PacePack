@@ -12,6 +12,9 @@ def get_translation(page, key, lang):
     """Fetch translation from JSON file."""
     return translations.get("pages", {}).get(page, {}).get(lang, {}).get(key, key)
 
+class EmptyForm(FlaskForm):
+    pass
+
 class LoginForm(FlaskForm):
     """Login Form with dynamic language support"""
 
