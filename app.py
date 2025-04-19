@@ -2,7 +2,7 @@ import os
 import json
 from flask import Flask, render_template, redirect, request, url_for, flash, session, g
 from flask_mail import Mail
-from forms import LoginForm, RegisterForm, VerificationForm, EditProfileForm, RunForm, RaceForm, EmptyForm
+from forms import LoginForm, RegisterForm, VerificationForm, EditProfileForm, RunForm, RaceForm, EmptyForm, SponsorForm
 from flask_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
 from mailService import send_verification_code,generate_verification_code
@@ -321,12 +321,11 @@ def myProfileSection(textVars):
 
 def homeSection(textVars):
     user_id = g.current_user.id
-    all_runs = run_service.get_all_runs() # není to all ale jen budoucí (celou dobu jsem si toho nevšiml xDDDDD) pak ten comm smaž
+    all_runs = run_service.get_all_runs()
     past_runs = run_service.get_past_runs()
 
     run_count = len(past_runs)
     
-
     user_upcoming_runs = []
     for run in all_runs:
         user_run = user_run_service.get_user_run_by_run_id_and_user_id(run.id, user_id)
@@ -525,16 +524,8 @@ def runDetailSection(textVars, run_id):
     users = [user_service.get_user_by_id(user_run.userid) for user_run in user_runs]
     already_registered = any(u.id == g.current_user.id for u in users) if g.current_user else False
 
-    return render_template(
-        "run_detail.html",
-        section=f"runs/{run_id}",
-        textVars=textVars,
-        run=run,
-        users=users,
-        user_runs=user_runs,
-        already_registered=already_registered,
-        form=form
-    )
+    return render_template("run_detail.html",section=f"runs/{run_id}",textVars=textVars,run=run,users=users,user_runs=user_runs,
+        already_registered=already_registered,form=form)
 
 def raceDetailSection(textVars, race_id):
     race = race_service.get_race_by_id(race_id)
@@ -554,12 +545,29 @@ def raceDetailSection(textVars, race_id):
     )
 
 def sponsorsSection(textVars):
-    if not g.current_user or not g.current_user.isadmin:
-        flash("Access denied. Admins only.", "danger")
-        return redirect(url_for("content_section", section="home"))
+    form = SponsorForm()
+    if form.validate_on_submit():
+        try:
+            password_service = PasswordService()
+            password_id = password_service.add_password(form.password.data)
+            sponsor_service.add_sponsor(
+                name=form.name.data,
+                email=form.email.data,
+                passwordid=password_id
+            )
+            password_service.close()
+
+            flash("Sponsor created successfully!", "success")
+            return redirect(url_for("content_section", section="sponsors"))
+
+        except Exception as e:
+
+            flash(f"Chyba při vytváření sponzora: {str(e)}", "danger")
 
     sponsors = sponsor_service.get_all_sponsors()
-    return render_template("sponsors.html", section="sponsors", textVars=textVars, sponsors=sponsors)
+    return render_template("sponsors.html", section="sponsors", textVars=textVars, form=form, sponsors=sponsors)
+
+
 
 def get_current_user():
     user_token = session.get("user_token")

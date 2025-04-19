@@ -588,16 +588,35 @@
             }            
         },
         "sponsors": {
-            "en": {
-                "title": "Sponsors"
-            },
+                "en": {
+                "title": "Sponsors",
+                "create_sponsor": "Create Sponsor",
+                "sponsor_name_label": "Sponsor Name",
+                "sponsor_email_label": "Sponsor Email",
+                "sponsor_password_label": "Password",
+                "cancel": "Cancel",
+                "save": "Save"
+                },
             "cz": {
-                "title": "Sponzoři"
-            },
+                "title": "Sponzoři",
+                "create_sponsor": "Vytvořit sponzora",
+                "sponsor_name_label": "Jméno sponzora",
+                "sponsor_email_label": "Email sponzora",
+                "sponsor_password_label": "Heslo",
+                "cancel": "Zrušit",
+                "save": "Uložit"
+                },
             "de": {
-                "title": "Sponsoren"
+                "title": "Sponsoren",
+                "create_sponsor": "Sponsor erstellen",
+                "sponsor_name_label": "Name des Sponsors",
+                "sponsor_email_label": "E-Mail des Sponsors",
+                "sponsor_password_label": "Passwort",
+                "cancel": "Abbrechen",
+                "save": "Speichern"
             }
         }
+
 
     }
 }

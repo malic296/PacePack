@@ -1,29 +1,98 @@
-{% extends "content.html" %}
-
-{% block title %}
-    {{ textVars["title"] }}
-{% endblock %}
-
-{% block content %}
+{% extends "content.html" %} {% block title %} {{ textVars["title"] }} {%
+endblock %} {% block content %}
 <div class="card p-4">
-    <h1>{{ textVars["title"] }}</h1>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">#ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for sponsor in sponsors %}
-            <tr>
-                <th scope="row">{{ sponsor.id }}</th>
-                <td>{{ sponsor.name }}</td>
-                <td>{{ sponsor.email }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  <h1>{{ textVars["title"] }}</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sponsor in sponsors %}
+      <tr>
+        <th scope="row">{{ sponsor.id }}</th>
+        <td>{{ sponsor.name }}</td>
+        <td>{{ sponsor.email }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
+
+<!-- Button to trigger modal -->
+<button
+  type="button"
+  class="btn btn-primary mb-3"
+  data-bs-toggle="modal"
+  data-bs-target="#createSponsorModal"
+>
+  {{ textVars["create_sponsor"] }}
+</button>
+
+<!-- Create Sponsor Modal -->
+<div
+  class="modal fade"
+  id="createSponsorModal"
+  tabindex="-1"
+  aria-labelledby="createSponsorModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createSponsorModalLabel">
+          {{ textVars["create_sponsor"] }}
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form
+        method="POST"
+        action="{{ url_for('content_section', section='sponsors') }}"
+      >
+        {{ form.hidden_tag() }}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label"
+              >{{ textVars["sponsor_name_label"] }}</label
+            >
+            {{ form.name(class="form-control", id="sponsor_name") }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label"
+              >{{ textVars["sponsor_email_label"] }}</label
+            >
+            {{ form.email(class="form-control", id="sponsor_email") }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label"
+              >{{ textVars["sponsor_password_label"] }}</label
+            >
+            {{ form.password(class="form-control", id="sponsor_password") }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            {{ textVars["cancel"] }}
+          </button>
+          <button type="submit" class="btn btn-success">
+            {{ textVars["save"] }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

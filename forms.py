@@ -107,3 +107,9 @@ class RaceForm(FlaskForm):
     sponsor_id = IntegerField("Sponsor ID", validators=[DataRequired()])
     category_id = IntegerField("Category ID", validators=[DataRequired()])
     address_id = StringField("Address ID", validators=[DataRequired()])
+
+class SponsorForm(FlaskForm):
+    name = StringField("Name", validators=[DataRequired(), Length(max=100)])
+    email = StringField("Email",validators=[DataRequired(), Email(), Length(max=120)])
+    password = PasswordField("Password",validators=[DataRequired(), Length(min=6)])
+    submit = SubmitField("Save")
