@@ -517,17 +517,35 @@
             "de":{},
             "cz":{}
         },
-        "teams":{
-            "en":{
-                "title": "Team results"
+        "teams": {
+                "en": {
+                    "title": "Team results",
+                    "tableTab": "View table",
+                    "chartTab": "View Chart",
+                    "team": "Team",
+                    "score": "Score",
+                    "barChart": "Bar Chart",
+                    "pieChart": "Pie Chart"
+                },
+                "de": {
+                    "title": "Teamergebnisse",
+                    "tableTab": "Tabelle anzeigen",
+                    "chartTab": "Diagramm anzeigen",
+                    "team": "Team",
+                    "score": "Punktzahl",
+                    "barChart": "Balkendiagramm",
+                    "pieChart": "Kreisdiagramm"
+                },
+                "cz": {
+                    "title": "Výsledky týmů",
+                    "tableTab": "Zobrazit tabulku",
+                    "chartTab": "Zobrazit graf",
+                    "team": "Tým",
+                    "score": "Skóre",
+                    "barChart": "Sloupcový graf",
+                    "pieChart": "Koláčový graf"
+                }
             },
-            "de":{
-                "title": "Teamergebnisse"
-            },
-            "cz":{
-                "title": "Výsledky týmů"
-            }
-        },
         "myProfile": {
             "en": {
                 "title": "My Profile",

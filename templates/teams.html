@@ -1,27 +1,263 @@
-{% extends "content.html" %}
-
-{% block title %}
-    {{ textVars["title"] }}
-{% endblock %}
-
-{% block content %}
+{% extends "content.html" %} {% block title %}{{ textVars["title"] }}{% endblock
+%} {% block head %}
+{% endblock %} {% block content %}
 <div class="card p-4">
-    <h1>{{ textVars["title"] }}</h1>
-    <table>
+  <h1>{{ textVars["title"] }}</h1>
+
+  <!-- Navigace mezi tabulkami -->
+  <ul class="nav nav-tabs mb-4" id="dataTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="table-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#table-view"
+        type="button"
+        role="tab"
+        aria-controls="table-view"
+        aria-selected="true"
+      >
+        <i class="fas fa-table me-2"></i>{{ textVars["tableTab"] }}
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="chart-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#chart-view"
+        type="button"
+        role="tab"
+        aria-controls="chart-view"
+        aria-selected="false"
+      >
+        <i class="fas fa-chart-bar me-2"></i>{{ textVars["chartTab"] }}
+      </button>
+    </li>
+  </ul>
+
+  <!-- Obsah tabulek -->
+  <div class="tab-content" id="dataTabsContent">
+    <!-- Zobrazení tabulky -->
+    <div
+      class="tab-pane fade show active"
+      id="table-view"
+      role="tabpanel"
+      aria-labelledby="table-tab"
+    >
+      <table class="table table-striped">
         <thead>
-            <tr>
-                <th>Team</th>
-                <th>Score</th>
-            </tr>
+          <tr>
+            <th>{{ textVars["team"] }}</th>
+            <th>{{ textVars["score"] }}</th>
+          </tr>
         </thead>
         <tbody>
-            {% for team in teamScores %}
-            <tr>
-                <td>{{ team[0] }}</td>
-                <td>{{ team[1] }}</td>
-            </tr>
-            {% endfor %}
+          {% for team in teamScores %}
+          <tr>
+            <td>{{ team[0] }}</td>
+            <td>{{ team[1] }}</td>
+          </tr>
+          {% endfor %}
         </tbody>
-    </table>
+      </table>
+    </div>
+
+    <!-- Zobrazení grafu -->
+    <div
+      class="tab-pane fade"
+      id="chart-view"
+      role="tabpanel"
+      aria-labelledby="chart-tab"
+    >
+      <div class="chart-controls">
+        <select id="chartTypeSelector" class="chart-type-selector">
+          <option value="bar">{{ textVars["barChart"] }}</option>
+          <option value="pie">{{ textVars["pieChart"] }}</option>
+        </select>
+      </div>
+      <div
+        class="chart-container"
+        style="position: relative; height: 400px; width: 100%"
+      >
+        <canvas id="teamScoresChart"></canvas>
+      </div>
+    </div>
+  </div>
 </div>
-{% endblock %}
+
+{% block scripts %}
+<!-- Include Chart.js from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Fixed initialization of data
+      // Create data arrays properly using the tojson filter for strings
+      const teamLabels = [
+          {% for team in teamScores %}
+              {{ team[0]|tojson }}{% if not loop.last %},{% endif %}
+          {% endfor %}
+      ];
+
+      const teamScoreData = [
+          {% for team in teamScores %}
+              {{ team[1] }}{% if not loop.last %},{% endif %}
+          {% endfor %}
+      ];
+
+      // Create gradient colors
+      const ctx = document.getElementById('teamScoresChart').getContext('2d');
+      let teamChart;
+      let currentChartType = 'bar';
+
+      // Function to generate colors
+      function generateColors() {
+          const colors = [];
+          const borderColors = [];
+
+          for (let i = 0; i < teamLabels.length; i++) {
+              // Create gradient effect from primary color to accent color based on score ranking
+              const hue = 210 - (i / teamLabels.length * 60); // From blue (210) toward orange
+              colors.push(`hsla(${hue}, 80%, 60%, 0.8)`);
+              borderColors.push(`hsl(${hue}, 80%, 50%)`);
+          }
+
+          return { colors, borderColors };
+      }
+
+      // Function to create/update chart
+      function createChart(type) {
+          const { colors, borderColors } = generateColors();
+          currentChartType = type;
+
+          // Destroy previous chart if exists
+          if (teamChart) {
+              teamChart.destroy();
+          }
+
+          // Configure specific options based on chart type
+          let options = {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                  legend: {
+                      display: type === 'pie',
+                      position: 'bottom',
+                      labels: {
+                          boxWidth: 15,
+                          padding: 15,
+                          font: {
+                              size: 12
+                          }
+                      }
+                  },
+                  tooltip: {
+                      backgroundColor: '#2c3e50',
+                      titleFont: {
+                          size: 16
+                      },
+                      bodyFont: {
+                          size: 14
+                      },
+                      callbacks: {
+                          label: function(context) {
+                              if (type === 'pie') {
+                                  return ` ${context.label}: ${context.raw}`;
+                              }
+                              return `Score: ${context.raw}`;
+                          }
+                      }
+                  }
+              },
+              animation: {
+                  duration: 1500,
+                  easing: 'easeOutQuart'
+              }
+          };
+
+          // Add scales for bar chart
+          if (type === 'bar') {
+              options.scales = {
+                  y: {
+                      beginAtZero: true,
+                      grid: {
+                          color: 'rgba(0, 0, 0, 0.05)'
+                      },
+                      ticks: {
+                          font: {
+                              weight: 'bold'
+                          }
+                      }
+                  },
+                  x: {
+                      grid: {
+                          display: false
+                      },
+                      ticks: {
+                          font: {
+                              weight: 'bold'
+                          }
+                      }
+                  }
+              };
+          }
+
+          // Dataset configuration changes based on chart type
+          let dataset = {
+              label: 'Team Scores',
+              data: teamScoreData,
+              backgroundColor: colors,
+              borderColor: borderColors,
+              borderWidth: 1
+          };
+
+          // Special configurations per chart type
+          if (type === 'bar') {
+              dataset.borderRadius = 5;
+              dataset.maxBarThickness = 80;
+          } else if (type === 'pie') {
+              dataset.hoverOffset = 15;
+          }
+
+          // Create new chart
+          teamChart = new Chart(ctx, {
+              type: type,
+              data: {
+                  labels: teamLabels,
+                  datasets: [dataset]
+              },
+              options: options
+          });
+      }
+
+      // Initialize with bar chart
+      createChart('bar');
+
+      // Update chart when changing chart type
+      document.getElementById('chartTypeSelector').addEventListener('change', function() {
+          createChart(this.value);
+      });
+
+      // Update chart when switching tabs (for proper rendering)
+      document.querySelector('#chart-tab').addEventListener('shown.bs.tab', function (e) {
+          // Redraw chart when tab becomes visible
+          createChart(currentChartType);
+      });
+
+      // Handle theme changes for proper chart coloring
+      const darkModeObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+              if (mutation.attributeName === 'class') {
+                  // Redraw chart when theme changes
+                  if (teamChart) {
+                      createChart(currentChartType);
+                  }
+              }
+          });
+      });
+
+      // Start observing document.body for class changes
+      darkModeObserver.observe(document.body, { attributes: true });
+  });
+</script>
+{% endblock %} {% endblock %}
