@@ -9,3 +9,6 @@ dbHelper/services/__pycache__/__init__.cpython-313.pyc
 dbHelper/__pycache__/DBModels.cpython-313.pyc
 dbHelper/__pycache__/__init__.cpython-313.pyc
 __pycache__/mailService.cpython-313.pyc
+
+*.pyc
+__pycache__/
