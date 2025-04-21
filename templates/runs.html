@@ -76,7 +76,7 @@
                 <td>{{ run.description }}</td>
                 <td>{{ run.address.streetname }}, {{ run.address.postalcode }}</td>
                 <td>
-                    {% set register_url = url_for('register_user', userid=g.current_user.id, runid=run.id) %}
+                    {% set register_url = url_for('register_user_to_run', userid=g.current_user.id, runid=run.id) %}
                     {% set user_run = user_run_service.get_user_run_by_run_id_and_user_id(run.id, g.current_user.id) %}
                     {% set run = run_service.get_run_by_id(run.id) %}
                 
