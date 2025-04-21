@@ -1,5 +1,5 @@
 from dbHelper.DBModels import Sponsor
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, joinedload
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import os
@@ -19,6 +19,9 @@ class SponsorService:
         self.session.add(new_sponsor)
         self.session.commit()
         return new_sponsor.id
+    
+    def getSponsorInfo(self, email):
+        return self.session.query(Sponsor).filter(Sponsor.email == email).first()
 
     def get_sponsor_by_id(self, sponsor_id):
         return self.session.query(Sponsor).filter(Sponsor.id == sponsor_id).first()

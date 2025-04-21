@@ -1,4 +1,4 @@
-from dbHelper.DBModels import Password, User
+from dbHelper.DBModels import Password, User, Sponsor
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
@@ -48,6 +48,24 @@ class PasswordService:
         passwordHashed = generate_hash(password, passwordInTable.passwordsalt)
 
         if passwordHashed == passwordInTable.passwordhash:
+            return True
+
+        return False
+    
+    def validate_sponsor_login(self, email, password):
+        sponsor = self.session.query(Sponsor).filter_by(email=email).first()
+
+        if sponsor is None:
+            return False
+
+        password_record = self.session.query(Password).filter(Password.id == sponsor.passwordid).first()
+
+        if password_record is None:
+            return False
+
+        password_hashed = generate_hash(password, password_record.passwordsalt)
+
+        if password_hashed == password_record.passwordhash:
             return True
 
         return False
