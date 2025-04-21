@@ -1,4 +1,4 @@
-from dbHelper.DBModels import Race
+from dbHelper.DBModels import Race, UserRace
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
@@ -15,12 +15,11 @@ class RaceService:
     def __init__(self):
         self.session = SessionLocal()
 
-    def add_race(self, date, time, capacity, state, name, description, sponsorid, categoryid, addressid):
+    def add_race(self, date, time, capacity, name, description, sponsorid, categoryid, addressid):
         new_race = Race(
             date=date,
             time=time,
             capacity=capacity,
-            state=state,
             name=name,
             description=description,
             sponsorid=sponsorid,
@@ -46,13 +45,12 @@ class RaceService:
     def get_races_by_address(self, address_id):
         return self.session.query(Race).filter(Race.addressid == address_id).all()
 
-    def update_race(self, race_id, date=None, time=None, capacity=None, state=None, name=None, description=None, sponsorid=None, categoryid=None, addressid=None):
+    def update_race(self, race_id, date=None, time=None, capacity=None, name=None, description=None, sponsorid=None, categoryid=None, addressid=None):
         race = self.get_race_by_id(race_id)
         if race:
             if date: race.date = date
             if time: race.time = time
             if capacity: race.capacity = capacity
-            if state: race.state = state
             if name: race.name = name
             if description: race.description = description
             if sponsorid: race.sponsorid = sponsorid
@@ -66,7 +64,10 @@ class RaceService:
     def delete_race(self, race_id):
         race = self.get_race_by_id(race_id)
         if race:
+            self.session.query(UserRace).filter_by(raceid=race_id).delete()
+            
             self.session.delete(race)
+            
             self.session.commit()
             return True
         return False

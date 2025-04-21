@@ -1,8 +1,9 @@
-from dbHelper.DBModels import UserRace
-from sqlalchemy.orm import sessionmaker
+from dbHelper.DBModels import UserRace, Payment
+from sqlalchemy.orm import sessionmaker, joinedload
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import os
+from datetime import date
 
 load_dotenv("environment.env")
 
@@ -49,6 +50,52 @@ class UserRaceService:
             self.session.commit()
             return True
         return False
+    
+    def register_user_to_race(self, userId, raceId):
+        # Create payment (example: hardcoded values just to make it work)
+        payment = Payment(
+            price=20,                 # you can later change this to dynamic pricing
+            state='D',               # D = done
+            date=date.today(),
+            userid=userId
+        )
+        self.session.add(payment)
+        self.session.commit()  # commit so payment.id gets assigned
+
+        # Create user-race relation with the new payment
+        new_registration = UserRace(
+            userid=userId,
+            raceid=raceId,
+            paymentid=payment.id,
+            userracenumber=0  # you can later add logic for assigning race numbers
+        )
+        self.session.add(new_registration)
+        self.session.commit()
+
+        return True
+
+        
+    def unregister_user_from_race(self, userId, raceId):
+        user_race = self.session.query(UserRace).filter_by(userid=userId, raceid=raceId).first()
+
+        if user_race:
+            # Also remove the associated payment
+            payment = self.session.query(Payment).filter_by(id=user_race.paymentid).first()
+            if payment:
+                self.session.delete(payment)
+
+            self.session.delete(user_race)
+            self.session.commit()
+            return True
+
+        return False
+    
+    def get_user_races(self, userid):
+        """
+        Returns all runs a user is registered for.
+        """
+        user_runs = self.session.query(UserRace).filter_by(userid=userid).options(joinedload(UserRace.race)).all()
+        return user_runs
 
     def close(self):
         self.session.close()

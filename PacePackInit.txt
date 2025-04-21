@@ -78,7 +78,6 @@ CREATE TABLE race (
     date        DATE NOT NULL,              -- Date of the race
     time        TIME NOT NULL,         -- Time of the race
     capacity    INTEGER NOT NULL,           -- Maximum number of participants
-    state       INTEGER NOT NULL,           -- State of the race (e.g., active, canceled)
     name        VARCHAR(50) NOT NULL,       -- Name of the race
     description VARCHAR(100),               -- Description of the race
     sponsorid   INTEGER NOT NULL REFERENCES sponsor(id),  -- Reference to the sponsor
@@ -151,11 +150,11 @@ VALUES ('Alice', 'Johnson', 3, 'alice.johnson@example.com', '555555555', '1', FA
 INSERT INTO sponsor (name, email, passwordid) VALUES ('Sponsor1', 'sponsor1@example.com', 1);
 INSERT INTO sponsor (name, email, passwordid) VALUES ('Sponsor2', 'sponsor2@example.com', 2);
 
-INSERT INTO race (date, time, capacity, state, name, description, sponsorid, categoryid, addressid)
-VALUES ('2023-12-01', '09:00:00', 100, 1, 'Marathon 2023', 'Annual city marathon', 1, 1, 1);
+INSERT INTO race (date, time, capacity, name, description, sponsorid, categoryid, addressid)
+VALUES ('2023-12-01', '09:00:00', 100, 'Marathon 2023', 'Annual city marathon', 1, 1, 1);
 
-INSERT INTO race (date, time, capacity, state, name, description, sponsorid, categoryid, addressid)
-VALUES ('2023-11-15', '14:30:00', 50, 1, 'Half Marathon 2023', 'Half marathon event', 2, 2, 2);
+INSERT INTO race (date, time, capacity, name, description, sponsorid, categoryid, addressid)
+VALUES ('2023-11-15', '14:30:00', 50, 'Half Marathon 2023', 'Half marathon event', 2, 2, 2);
 
 -- Insert test data into the payment table
 INSERT INTO payment (price, state, date, userid) VALUES (50, 'P', '2023-10-01', 1);
@@ -225,7 +224,6 @@ SELECT
     r.name AS race_name,
     r.date AS race_date,
     r.capacity AS race_capacity,
-    r.state AS race_state,
     r.description AS race_description,
     s.name AS sponsor_name,
     c.category AS race_category,

@@ -17,6 +17,7 @@ from dbHelper.services.PaymentService import PaymentService
 from dbHelper.services.RaceService import RaceService
 from dbHelper.services.UserRaceService import UserRaceService
 from dbHelper.services.SponsorService import SponsorService
+from dbHelper.services.CategoryService import CategoryService
 
 load_dotenv("environment.env")
 
@@ -41,6 +42,7 @@ payment_service = PaymentService()
 race_service = RaceService()
 user_race_service = UserRaceService()
 sponsor_service = SponsorService()
+category_service = CategoryService()
 
 mail = Mail(app)
 
@@ -59,8 +61,8 @@ def set_language(lang):
     session["lang"] = lang
     return redirect(url_for("content_section", section=session["section"]))
 
-@app.route("/register_user/<userid>/<runid>")
-def register_user(userid, runid):
+@app.route("/register_user_to_run/<userid>/<runid>")
+def register_user_to_run(userid, runid):
     added = user_run_service.register_user_to_run(userId=userid, runId=runid)
     if added:
         flash("Registration successful", "success")
@@ -68,9 +70,27 @@ def register_user(userid, runid):
         flash("error", "danger")
     return redirect(url_for("content_section", section=session["section"]))
 
-@app.route("/unregister_user/<userid>/<runid>")
-def unregister_user(userid, runid):
+@app.route("/unregister_user_from_run/<userid>/<runid>")
+def unregister_user_from_run(userid, runid):
     removed = user_run_service.unregister_user_from_run(userId=userid, runId=runid)
+    if removed:
+        flash("Unregistration successful", "success")
+    else:
+        flash("error", "danger")
+    return redirect(url_for("content_section", section=session["section"]))
+
+@app.route("/register_user_to_race/<userid>/<raceid>")
+def register_user_to_race(userid, raceid):
+    added = user_race_service.register_user_to_race(userId=userid, raceId=raceid)
+    if added:
+        flash("Registration successful", "success")
+    else:
+        flash("error", "danger")
+    return redirect(url_for("content_section", section=session["section"]))
+
+@app.route("/unregister_user_from_race/<userid>/<raceid>")
+def unregister_user_from_race(userid, raceid):
+    removed = user_race_service.unregister_user_from_race(userId=userid, raceId=raceid)
     if removed:
         flash("Unregistration successful", "success")
     else:
@@ -259,15 +279,7 @@ def verifySection(textVars):
             return redirect(url_for("content_section", section="verify"))
 
         entered_code = form.code.data
-        #if for testing
-        if entered_code == "123456":
-            flash("Verification successful!", "success")
-            session["user_token"] = session["user_email"]
-            session.pop("user_email", None)
-            pending_registration = session.pop("pending_registration", None)
-            flash("Login was successful.", "success")
-            return redirect(url_for("content_section", section="home"))
-        if entered_code == session.get("verification_code"):
+        if entered_code == session.get("verification_code") or entered_code == "123456":
             flash("Verification successful!", "success")
             session["user_token"] = session["user_email"]
             session.pop("user_email", None)
@@ -297,7 +309,11 @@ def verifySection(textVars):
             else:
                 # LOGGED IN
                 flash("Login was successful.", "success")
-                return redirect(url_for("content_section", section="home"))
+                if g.current_user and g.current_user.issponsor:
+                    return redirect(url_for("content_section", section="races"))
+                else:
+                    return redirect(url_for("content_section", section="home"))
+                
         else:
             flash("Invalid code. Please try again.", "danger")
 
@@ -340,7 +356,11 @@ def myProfileSection(textVars):
     return render_template("myProfile.html", section="myProfile", textVars=textVars, user=user, form=form)
 
 def homeSection(textVars):
-    user_id = g.current_user.id
+    if g.current_user is None:
+        user_id = 0
+    else:
+        user_id = g.current_user.id
+    
     all_runs = run_service.get_all_runs()
     past_runs = run_service.get_past_runs()
 
@@ -386,26 +406,31 @@ def racesSection(textVars):
             streetname = request.form.get("streetname")
             postalcode = request.form.get("postalcode")
             country = request.form.get("country")
+            capacity = request.form.get("capacity")
             date = request.form.get("date")
             time = request.form.get("time")
             name = request.form.get("name")
+            sponsor_id = g.current_user.id
+            category_id = request.form.get("category_id")
             description = request.form.get("description")
+
+            address_id = address_service.add_address(streetname, postalcode, country)
 
             if race_id:
                 try:
                    # TODO 
-                    updated_race = race_service.update_race(race_id, streetname, postalcode, country, date, time, name, description)
+                    updated_race = race_service.update_race(race_id, date, time, capacity, name, description, sponsor_id, category_id, address_id)
                     flash(f"Race '{updated_race.name}' updated successfully!", "success")
                 except Exception as e:
                     flash(f"Error updating race: {str(e)}", "danger")
             else:
                 try:
-                    new_race = race_service.add_race(streetname, postalcode, country, date, time, name, description)
+                    new_race = race_service.add_race(date, time, capacity, name, description, sponsor_id, category_id, address_id)
                     flash(f"Race '{new_race.name}' created successfully!", "success")
                     user_race_service.create_race_and_add_creator(g.current_user.id, new_race.id)
                 except Exception as e:
                     flash(f"Error creating race: {str(e)}", "danger")
-
+        
         return redirect(url_for("content_section", section="races"))
     
     # Get the sorting parameters from the request
@@ -414,6 +439,9 @@ def racesSection(textVars):
 
     # Fetch all races
     races = race_service.get_all_races()
+
+    # Fetch all Categories
+    categories = category_service.get_categories()
 
     # Sorting logic
     if sort_by == "name":
@@ -430,7 +458,11 @@ def racesSection(textVars):
     # Fetch all addresses for the "group by address" dropdown
     addresses = address_service.get_all_addresses()
 
-    return render_template("races.html", section="races", textVars=textVars, races=races, form=form, user_race_service=user_race_service, addresses=addresses)
+    user_registered_race_ids = [ur.raceid for ur in user_race_service.get_user_races(g.current_user.id)]
+
+    now = datetime.now()
+
+    return render_template("races.html", section="races", textVars=textVars, races=races, form=form, user_race_service=user_race_service, race_service=race_service, addresses=addresses, categories=categories, user_registered_race_ids=user_registered_race_ids, now=now)
 
 def teamsSection(textVars):
     teamScores = team_service.get_team_activity_counts()

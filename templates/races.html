@@ -12,7 +12,7 @@
             <h2 class="mb-1">{{ textVars['races_list'] }}</h2>
             <p class="text-muted mb-0">{{ textVars['description'] }}</p>
         </div>
-        {% if g.current_user.isadmin %}
+        {% if g.current_user.isadmin or g.current_user.issponsor %}
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
             <i class="bi bi-plus-circle"></i> {{ textVars['create_race'] }}
         </button>
@@ -50,7 +50,7 @@
     
 
 
-    <!-- Runs List Table -->
+    <!-- races List Table -->
     <table class="table table-striped">
         <thead>
             <tr>
@@ -59,6 +59,9 @@
                 <th scope="col">{{ textVars['race_time_label'] }}</th>
                 <th scope="col">{{ textVars['description_label'] }}</th>
                 <th scope="col">{{ textVars['address_label'] }}</th>
+                {% if not g.current_user.issponsor %}
+                <th scope="col">{{ textVars['actions_label'] }}</th>
+                {% endif %}
                 {% if g.current_user.isadmin %}
                 <th scope="col">{{ textVars['edit'] }}</th>
                 <th scope="col">{{ textVars['delete'] }}</th>
@@ -73,12 +76,31 @@
                 <td>{{ race.time.strftime('%H:%M') }}</td>
                 <td>{{ race.description }}</td>
                 <td>{{ race.address.streetname }}, {{ race.address.postalcode }}</td>
+                <td>
+                    {% set race = race_service.get_race_by_id(race.id) %}
+                    
+                    {% if race.date < now.date() or race.time < now.time() %}
+                        {% if not g.current_user.issponsor or not g.current_user.isadmin %}
+                            {% if race.id in user_registered_race_ids %}
+                                {% set unregister_url = url_for('unregister_user_from_race', userid=g.current_user.id, raceid=race.id) %}
+                                <button class="btn btn-danger btn-sm" onclick="window.location.href='{{ unregister_url }}'">
+                                    <i class="bi bi-person-dash"></i>
+                                </button>
+                            {% else %}
+                                {% set register_url = url_for('register_user_to_race', userid=g.current_user.id, raceid=race.id) %}
+                                <button class="btn btn-success btn-sm" onclick="window.location.href='{{ register_url }}'">
+                                    <i class="bi bi-person-plus"></i>
+                                </button>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </td>
 
                 
-                {% if g.current_user.isadmin %}
+                {% if g.current_user.isadmin or g.current_user.issponsor %}
                 <!-- Admin can edit it -->
                 <td>
-                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRunModal{{ race.id }}" onclick="populateEditRaceForm('{{ race.id }}', '{{ race.name }}', '{{ race.date }}', '{{ race.description }}', '{{ race.address.streetname }}', '{{ race.address.postalcode }}')">
+                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editraceModal{{ race.id }}" onclick="populateEditRaceForm('{{ race.id }}', '{{ race.name }}', '{{ race.date }}', '{{ race.description }}', '{{ race.address.streetname }}', '{{ race.address.postalcode }}')">
                         <i class="bi bi-pencil"></i>
                     </button>
                 </td>
@@ -92,7 +114,7 @@
                     </form>
                 </td>
                 {% else %}
-                <!-- Empty space to maintain alignment for runs created by others -->
+                <!-- Empty space to maintain alignment for races created by others -->
                 <td class="empty-cell"></td>
                 <td class="empty-cell"></td>
                 {% endif %}
@@ -102,7 +124,7 @@
     </table>
     </div>
 
-  <!-- Create Run Modal -->
+  <!-- Create race Modal -->
   <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
       <div class="modal-dialog">
           <div class="modal-content">
@@ -130,6 +152,10 @@
                         <textarea class="form-control" id="description" name="description" required>{{ form.description.data }}</textarea>
                     </div>
                     <div class="mb-3">
+                        <label for="capacity" class="form-label">{{ textVars["capacity_label"] }}</label>
+                        <input type="text" class="form-control" id="capacity" name="capacity" required>
+                    </div>
+                    <div class="mb-3">
                       <label for="streetname" class="form-label">{{ textVars["street_name_label"] }}</label>
                       <input type="text" class="form-control" id="streetname" name="streetname" required>
                     </div>
@@ -142,6 +168,16 @@
                         <input type="text" class="form-control" id="postalcode" name="postalcode" required>
                     </div>
                   </div>
+                  <div class="mb-3">
+                    <label for="category_id" class="form-label">{{ textVars["category_label"] }}</label>
+                    <select class="form-select" id="category_id" name="category_id" required>
+                      {% for category in categories %}
+                        <option value="{{ category.id }}">
+                          {{ category.category }} - {{ category.gender }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
                   <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ textVars["cancel"] }}</button>
                       <button type="submit" class="btn btn-success">{{ textVars["save"] }}</button>
@@ -151,69 +187,75 @@
       </div>
   </div>
 
-  <!-- Edit Race Modals -->
   {% for race in races %}
-    <div class="modal fade" id="editRunModal{{ race.id }}" tabindex="-1" aria-labelledby="editRunModalLabel{{ race.id }}" aria-hidden="true">
-      <div class="modal-dialog">
-          <form method="POST" action="{{ url_for('content_section', section='runs') }}">
-            {{ form.hidden_tag() }}
-            <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="editRunModalLabel">{{ textVars['edit_run'] }}</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal fade" id="editraceModal{{ race.id }}" tabindex="-1" aria-labelledby="editraceModalLabel{{ race.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="editraceModalLabel">{{ textVars["edit_race"] }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="{{ url_for('content_section', section='races') }}">
+          {{ form.hidden_tag() }}
+          <div class="modal-body">
+              <!-- Hidden race ID field -->
+              <input type="hidden" name="race_id" id="race_id" value="{{ race.id }}">
+
+              <div class="mb-3">
+                  <label for="name" class="form-label">{{ textVars["race_name_label"] }}</label>
+                  <input type="text" class="form-control" id="name" name="name" value="{{ race.name }}" required>
               </div>
-              <div class="modal-body">
-                  <input type="hidden" name="run_id" id="run_id" value="{{ race.id }}">
-
-                  <div class="mb-3">
-                      <label for="name" class="form-label">{{ textVars['race_name_label'] }}</label>
-                      <input type="text" class="form-control" id="name" name="name" value="{{ race.name }}" required>
-                  </div>
-
-                  <div class="mb-3">
-                      <label for="date" class="form-label">{{ textVars['race_date_label'] }}</label>
-                      <input type="date" class="form-control" id="date" name="date" value="{{ race.date }}" required>
-                  </div>
-
-                  <div class="mb-3">
-                      <label for="time" class="form-label">{{ textVars['race_time_label'] }}</label>
-                      <input type="time" class="form-control" id="time" name="time" value="{{ race.time }}" required>
-                  </div>
-
-                  <div class="mb-3">
-                      <label for="description" class="form-label">{{ textVars['description_label'] }}</label>
-                      <textarea class="form-control" id="description" name="description" required>{{ race.description }}</textarea>
-                  </div>
-
-                  <!-- Address Fields (Aligned vertically in smaller space) -->
-                  
-                  <div class="mb-3">
-                      <label for="streetname" class="form-label">{{ textVars['street_name_label'] }}</label>
-                      <input type="text" class="form-control" id="streetname" name="streetname" value="{{ race.address.streetname }}" required>
-                  </div>
-
-                  <div class="mb-3">
-                      <label for="postalcode" class="form-label">{{ textVars['postal_code_label'] }}</label>
-                      <input type="text" class="form-control" id="postalcode" name="postalcode" value="{{ race.address.postalcode }}" required>
-                  </div>
-                  
-
-                  <div class="mb-3">
-                      <label for="country" class="form-label">{{ textVars['country_label'] }}</label>
-                      <input type="text" class="form-control" id="country" name="country" value="{{ race.address.country }}" required>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ textVars['cancel'] }}</button>
-                    <button type="submit" class="btn btn-primary">{{ textVars['save'] }}</button>
-                </div>
+              <div class="mb-3">
+                  <label for="date" class="form-label">{{ textVars["race_date_label"] }}</label>
+                  <input type="date" class="form-control" id="date" name="date" value="{{ race.date }}" required>
               </div>
-          </form>
+              <div class="mb-3">
+                  <label for="time" class="form-label">{{ textVars["race_time_label"] }}</label>
+                  <input type="time" class="form-control" id="time" name="time" value="{{ race.time }}" required>
+              </div>
+              <div class="mb-3">
+                  <label for="description" class="form-label">{{ textVars["description_label"] }}</label>
+                  <textarea class="form-control" id="description" name="description" required>{{ race.description }}</textarea>
+              </div>
+              <div class="mb-3">
+                  <label for="capacity" class="form-label">{{ textVars["capacity_label"] }}</label>
+                  <input type="text" class="form-control" id="capacity" name="capacity" value="{{ race.capacity }}" required>
+              </div>
+              <div class="mb-3">
+                  <label for="streetname" class="form-label">{{ textVars["street_name_label"] }}</label>
+                  <input type="text" class="form-control" id="streetname" name="streetname" value="{{ race.address.streetname }}" required>
+              </div>
+              <div class="mb-3">
+                  <label for="country" class="form-label">{{ textVars["country_label"] }}</label>
+                  <input type="text" class="form-control" id="country" name="country" value="{{ race.address.country }}" required>
+              </div>
+              <div class="mb-3">
+                  <label for="postalcode" class="form-label">{{ textVars["postal_code_label"] }}</label>
+                  <input type="text" class="form-control" id="postalcode" name="postalcode" value="{{ race.address.postalcode }}" required>
+              </div>
+              <div class="mb-3">
+                <label for="category_id" class="form-label">{{ textVars["category_label"] }}</label>
+                <select class="form-select" id="category_id" name="category_id" required>
+                  {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category.id == race.category_id %}selected{% endif %}>
+                      {{ category.category }} - {{ category.gender }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ textVars["cancel"] }}</button>
+              <button type="submit" class="btn btn-primary">{{ textVars["save"] }}</button>
+          </div>
+        </form>
       </div>
     </div>
+  </div>
   {% endfor %}
 
-  <!-- Delete Run Modals -->
+
+  <!-- Delete race Modals -->
   {% for race in races %}
       <div class="modal fade" id="deleteModal{{ race.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ race.id }}" aria-hidden="true">
           <div class="modal-dialog">

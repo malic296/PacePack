@@ -106,7 +106,6 @@ class Race(Base):
     date = Column(Date, nullable=False)
     time = Column(DateTime, nullable=False)
     capacity = Column(Integer, nullable=False)
-    state = Column(Integer, nullable=False)
     name = Column(String(50), nullable=False)
     description = Column(String(100), nullable=True)
     sponsorid = Column(Integer, ForeignKey('sponsor.id'), nullable=False)

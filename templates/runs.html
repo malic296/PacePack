@@ -84,12 +84,12 @@
                         
                     {% else %}
                         {% if run.id in user_registered_run_ids %}
-                            {% set unregister_url = url_for('unregister_user', userid=g.current_user.id, runid=run.id) %}
+                            {% set unregister_url = url_for('unregister_user_from_run', userid=g.current_user.id, runid=run.id) %}
                             <button class="btn btn-danger btn-sm" onclick="window.location.href='{{ unregister_url }}'">
                                 <i class="bi bi-person-dash"></i>
                             </button>
                         {% else %}
-                            {% set register_url = url_for('register_user', userid=g.current_user.id, runid=run.id) %}
+                            {% set register_url = url_for('register_user_to_run', userid=g.current_user.id, runid=run.id) %}
                             <button class="btn btn-success btn-sm" onclick="window.location.href='{{ register_url }}'">
                                 <i class="bi bi-person-plus"></i>
                             </button>
