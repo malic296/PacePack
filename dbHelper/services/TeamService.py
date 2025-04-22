@@ -1,4 +1,4 @@
-from dbHelper.DBModels import Team, User, UserRun, Race
+from dbHelper.DBModels import Team, User, UserRun, Race, UserRace, Run
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, or_
 from dotenv import load_dotenv
@@ -44,21 +44,47 @@ class TeamService:
         return False
 
     def get_team_activity_counts(self):
-        race_datetime = Race.date + Race.time
+        from datetime import datetime
+        now = datetime.now()
 
-        stmt = (
-            self.session.query(
-                Team.id.label("team_id"),
-                func.count(UserRun.id).label("activity_count")
+        try:
+            run_counts = (
+                self.session.query(
+                    Team.id.label("team_id"),
+                    func.count(UserRun.id).label("count")
+                )
+                .join(User, User.teamid == Team.id)
+                .join(UserRun, UserRun.userid == User.id)
+                .join(Run, Run.id == UserRun.runid)
+                .filter(Run.date + Run.time < now)
+                .group_by(Team.id)
+                .all()
             )
-            .join(User, User.teamid == Team.id)
-            .join(UserRun, UserRun.userid == User.id)
-            .join(Race, Race.id == UserRun.runid)
-            .filter(race_datetime < datetime.now())  
-            .group_by(Team.id)
-        )
 
-        return self.session.execute(stmt).fetchall()
+            race_counts = (
+                self.session.query(
+                    Team.id.label("team_id"),
+                    func.count(UserRace.iduserrace).label("count")
+                )
+                .join(User, User.teamid == Team.id)
+                .join(UserRace, UserRace.userid == User.id)
+                .join(Race, Race.id == UserRace.raceid)
+                .filter(Race.date + Race.time < now)
+                .group_by(Team.id)
+                .all()
+            )
+
+            combined = {}
+            for team_id, count in run_counts:
+                combined[team_id] = combined.get(team_id, 0) + count
+            for team_id, count in race_counts:
+                combined[team_id] = combined.get(team_id, 0) + count
+
+            return list(combined.items())
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return []
 
 
     def close(self):
