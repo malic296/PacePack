@@ -1,107 +1,189 @@
-{% extends "content.html" %}
+{% extends "content.html" %} {% block title %} {{ textVars["title"] }} {%
+endblock %} {% block content %}
+<h2>👤 {{ textVars["title"] }}</h2>
+<p>{{ textVars["description"] }}</p>
 
-{% block title %}
-    {{ textVars["title"] }}
-{% endblock %}
+<div class="text-center mb-4">
+  {% if user.profile_pic %}
+  <img
+    src="{{ url_for('static', filename=user.profile_pic) }}"
+    class="rounded-circle img-thumbnail"
+    style="width: 150px; height: 150px; object-fit: cover"
+    alt="Profile Picture"
+  />
+  {% else %}
+  <img
+    src="{{ url_for('static', filename='default_profile.png') }}"
+    class="rounded-circle img-thumbnail"
+    style="width: 150px; height: 150px; object-fit: cover"
+    alt="Default Profile Picture"
+  />
+  {% endif %}
+</div>
 
-{% block content %}
-    <h2>👤 {{ textVars["title"] }}</h2>
-    <p>{{ textVars["description"] }}</p>
-    
-    {% for field, value in {
-        "name": user.name, 
-        "surname": user.surname, 
-        "email": user.email,
-        "telephone": "+" ~ user.telephonecode ~ user.telephone, 
-        "gender": user.gender, 
-        "country": user.address.country, 
-        "streetname": user.address.streetname, 
-        "postalcode": user.address.postalcode
-    }.items() %}
-        {% set label_key = field ~ "_label" %}
-        {% if label_key in textVars %}
-            <div class="mb-2">
-                <strong>{{ textVars[label_key] }}:</strong> {{ value }}
+{% for field, value in { "name": user.name, "surname": user.surname, "email":
+user.email, "telephone": "+" ~ user.telephonecode ~ user.telephone, "gender":
+user.gender, "country": user.address.country, "streetname":
+user.address.streetname, "postalcode": user.address.postalcode }.items() %} {%
+set label_key = field ~ "_label" %} {% if label_key in textVars %}
+<div class="mb-2"><strong>{{ textVars[label_key] }}:</strong> {{ value }}</div>
+{% else %}
+<div class="mb-2">
+  <strong
+    >{{ textVars[field.replace("streetname",
+    "street_name").replace("postalcode", "postal_code") ~ "_label"] }}:</strong
+  >
+  {{ value }}
+</div>
+{% endif %} {% endfor %}
+
+<button
+  class="btn btn-primary mt-3"
+  data-bs-toggle="modal"
+  data-bs-target="#editModal"
+>
+  {{ textVars["edit"] }}
+</button>
+
+<div
+  class="modal fade"
+  id="editModal"
+  tabindex="-1"
+  aria-labelledby="modalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">{{ textVars["edit"] }}</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form
+        method="POST"
+        action="{{ url_for('content_section', section='myProfile') }}"
+        enctype="multipart/form-data"
+      >
+        {{ form.hidden_tag() }}
+        <div class="modal-body">
+          <div class="mb-3 text-center">
+            <label for="profile_picture" class="form-label"
+              >{{ textVars["profile_picture_label"] }}</label
+            >
+            <div class="d-flex justify-content-center mb-3">
+              {% if user.profile_pic %}
+              <img
+                src="{{ url_for('static', filename=user.profile_pic) }}"
+                class="rounded-circle img-thumbnail preview-img"
+                style="width: 100px; height: 100px; object-fit: cover"
+                alt="Profile Picture"
+              />
+              {% else %}
+              <img
+                src="{{ url_for('static', filename='default.jpg') }}"
+                class="rounded-circle img-thumbnail preview-img"
+                style="width: 100px; height: 100px; object-fit: cover"
+                alt="Default Profile Picture"
+              />
+              {% endif %}
             </div>
-        {% else %}
-            <div class="mb-2">
-                <strong>{{ textVars[field.replace("streetname", "street_name").replace("postalcode", "postal_code") ~ "_label"] }}:</strong> {{ value }}
-            </div>
-        {% endif %}
-    {% endfor %}
-    
+            {{ form.profile_picture(class="form-control") }}
+            <small class="text-muted"
+              >{{ textVars["profile_picture_help"]}}</small
+            >
+          </div>
 
-    <!-- Edit Profile Button -->
-    <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#editModal">
-        {{ textVars["edit"] }}
-    </button>
-
-    <!-- Bootstrap Modal -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">{{ textVars["edit"] }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="POST" action="{{ url_for('content_section', section='myProfile') }}">
-                    {{ form.hidden_tag() }} 
-                    <div class="modal-body">
-                        {% for field, value in {
-                            "name": user.name, 
-                            "surname": user.surname,  
-                            "telephone": user.telephone,
-                            "gender": user.gender, 
-                            "country": user.address.country, 
-                            "streetname": user.address.streetname, 
-                            "postalcode": user.address.postalcode
-                        }.items() %}
-                            {% set label_key = field ~ "_label" %}
-                        
-                            {% if field == "streetname" %}
-                                {% set label_key = "street_name_label" %}
-                            {% elif field == "postalcode" %}
-                                {% set label_key = "postal_code_label" %}
-                            {% elif field == "telephonecode" %}
-                                {% set label_key = "telephone_label" %}
-                            {% endif %}
-                        
-                            {% if field == "gender" %}
-                                <div class="mb-3">
-                                    <label class="form-label">{{ textVars[label_key] }}</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="M" 
-                                            {% if value == "M" %} checked {% endif %}>
-                                        <label class="form-check-label" for="gender_male">{{ textVars["male"] }}</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_female" value="F" 
-                                            {% if value == "F" %} checked {% endif %}>
-                                        <label class="form-check-label" for="gender_female">{{ textVars["female"] }}</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_other" value="O" 
-                                            {% if value == "O" %} checked {% endif %}>
-                                        <label class="form-check-label" for="gender_other">{{ textVars["other"] }}</label>
-                                    </div>
-                                </div>
-                            
-                            {% else %}
-                                <div class="mb-3">
-                                    <label for="{{ field }}" class="form-label">{{ textVars[label_key] }}</label>
-                                    <input type="text" class="form-control" id="{{ field }}" name="{{ field }}" value="{{ value }}" required>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                        
-                        
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ textVars["cancel"]}}</button>
-                        <button type="submit" class="btn btn-success">{{ textVars["save"]}}</button>
-                    </div>
-                </form>
+          {% for field, value in { "name": user.name, "surname": user.surname,
+          "telephone": user.telephone, "gender": user.gender, "country":
+          user.address.country, "streetname": user.address.streetname,
+          "postalcode": user.address.postalcode }.items() %} {% set label_key =
+          field ~ "_label" %} {% if field == "streetname" %} {% set label_key =
+          "street_name_label" %} {% elif field == "postalcode" %} {% set
+          label_key = "postal_code_label" %} {% elif field == "telephonecode" %}
+          {% set label_key = "telephone_label" %} {% endif %} {% if field ==
+          "gender" %}
+          <div class="mb-3">
+            <label class="form-label">{{ textVars[label_key] }}</label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gender"
+              id="gender_male" value="M" {% if value == "M" %} checked {% endif
+              %}>
+              <label class="form-check-label" for="gender_male"
+                >{{ textVars["male"] }}</label
+              >
             </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gender"
+              id="gender_female" value="F" {% if value == "F" %} checked {%
+              endif %}>
+              <label class="form-check-label" for="gender_female"
+                >{{ textVars["female"] }}</label
+              >
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gender"
+              id="gender_other" value="O" {% if value == "O" %} checked {% endif
+              %}>
+              <label class="form-check-label" for="gender_other"
+                >{{ textVars["other"] }}</label
+              >
+            </div>
+          </div>
+
+          {% else %}
+          <div class="mb-3">
+            <label for="{{ field }}" class="form-label"
+              >{{ textVars[label_key] }}</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="{{ field }}"
+              name="{{ field }}"
+              value="{{ value }}"
+              required
+            />
+          </div>
+          {% endif %} {% endfor %}
         </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            {{ textVars["cancel"]}}
+          </button>
+          <button type="submit" class="btn btn-success">
+            {{ textVars["save"]}}
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const profilePicInput = document.getElementById("profile_picture");
+    const previewImg = document.querySelector(".preview-img");
+
+    if (profilePicInput && previewImg) {
+      profilePicInput.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            previewImg.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+  });
+</script>
 {% endblock %}

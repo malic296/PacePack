@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField, RadioField, DateField, TextAreaField
+from wtforms import FileField, StringField, PasswordField, SubmitField, IntegerField, RadioField, DateField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 import json
+from flask_wtf.file import FileField, FileAllowed
 from flask import session
 from wtforms.fields import TimeField
 
@@ -87,6 +88,9 @@ class EditProfileForm(FlaskForm):
     country = StringField("Country", validators=[DataRequired()])
     streetname = StringField("Street Name", validators=[DataRequired()])
     postalcode = StringField("Postal Code", validators=[DataRequired()])
+    profile_picture = FileField('Profile Picture', validators=[
+        FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
+    ])
     submit = SubmitField("Save Changes")
 
 class RunForm(FlaskForm):

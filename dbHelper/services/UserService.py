@@ -44,13 +44,11 @@ class UserService:
     def getUserInfo(self, email):
         return self.session.query(User).filter(User.email == email).options(joinedload(User.address)).first()
     
-    def updateUser(self, email, name, surname, telephone, gender, country, streetname, postalcode):
+    def updateUser(self, email, name, surname, telephone, gender, country, streetname, postalcode, profile_pic=None):
         user = self.session.query(User).filter(User.email==email).options(joinedload(User.address)).first()
-
+        
         if not user:
             return False
-
-        # Check if user has an address
         if not user.address:
             return False
         
@@ -61,7 +59,10 @@ class UserService:
         user.address.country = country
         user.address.streetname = streetname
         user.address.postalcode = postalcode
-
+        
+        if profile_pic:
+            user.profile_pic = profile_pic
+        
         self.session.commit()
         return True
 

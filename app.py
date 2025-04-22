@@ -19,6 +19,8 @@ from dbHelper.services.UserRaceService import UserRaceService
 from dbHelper.services.SponsorService import SponsorService
 from dbHelper.services.CategoryService import CategoryService
 from flask_babel import Babel, _
+from werkzeug.utils import secure_filename
+
 
 
 load_dotenv("environment.env")
@@ -348,9 +350,9 @@ def resendCode():
     return redirect(url_for("content_section", section="verify"))
 
 def myProfileSection(textVars):
-    form = EditProfileForm()  # Create form instance
-
-    if form.validate_on_submit():  # Check if form is submitted
+    form = EditProfileForm()
+    
+    if form.validate_on_submit():
         name = form.name.data
         surname = form.surname.data
         telephone = form.telephone.data
@@ -358,13 +360,33 @@ def myProfileSection(textVars):
         country = form.country.data
         streetname = form.streetname.data
         postalcode = form.postalcode.data
-
-        if not user_service.updateUser(session["user_token"], name, surname, telephone, gender, country, streetname, postalcode):
+        
+        profile_pic_filename = None
+        if form.profile_picture.data:
+            filename = secure_filename(form.profile_picture.data.filename)
+            unique_filename = f"{session['user_token'].split('@')[0]}_{filename}"
+            upload_folder = os.path.join(app.root_path, 'static', 'profile_pics')
+            os.makedirs(upload_folder, exist_ok=True)
+            file_path = os.path.join(upload_folder, unique_filename)
+            form.profile_picture.data.save(file_path)
+            profile_pic_filename = f"profile_pics/{unique_filename}"
+        
+        if not user_service.updateUser(
+            session["user_token"], 
+            name, 
+            surname, 
+            telephone, 
+            gender, 
+            country, 
+            streetname, 
+            postalcode, 
+            profile_pic_filename
+        ):
             flash(_("The update failed"), "danger")
         else:
             flash(_("Profile updated successfully!"), "success")
-
-    user = user_service.getUserInfo(session["user_token"])  # Get updated user info
+    
+    user = user_service.getUserInfo(session["user_token"])
     return render_template("myProfile.html", section="myProfile", textVars=textVars, user=user, form=form)
 
 def homeSection(textVars):

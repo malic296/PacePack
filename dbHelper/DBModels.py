@@ -39,6 +39,8 @@ class User(Base):
     gender = Column(String(1), nullable=False)
     passwordid = Column(Integer, ForeignKey("passwords.id"), nullable=False)
     teamid = Column(Integer, ForeignKey("team.id"), nullable=False)
+    profile_pic = Column(String(255), nullable=True)  # Add this line
+
 
     # Establish relationships
     address = relationship("Address")

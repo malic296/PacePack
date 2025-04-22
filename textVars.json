@@ -570,7 +570,10 @@
                 "cancel": "Cancel",
                 "male": "Male",
                 "female": "Female",
-                "other": "Other"
+                "other": "Other",
+                "profile_picture_label":"Profile Picture",
+                "profile_picture_help":"Upload a JPG, JPEG or PNG image"
+                
             },
             "cs": {
                 "title": "Můj profil",
@@ -589,7 +592,10 @@
                 "cancel": "Zrušit",
                 "male": "Muž",
                 "female": "Žena",
-                "other": "Jiné"
+                "other": "Jiné",
+                "profile_picture_label":"Profilový obrázek",
+                "profile_picture_help":"Nahrajte obrázek ve formátu JPG, JPEG nebo PNG"
+                
             },
             "de": {
                 "title": "Mein Profil",
@@ -608,7 +614,10 @@
                 "cancel": "Stornieren",
                 "male": "Mann",
                 "female": "Frau",
-                "other": "Andere"
+                "other": "Andere",
+                "profile_picture_label":"Profilbild",
+                "profile_picture_help":"Laden Sie ein JPG-, JPEG- oder PNG-Bild hoch"
+                
             }            
         },
         "sponsors": {
