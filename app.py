@@ -18,6 +18,8 @@ from dbHelper.services.RaceService import RaceService
 from dbHelper.services.UserRaceService import UserRaceService
 from dbHelper.services.SponsorService import SponsorService
 from dbHelper.services.CategoryService import CategoryService
+from flask_babel import Babel, _
+
 
 load_dotenv("environment.env")
 
@@ -28,6 +30,8 @@ csrf = CSRFProtect(app)
 app.config['MAIL_SERVER'] = os.getenv("MAIL_SERVER")
 app.config['MAIL_PORT'] = os.getenv("MAIL_PORT")
 app.config['MAIL_USE_TLS'] = os.getenv("MAIL_USE_TLS") == "True"
+app.config['BABEL_DEFAULT_LOCALE'] = 'en'
+app.config['BABEL_SUPPORTED_LOCALES'] = ['en', 'cs', 'de']
 app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
 app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_DEFAULT_SENDER")
@@ -45,6 +49,12 @@ sponsor_service = SponsorService()
 category_service = CategoryService()
 
 mail = Mail(app)
+babel = Babel(app)
+
+def get_locale():
+    return session.get('lang', 'en')
+
+babel.init_app(app, locale_selector=get_locale)
 
 @app.before_request
 def load_current_user():
@@ -58,43 +68,45 @@ def index():
     
 @app.route("/set_language/<lang>")
 def set_language(lang):
-    session["lang"] = lang
-    return redirect(url_for("content_section", section=session["section"]))
+    if lang in app.config["BABEL_SUPPORTED_LOCALES"]:
+        session["lang"] = lang
+    return redirect(url_for("content_section", section=session.get("section", "default")))
+
 
 @app.route("/register_user_to_run/<userid>/<runid>")
 def register_user_to_run(userid, runid):
     added = user_run_service.register_user_to_run(userId=userid, runId=runid)
     if added:
-        flash("Registration successful", "success")
+        flash(_("Registration successful"), "success")
     else:
-        flash("error", "danger")
+        flash(_("error"), "danger")
     return redirect(url_for("content_section", section=session["section"]))
 
 @app.route("/unregister_user_from_run/<userid>/<runid>")
 def unregister_user_from_run(userid, runid):
     removed = user_run_service.unregister_user_from_run(userId=userid, runId=runid)
     if removed:
-        flash("Unregistration successful", "success")
+        flash(_("Unregistration successful"), "success")
     else:
-        flash("error", "danger")
+        flash(_("error"), "danger")
     return redirect(url_for("content_section", section=session["section"]))
 
 @app.route("/register_user_to_race/<userid>/<raceid>")
 def register_user_to_race(userid, raceid):
     added = user_race_service.register_user_to_race(userId=userid, raceId=raceid)
     if added:
-        flash("Registration successful", "success")
+        flash(_("Registration successful"), "success")
     else:
-        flash("error", "danger")
+        flash(_("error"), "danger")
     return redirect(url_for("content_section", section=session["section"]))
 
 @app.route("/unregister_user_from_race/<userid>/<raceid>")
 def unregister_user_from_race(userid, raceid):
     removed = user_race_service.unregister_user_from_race(userId=userid, raceId=raceid)
     if removed:
-        flash("Unregistration successful", "success")
+        flash(_("Unregistration successful"), "success")
     else:
-        flash("error", "danger")
+        flash(_("error"), "danger")
     return redirect(url_for("content_section", section=session["section"]))
 
 @app.route("/toggle-theme")
@@ -129,7 +141,7 @@ def content_section(section):
     public_sections = {"login", "register", "verify", "index","resend"}
 
     if section not in public_sections and "user_token" not in session:
-        flash("You need to log in first.", "warning")
+        flash(_("You need to log in first."), "warning")
         return redirect(url_for("content_section", section="login"))
 
     with open("textVars.json", "r", encoding="utf-8") as f:
@@ -197,21 +209,21 @@ def loginSection(textVars):
             if send_verification_code(email, verification_code):
                 session["isSponsor"] = False
                 session["user_email"] = email
-                flash("A verification code has been sent to your email.", "info")
+                flash(_("A verification code has been sent to your email."), "info")
                 return redirect(url_for("content_section", section="verify"))
             else:
-                flash("Error sending verification email. Please try again.", "danger")
+                flash(_("Error sending verification email. Please try again."), "danger")
         # Sponsor login check
         elif password_service.validate_sponsor_login(email, password):
             if send_verification_code(email, verification_code):
                 session["isSponsor"] = True
                 session["user_email"] = email
-                flash("A verification code has been sent to your email.", "info")
+                flash(_("A verification code has been sent to your email."), "info")
                 return redirect(url_for("content_section", section="verify"))
             else:
-                flash("Error sending verification email. Please try again.", "danger")
+                flash(_("Error sending verification email. Please try again."), "danger")
         else:
-            flash("Wrong email or password.", "danger")
+            flash(_("Wrong email or password."), "danger")
             return redirect(url_for("content_section", section="login"))
         
     return render_template("login.html", section="login", textVars=textVars, form=form)
@@ -238,12 +250,12 @@ def registerSection(textVars):
 
         # test if email is in use 
         if user_service.isUserEmailInUse(email):
-            flash("Provided email is already in use", "danger")
+            flash(_("Provided email is already in use"), "danger")
             return redirect(url_for("content_section", section="register"))
         
         # test if password was written correctly 
         if password != confirmPassword:
-            flash("Passwords do not match", "danger")
+            flash(_("Passwords do not match"), "danger")
             return redirect(url_for("content_section", section="register"))
     
         # user registration
@@ -263,10 +275,10 @@ def registerSection(textVars):
         if send_verification_code(email, verification_code):
             session["user_email"] = email
             session["isSponsor"] = False
-            flash("A verification code has been sent to your email.", "info")
+            flash(_("A verification code has been sent to your email."), "info")
             return redirect(url_for("content_section", section="verify"))
         else:
-            flash("Error sending verification email. Please try again.", "danger")
+            flash(_("Error sending verification email. Please try again."), "danger")
 
     return render_template("register.html", section="register", textVars=textVars, form=form)
 
@@ -275,12 +287,12 @@ def verifySection(textVars):
     if request.method == "POST":
         expiration_time = datetime.fromisoformat(session.get("code_expiration", "1970-01-01T00:00:00"))
         if datetime.now() > expiration_time:
-            flash("The verification code has expired.", "danger")
+            flash(_("The verification code has expired."), "danger")
             return redirect(url_for("content_section", section="verify"))
 
         entered_code = form.code.data
         if entered_code == session.get("verification_code") or entered_code == "123456":
-            flash("Verification successful!", "success")
+            flash(_("Verification successful!"), "success")
             session["user_token"] = session["user_email"]
             session.pop("user_email", None)
             pending_registration = session.pop("pending_registration", None)
@@ -303,25 +315,25 @@ def verifySection(textVars):
                     address_id
                 )
                 # REGISTERED
-                flash("Your account has been created successfully!", "success")
+                flash(_("Your account has been created successfully!"), "success")
                 return redirect(url_for("content_section", section="home"))
 
             else:
                 # LOGGED IN
-                flash("Login was successful.", "success")
+                flash(_("Login was successful."), "success")
                 if g.current_user and g.current_user.issponsor:
                     return redirect(url_for("content_section", section="races"))
                 else:
                     return redirect(url_for("content_section", section="home"))
                 
         else:
-            flash("Invalid code. Please try again.", "danger")
+            flash(_("Invalid code. Please try again."), "danger")
 
     return render_template("verify.html", section="verify", textVars=textVars, form=form)
 
 def resendCode():
     if "email" not in session:
-        flash("Session expired. Please log in again.", "warning")
+        flash(_("Session expired. Please log in again."), "warning")
         return redirect(url_for("content_section", section="login"))
 
     new_code = generate_verification_code()
@@ -329,9 +341,9 @@ def resendCode():
     session["code_expiration"] = (datetime.now() + timedelta(minutes=2)).isoformat()
 
     if send_verification_code(session["email"], new_code):
-        flash("A new verification code has been sent.", "info")
+        flash(_("A new verification code has been sent."), "info")
     else:
-        flash("Error sending the verification email. Please try again.", "danger")
+        flash(_("Error sending the verification email. Please try again."), "danger")
 
     return redirect(url_for("content_section", section="verify"))
 
@@ -348,9 +360,9 @@ def myProfileSection(textVars):
         postalcode = form.postalcode.data
 
         if not user_service.updateUser(session["user_token"], name, surname, telephone, gender, country, streetname, postalcode):
-            flash("The update failed", "danger")
+            flash(_("The update failed"), "danger")
         else:
-            flash("Profile updated successfully!", "success")
+            flash(_("Profile updated successfully!"), "success")
 
     user = user_service.getUserInfo(session["user_token"])  # Get updated user info
     return render_template("myProfile.html", section="myProfile", textVars=textVars, user=user, form=form)
@@ -395,11 +407,11 @@ def racesSection(textVars):
             if deleted_race:
                 success = race_service.delete_race(race_id)
                 if success:
-                    flash(f"Race '{deleted_race.name}' deleted successfully!", "success")
+                    flash(_(f"Race '{deleted_race.name}' deleted successfully!"), "success")
                 else:
-                    flash("Error deleting race.", "danger")
+                    flash(_("Error deleting race."), "danger")
             else:
-                flash("Race not found.", "danger")
+                flash(_("Race not found."), "danger")
         else:
             # Handle race creation or update
             race_id = request.form.get("race_id")
@@ -420,16 +432,16 @@ def racesSection(textVars):
                 try:
                    # TODO 
                     updated_race = race_service.update_race(race_id, date, time, capacity, name, description, sponsor_id, category_id, address_id)
-                    flash(f"Race '{updated_race.name}' updated successfully!", "success")
+                    flash(_(f"Race '{updated_race.name}' updated successfully!"), "success")
                 except Exception as e:
-                    flash(f"Error updating race: {str(e)}", "danger")
+                    flash(_(f"Error updating race: {str(e)}"), "danger")
             else:
                 try:
                     new_race = race_service.add_race(date, time, capacity, name, description, sponsor_id, category_id, address_id)
-                    flash(f"Race '{new_race.name}' created successfully!", "success")
+                    flash(_(f"Race '{new_race.name}' created successfully!"), "success")
                     user_race_service.create_race_and_add_creator(g.current_user.id, new_race.id)
                 except Exception as e:
-                    flash(f"Error creating race: {str(e)}", "danger")
+                    flash(_(f"Error creating race: {str(e)}"), "danger")
         
         return redirect(url_for("content_section", section="races"))
     
@@ -480,11 +492,11 @@ def runsSection(textVars):
             if deleted_run:
                 success = run_service.delete_run(run_id)
                 if success:
-                    flash(f"Run '{deleted_run.name}' deleted successfully!", "success")
+                    flash(_(f"Run '{deleted_run.name}' deleted successfully!"), "success")
                 else:
-                    flash("Error deleting run.", "danger")
+                    flash(_("Error deleting run."), "danger")
             else:
-                flash("Run not found.", "danger")
+                flash(_("Run not found."), "danger")
         else:
             # Handle run creation or update
             run_id = request.form.get("run_id")
@@ -499,16 +511,16 @@ def runsSection(textVars):
             if run_id:
                 try:
                     updated_run = run_service.update_run(run_id, streetname, postalcode, country, date, time, name, description)
-                    flash(f"Run '{updated_run.name}' updated successfully!", "success")
+                    flash(_(f"Run '{updated_run.name}' updated successfully!"), "success")
                 except Exception as e:
-                    flash(f"Error updating run: {str(e)}", "danger")
+                    flash(_(f"Error updating run: {str(e)}"), "danger")
             else:
                 try:
                     new_run = run_service.create_run(streetname, postalcode, country, date, time, name, description)
-                    flash(f"Run '{new_run.name}' created successfully!", "success")
+                    flash(_(f"Run '{new_run.name}' created successfully!"), "success")
                     user_run_service.create_run_and_add_creator(g.current_user.id, new_run.id)
                 except Exception as e:
-                    flash(f"Error creating run: {str(e)}", "danger")
+                    flash(_(f"Error creating run: {str(e)}"), "danger")
 
         return redirect(url_for("content_section", section="runs"))
 
@@ -544,7 +556,7 @@ def runsSection(textVars):
 def runDetailSection(textVars, run_id):
     run = run_service.get_run_by_id(run_id)
     if not run:
-        flash("Run not found.", "danger")
+        flash(_("Run not found."), "danger")
         return redirect(url_for("content_section", section="runs"))
     
     form = EmptyForm()
@@ -552,23 +564,23 @@ def runDetailSection(textVars, run_id):
     if request.method == "POST" and form.validate_on_submit():
         if "sign_up" in request.form:
             if not g.current_user:
-                flash("You need to log in first.", "warning")
+                flash(_("You need to log in first."), "warning")
                 return redirect(url_for("content_section", section="login"))
 
             already_registered = user_run_service.get_user_run_by_run_id_and_user_id(run_id, g.current_user.id)
             if already_registered:
-                flash("You're already signed up for this run.", "warning")
+                flash(_("You're already signed up for this run."), "warning")
             else:
                 user_run_service.register_user_to_run(g.current_user.id, run_id)
-                flash("You've been signed up for the run!", "success")
+                flash(_("You've been signed up for the run!"), "success")
 
         elif "sign_off" in request.form:
             user_run = user_run_service.get_user_run_by_run_id_and_user_id(run_id, g.current_user.id)
             if user_run and not user_run.iscreator:
                 user_run_service.unregister_user_from_run(g.current_user.id, run_id)
-                flash("You've been signed off from the run.", "info")
+                flash(_("You've been signed off from the run."), "info")
             else:
-                flash("You can't sign off as the creator.", "danger")
+                flash(_("You can't sign off as the creator."), "danger")
 
         return redirect(url_for("content_section", section=f"runs/{run_id}"))
 
@@ -609,12 +621,12 @@ def sponsorsSection(textVars):
             )
             password_service.close()
 
-            flash("Sponsor created successfully!", "success")
+            flash(_("Sponsor created successfully!"), "success")
             return redirect(url_for("content_section", section="sponsors"))
 
         except Exception as e:
 
-            flash(f"Chyba při vytváření sponzora: {str(e)}", "danger")
+            flash(_(f"Chyba při vytváření sponzora: {str(e)}"), "danger")
 
     sponsors = sponsor_service.get_all_sponsors()
     return render_template("sponsors.html", section="sponsors", textVars=textVars, form=form, sponsors=sponsors)

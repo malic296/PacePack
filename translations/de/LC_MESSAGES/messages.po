@@ -1,0 +1,106 @@
+# Translations template for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-04-22 16:21+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: app.py:79 app.py:97
+msgid "Registration successful"
+msgstr "Registrierung erfolgreich"
+
+msgid "error"
+msgstr "Fehler"
+
+msgid "Unregistration successful"
+msgstr "Abmeldung erfolgreich"
+
+msgid "You need to log in first."
+msgstr "Sie müssen sich zuerst anmelden."
+
+msgid "A verification code has been sent to your email."
+msgstr "Ein Bestätigungscode wurde an Ihre E-Mail gesendet."
+
+msgid "Error sending verification email. Please try again."
+msgstr "Fehler beim Senden der Bestätigungsmail. Bitte versuchen Sie es erneut."
+
+msgid "Wrong email or password."
+msgstr "Falsche E-Mail oder Passwort."
+
+msgid "Provided email is already in use"
+msgstr "Die angegebene E-Mail wird bereits verwendet."
+
+msgid "Passwords do not match"
+msgstr "Die Passwörter stimmen nicht überein."
+
+msgid "The verification code has expired."
+msgstr "Der Bestätigungscode ist abgelaufen."
+
+msgid "Verification successful!"
+msgstr "Verifizierung erfolgreich!"
+
+msgid "Your account has been created successfully!"
+msgstr "Ihr Konto wurde erfolgreich erstellt!"
+
+msgid "Login was successful."
+msgstr "Anmeldung war erfolgreich."
+
+msgid "Invalid code. Please try again."
+msgstr "Ungültiger Code. Bitte versuchen Sie es erneut."
+
+msgid "Session expired. Please log in again."
+msgstr "Sitzung abgelaufen. Bitte melden Sie sich erneut an."
+
+msgid "A new verification code has been sent."
+msgstr "Ein neuer Bestätigungscode wurde gesendet."
+
+msgid "Error sending the verification email. Please try again."
+msgstr "Fehler beim Senden der Bestätigungsmail. Bitte versuchen Sie es erneut."
+
+msgid "The update failed"
+msgstr "Das Update ist fehlgeschlagen."
+
+msgid "Profile updated successfully!"
+msgstr "Profil erfolgreich aktualisiert!"
+
+msgid "Error deleting race."
+msgstr "Fehler beim Löschen des Rennens."
+
+msgid "Race not found."
+msgstr "Rennen nicht gefunden."
+
+msgid "Error deleting run."
+msgstr "Fehler beim Löschen des Laufs."
+
+msgid "Run not found."
+msgstr "Lauf nicht gefunden."
+
+msgid "You're already signed up for this run."
+msgstr "Sie sind bereits für diesen Lauf angemeldet."
+
+msgid "You've been signed up for the run!"
+msgstr "Sie wurden für den Lauf angemeldet!"
+
+msgid "You've been signed off from the run."
+msgstr "Sie wurden vom Lauf abgemeldet."
+
+msgid "You can't sign off as the creator."
+msgstr "Als Ersteller können Sie sich nicht abmelden."
+
+msgid "Sponsor created successfully!"
+msgstr "Sponsor erfolgreich erstellt!"
+
+
+

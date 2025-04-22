@@ -6,7 +6,7 @@
                 "login": "Login",
                 "registration": "Registration"
             },
-            "cz": {
+            "cs": {
                 "index": "Hlavní menu",
                 "login": "Přihlášení",
                 "registration": "Registrace"
@@ -28,7 +28,7 @@
                 "see_full_stats": "See Full Stats",
                 "runs_count": "Number of Your Runs"
             },
-            "cz": {
+            "cs": {
                 "stats": "Vaše běžecké statistiky",
                 "stats_desc": "Rychlý pohled na váš výkon za poslední měsíc:",
                 "distance": "Celková vzdálenost",
@@ -84,7 +84,7 @@
                 "desc": "Descending",
                 "sort": "Sort"
             },
-            "cz": {
+            "cs": {
                 "title": "Závody",
                 "description": "Najděte závod nebo vytvořte vlastní.",
                 "no_races": "Další závody již brzy!",
@@ -164,7 +164,7 @@
                 "description": "Description",
                 "address": "Address"
             },
-            "cz": {
+            "cs": {
                 "title": "Detail Závodu",
                 "back": "Zpět na závody",
                 "join": "Připojit se k závodu",
@@ -221,7 +221,7 @@
                 "desc": "Descending",
                 "sort": "Sort"
             },
-            "cz": {
+            "cs": {
                 "title": "Tréninkové běhy",
                 "description": "Najděte skupinový běh nebo si naplánujte vlastní.",
                 "no_runs": "Další skupinové běhy již brzy!",
@@ -300,7 +300,7 @@
                 "sign_off": "Sign Off",
                 "creator_flash": "You are the creator of this run."
             },
-            "cz": {
+            "cs": {
                 "title": "Detail Běhu",
                 "back": "Zpět na běhy",
                 "join": "Připojit se k běhu",
@@ -347,7 +347,7 @@
                 "run_clubs_desc": "Join or check upcoming running clubs near you.",
                 "join_run_clubs": "Join Run Clubs"
             },
-            "cz": {
+            "cs": {
                 "title": "Aplikace pro sledování běžeckého výkonu",
                 "login": "Přihlášení",
                 "registration": "Registrace",
@@ -391,7 +391,7 @@
                 "forgotpass":"Forgot your password?"
                 
             },
-            "cz": {
+            "cs": {
                 "title": "Přihlášení",
                 "description": "Najděte skupinový běh nebo si naplánujte vlastní.",
                 "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!",
@@ -439,7 +439,7 @@
 
 
             },
-            "cz": {
+            "cs": {
                 "title": "Registrace",
                 "description": "Najděte skupinový běh nebo si naplánujte vlastní.",
                 "text": "Zůstaňte fit s našimi naplánovanými tréninkovými běhy. Připojte se k místní skupině nebo si nastavte vlastní tempo!",
@@ -499,7 +499,7 @@
                 "resend_text": "Didn't receive a code?",
                 "resend_link_text": "Resend"
             },
-            "cz": {
+            "cs": {
                 "title": "Ověřte svůj e-mail",
                 "heading": "Ověření e-mailu",
                 "description": "Na váš e-mail byl odeslán ověřovací kód. Zadejte jej níže:",
@@ -521,7 +521,7 @@
         "resend":{
             "en":{},
             "de":{},
-            "cz":{}
+            "cs":{}
         },
         "teams": {
                 "en": {
@@ -542,7 +542,7 @@
                     "barChart": "Balkendiagramm",
                     "pieChart": "Kreisdiagramm"
                 },
-                "cz": {
+                "cs": {
                     "title": "Výsledky týmů",
                     "tableTab": "Zobrazit tabulku",
                     "chartTab": "Zobrazit graf",
@@ -572,7 +572,7 @@
                 "female": "Female",
                 "other": "Other"
             },
-            "cz": {
+            "cs": {
                 "title": "Můj profil",
                 "description": "Zde si můžete prohlédnout svůj profil a nadcházející závody.",
                 "info_title": "Informace o profilu",
@@ -621,7 +621,7 @@
                 "cancel": "Cancel",
                 "save": "Save"
                 },
-            "cz": {
+            "cs": {
                 "title": "Sponzoři",
                 "create_sponsor": "Vytvořit sponzora",
                 "sponsor_name_label": "Jméno sponzora",

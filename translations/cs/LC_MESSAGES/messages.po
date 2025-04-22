@@ -1,0 +1,105 @@
+# Translations template for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-04-22 16:21+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: app.py:79 app.py:97
+msgid "Registration successful"
+msgstr "Registrace byla úspěšná"
+
+msgid "error"
+msgstr "Chyba"
+
+msgid "Unregistration successful"
+msgstr "Odhlášení bylo úspěšné"
+
+msgid "You need to log in first."
+msgstr "Nejdříve se musíte přihlásit."
+
+msgid "A verification code has been sent to your email."
+msgstr "Na váš email byl odeslán ověřovací kód."
+
+msgid "Error sending verification email. Please try again."
+msgstr "Chyba při odesílání ověřovacího emailu. Zkuste to prosím znovu."
+
+msgid "Wrong email or password."
+msgstr "Špatný email nebo heslo."
+
+msgid "Provided email is already in use"
+msgstr "Zadaný email je již v používání"
+
+msgid "Passwords do not match"
+msgstr "Hesla se neshodují"
+
+msgid "The verification code has expired."
+msgstr "Ověřovací kód vypršel."
+
+msgid "Verification successful!"
+msgstr "Ověření bylo úspěšné!"
+
+msgid "Your account has been created successfully!"
+msgstr "Váš účet byl úspěšně vytvořen!"
+
+msgid "Login was successful."
+msgstr "Přihlášení bylo úspěšné."
+
+msgid "Invalid code. Please try again."
+msgstr "Neplatný kód. Zkuste to prosím znovu."
+
+msgid "Session expired. Please log in again."
+msgstr "Relace vypršela. Přihlaste se prosím znovu."
+
+msgid "A new verification code has been sent."
+msgstr "Byl odeslán nový ověřovací kód."
+
+msgid "Error sending the verification email. Please try again."
+msgstr "Chyba při odesílání ověřovacího emailu. Zkuste to prosím znovu."
+
+msgid "The update failed"
+msgstr "Aktualizace selhala"
+
+msgid "Profile updated successfully!"
+msgstr "Profil byl úspěšně aktualizován!"
+
+msgid "Error deleting race."
+msgstr "Chyba při mazání závodu."
+
+msgid "Race not found."
+msgstr "Závod nebyl nalezen."
+
+msgid "Error deleting run."
+msgstr "Chyba při mazání běhu."
+
+msgid "Run not found."
+msgstr "Běh nebyl nalezen."
+
+msgid "You're already signed up for this run."
+msgstr "Na tento běh jste se již přihlásili."
+
+msgid "You've been signed up for the run!"
+msgstr "Byli jste přihlášeni na tento běh!"
+
+msgid "You've been signed off from the run."
+msgstr "Byli jste odhlášeni z tohoto běhu."
+
+msgid "You can't sign off as the creator."
+msgstr "Nemůžete se odhlásit jako organizátor."
+
+msgid "Sponsor created successfully!"
+msgstr "Sponzor byl úspěšně vytvořen!"
+
+
