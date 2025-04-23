@@ -69,7 +69,8 @@ CREATE TABLE users (
     canCreateRuns BOOLEAN NOT NULL,         -- Whether the user can create runs
     gender        CHAR(1) NOT NULL,         -- Gender of the user (M/F)
     passwordid    INTEGER NOT NULL REFERENCES passwords(id),  -- Reference to the user's password
-    teamid        INTEGER REFERENCES team(id)
+    teamid        INTEGER REFERENCES team(id),
+    profile_pic   VARCHAR(100) DEFAULT 'default.jpg'
 );
 
 -- Create the race table to store race information
@@ -137,46 +138,68 @@ INSERT INTO passwords (passwordhash, passwordsalt) VALUES ('hash2', 'salt2');
 INSERT INTO passwords (passwordhash, passwordsalt) VALUES ('hash3', 'salt3');
 
 -- Insert test data into the users table
-INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid)
-VALUES ('John', 'Doe', 1, 'john.doe@example.com', '123456789', '1', TRUE, TRUE, 'M', 1);
-
-INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid)
-VALUES ('Jane', 'Smith', 2, 'jane.smith@example.com', '987654321', '1', FALSE, TRUE, 'F', 2);
-
-INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid)
-VALUES ('Alice', 'Johnson', 3, 'alice.johnson@example.com', '555555555', '1', FALSE, FALSE, 'F', 3);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid) VALUES ('John', 'Doe', 1, 'john.doe@example.com', '123456789', '1', TRUE, TRUE, 'M', 1);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid) VALUES ('Jane', 'Smith', 2, 'jane.smith@example.com', '987654321', '1', FALSE, TRUE, 'F', 2);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid) VALUES ('Alice', 'Johnson', 3, 'alice.johnson@example.com', '555555555', '1', FALSE, FALSE, 'F', 3);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid, teamid) VALUES ('Eliška', 'Novák', 3, 'eliška.novák0@example.com', '777388389', '+420', FALSE, TRUE, 'M', 1, 3);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid, teamid) VALUES ('Veronika', 'Veselý', 1, 'veronika.veselý1@example.com', '777131244', '+420', FALSE, TRUE, 'M', 1, 3);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid, teamid) VALUES ('Lucie', 'Křížová', 3, 'lucie.křížová2@example.com', '777391704', '+420', FALSE, TRUE, 'M', 3, 2);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid, teamid) VALUES ('Eliška', 'Svobodová', 2, 'eliška.svobodová3@example.com', '777201414', '+420', FALSE, FALSE, 'F', 3, 2);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid, teamid) VALUES ('Jan', 'Kučerová', 2, 'jan.kučerová4@example.com', '777271109', '+420', FALSE, TRUE, 'M', 3, 2);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid, teamid) VALUES ('Adam', 'Křížová', 1, 'adam.křížová5@example.com', '777494310', '+420', FALSE, FALSE, 'F', 2, 2);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid, teamid) VALUES ('Adam', 'Dvořák', 2, 'adam.dvořák6@example.com', '777404465', '+420', FALSE, FALSE, 'M', 3, 2);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid, teamid) VALUES ('Martin', 'Kučerová', 3, 'martin.kučerová7@example.com', '777249436', '+420', FALSE, FALSE, 'M', 1, 1);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid, teamid) VALUES ('Veronika', 'Král', 3, 'veronika.král8@example.com', '777418079', '+420', FALSE, FALSE, 'M', 2, 2);
+INSERT INTO users (name, surname, addressid, email, telephone, telephonecode, isadmin, canCreateRuns, gender, passwordid, teamid) VALUES ('Petr', 'Horáková', 3, 'petr.horáková9@example.com', '777466163', '+420', FALSE, FALSE, 'F', 1, 2);
 
 -- Insert test data into the sponsor table
 INSERT INTO sponsor (name, email, passwordid) VALUES ('Sponsor1', 'sponsor1@example.com', 1);
 INSERT INTO sponsor (name, email, passwordid) VALUES ('Sponsor2', 'sponsor2@example.com', 2);
 
-INSERT INTO race (date, time, capacity, name, description, sponsorid, categoryid, addressid)
-VALUES ('2023-12-01', '09:00:00', 100, 'Marathon 2023', 'Annual city marathon', 1, 1, 1);
-
-INSERT INTO race (date, time, capacity, name, description, sponsorid, categoryid, addressid)
-VALUES ('2023-11-15', '14:30:00', 50, 'Half Marathon 2023', 'Half marathon event', 2, 2, 2);
+-- Insert test data into the race table
+INSERT INTO race (date, time, capacity, name, description, sponsorid, categoryid, addressid) VALUES ('2023-12-01', '09:00:00', 100, 'Marathon 2023', 'Annual city marathon', 1, 1, 1);
+INSERT INTO race (date, time, capacity, name, description, sponsorid, categoryid, addressid) VALUES ('2023-11-15', '14:30:00', 50, 'Half Marathon 2023', 'Half marathon event', 2, 2, 2);
+INSERT INTO race (date, time, capacity, name, description, sponsorid, categoryid, addressid) VALUES ('2025-07-04', '11:00:00', 100, 'Spring City Run', 'Official race event with up to 100 runners', 2, 3, 2);
+INSERT INTO race (date, time, capacity, name, description, sponsorid, categoryid, addressid) VALUES ('2025-08-04', '11:00:00', 200, 'Mountain Challenge', 'Official race event with up to 200 runners', 2, 2, 1);
+INSERT INTO race (date, time, capacity, name, description, sponsorid, categoryid, addressid) VALUES ('2025-08-06', '9:00:00', 100, 'River Run Championship', 'Official race event with up to 100 runners', 1, 6, 2);
 
 -- Insert test data into the payment table
 INSERT INTO payment (price, state, date, userid) VALUES (50, 'P', '2023-10-01', 1);
 INSERT INTO payment (price, state, date, userid) VALUES (30, 'P', '2023-10-02', 2);
+INSERT INTO payment (price, state, date, userid) VALUES (60, 'P', '2024-01-10', 10);
+INSERT INTO payment (price, state, date, userid) VALUES (70, 'P', '2024-01-11', 11);
+INSERT INTO payment (price, state, date, userid) VALUES (50, 'P', '2024-01-12', 12);
+INSERT INTO payment (price, state, date, userid) VALUES (40, 'P', '2024-01-13', 13);
+INSERT INTO payment (price, state, date, userid) VALUES (35, 'P', '2024-01-14', 14);
 
 -- Insert test data into the user_race table
 INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (1, 101, 1, 1);
 INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (1, 102, 1, 2);
 INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (2, 10, 2, 1);
 INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (2, 11, 2, 2);
+INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (3, 201, 1, 3);
+INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (4, 202, 2, 4);
+INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (5, 203, 1, 5);
+INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (6, 204, 2, 6);
+INSERT INTO user_race (paymentid, userracenumber, raceid, userid) VALUES (7, 205, 1, 7);
 
 -- Insert test data into the run table
-INSERT INTO run (addressid, date, time, name, description)
-VALUES (1, '2023-10-10', '07:30:00', 'Morning Run', '5 km morning run');
-
-INSERT INTO run (addressid, date, time, name, description)
-VALUES (2, '2023-10-12', '18:00:00', 'Evening Run', '10 km evening run');
-
+INSERT INTO run (addressid, date, time, name, description) VALUES (1, '2023-10-10', '07:30:00', 'Morning Run', '5 km morning run');
+INSERT INTO run (addressid, date, time, name, description) VALUES (2, '2023-10-12', '18:00:00', 'Evening Run', '10 km evening run');
+INSERT INTO run (addressid, date, time, name, description) VALUES (2, '2025-07-01', '9:00:00', 'Forest Sprint', '4 km run through scenic areas');
+INSERT INTO run (addressid, date, time, name, description) VALUES (3, '2025-07-12', '7:00:00', 'Hill Climb', '3 km run through scenic areas');
+INSERT INTO run (addressid, date, time, name, description) VALUES (1, '2025-07-11', '19:00:00', 'Sunset Loop', '3 km run through scenic areas');
+INSERT INTO run (addressid, date, time, name, description) VALUES (2, '2025-06-02', '8:00:00', 'City Park Run', '9 km run through scenic areas');
+INSERT INTO run (addressid, date, time, name, description) VALUES (1, '2025-07-03', '9:00:00', 'River Trail Run', '9 km run through scenic areas');
 
 -- Insert test data into the user_run table
 INSERT INTO user_run (userid, runid) VALUES (1, 1);
 INSERT INTO user_run (userid, runid) VALUES (2, 2);
+INSERT INTO user_run (userid, runid, iscreator) VALUES (3, 1, FALSE);
+INSERT INTO user_run (userid, runid, iscreator) VALUES (4, 2, FALSE);
+INSERT INTO user_run (userid, runid, iscreator) VALUES (5, 3, FALSE);
+INSERT INTO user_run (userid, runid, iscreator) VALUES (6, 4, FALSE);
+INSERT INTO user_run (userid, runid, iscreator) VALUES (7, 1, FALSE);
 
 -- Create an index on the email column in the users table for faster lookups
 CREATE INDEX idx_users_email ON users(email);
