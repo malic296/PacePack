@@ -1,65 +1,58 @@
-{% extends "content.html" %} {% block title %}Home - Flask App{% endblock %} {%
-block content %}
-<h1>{{ textVars["title"]}}</h1>
-<p class="lead">{{ textVars["description"]}}</p>
-  <div class="col-md-4">
-    <div class="card">
-      <div class="card-header">🏅 Your Upcoming Runs</div>
-      <div class="card-body">
-        {% if upcoming_runs %}
-        <ul>
-          {% for entry in upcoming_runs %}
-          <li>
-            {{ entry.run.name }} {% if entry.is_creator %}
-            <span class="badge bg-success">creator</span>
-            {% else %}
-            <span class="badge bg-secondary">participant</span>
-            {% endif %} {{ entry.run.date }}
-          </li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        <p>You have not joined any runs yet.</p>
-        {% endif %}
-        <a
-          href="{{ url_for('content_section', section='runs') }}"
-          class="btn btn-primary"
-          >View Your Runs</a
-        >
-      </div>
-    </div>
-  </div>
+{% extends "content.html" %} {% block title %}{{ textVars["title"] }} - Flask
+App{% endblock %} {% block content %}
+<h1>{{ textVars["title"] }}</h1>
+<p class="lead">{{ textVars["description"] }}</p>
 
-
-  <div class="col-md-4">
-    <div class="card">
-      <div class="card-header">📝 Profile Settings</div>
-      <div class="card-body">
-        <p>
-          Manage your profile details, update your preferences, or change your
-          password.
-        </p>
-        <a
-          href="{{ url_for('content_section', section='myProfile') }}"
-          class="btn btn-primary"
-          >Edit Profile</a
-        >
-      </div>
+<div class="col-md-4">
+  <div class="card">
+    <div class="card-header">🏅 {{ textVars["upcoming_runs"] }}</div>
+    <div class="card-body">
+      {% if upcoming_runs %}
+      <ul>
+        {% for entry in upcoming_runs %}
+        <li>
+          {{ entry.run.name }} {% if entry.is_creator %}
+          <span class="badge bg-success">{{ textVars["creator"] }}</span>
+          {% else %}
+          <span class="badge bg-secondary">{{ textVars["participant"] }}</span>
+          {% endif %} {{ entry.run.date }}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>{{ textVars["no_runs_joined"] }}</p>
+      {% endif %}
+      <a
+        href="{{ url_for('content_section', section='runs') }}"
+        class="btn btn-primary"
+      >
+        {{ textVars["view_your_runs"] }}
+      </a>
     </div>
   </div>
 </div>
 
-
+<div class="col-md-4">
+  <div class="card">
+    <div class="card-header">📝 {{ textVars["profile_settings"] }}</div>
+    <div class="card-body">
+      <p>{{ textVars["profile_description"] }}</p>
+      <a
+        href="{{ url_for('content_section', section='myProfile') }}"
+        class="btn btn-primary"
+      >
+        {{ textVars["edit_profile"] }}
+      </a>
+    </div>
+  </div>
+</div>
 
 <div class="mt-4">
   <h2>{{ textVars["stats"] }}</h2>
   <p>{{ textVars["stats_desc"] }}</p>
-
-
-    <ul>
-      <li><strong>{{ textVars["runs_count"] }}:</strong> {{ run_count }}</li>
-    </ul>
-    
+  <ul>
+    <li><strong>{{ textVars["runs_count"] }}:</strong> {{ run_count }}</li>
+  </ul>
 </div>
 
 {% endblock %}

@@ -18,38 +18,67 @@
             }
         },
         "home": {
-            "en": {
-                "stats": "Your Running Stats",
-                "stats_desc": "Here's a quick look at your performance over the last month:",
-                "distance": "Total Distance",
-                "time": "Total Time",
-                "pace": "Avarage Pace",
-                "best": "Best Time",
-                "see_full_stats": "See Full Stats",
-                "runs_count": "Number of Your Runs"
-            },
-            "cs": {
-                "stats": "Vaše běžecké statistiky",
-                "stats_desc": "Rychlý pohled na váš výkon za poslední měsíc:",
-                "distance": "Celková vzdálenost",
-                "time": "Celkový čas",
-                "pace": "Průměrné tempo",
-                "best": "Nejlepší čas",
-                "see_full_stats": "Zobrazit všechny statistiky",
-                "runs_count": "Počet tvých běhů"
-                
-            },
-            "de": {
-                "stats": "Ihre Laufstatistiken",
-                "stats_desc": "Ein schneller Überblick über Ihre Leistung im letzten Monat:",
-                "distance": "Gesamtdistanz",
-                "time": "Gesamtzeit",
-                "pace": "Durchschnittstempo",
-                "best": "Beste Zeit",
-                "see_full_stats": "Alle Statistiken ansehen",
-                "runs_count": "Anzahl deiner Läufe"    
-            }
-        },
+    "en": {
+        "stats": "Your Running Stats",
+        "stats_desc": "Here's a quick look at your performance over the last month:",
+        "distance": "Total Distance",
+        "time": "Total Time",
+        "pace": "Avarage Pace",
+        "best": "Best Time",
+        "see_full_stats": "See Full Stats",
+        "runs_count": "Number of Your Runs",
+        "title": "Welcome",
+        "description": "This is your dashboard overview.",
+        "upcoming_runs": "Your Upcoming Runs",
+        "creator": "creator",
+        "participant": "participant",
+        "no_runs_joined": "You have not joined any runs yet.",
+        "view_your_runs": "View Your Runs",
+        "profile_settings": "Profile Settings",
+        "profile_description": "Manage your profile details, update your preferences, or change your password.",
+        "edit_profile": "Edit Profile"
+    },
+    "cs": {
+        "stats": "Vaše běžecké statistiky",
+        "stats_desc": "Rychlý pohled na váš výkon za poslední měsíc:",
+        "distance": "Celková vzdálenost",
+        "time": "Celkový čas",
+        "pace": "Průměrné tempo",
+        "best": "Nejlepší čas",
+        "see_full_stats": "Zobrazit všechny statistiky",
+        "runs_count": "Počet tvých běhů",
+        "title": "Vítejte",
+        "description": "Toto je váš přehledový panel.",
+        "upcoming_runs": "Nadcházející běhy",
+        "creator": "tvůrce",
+        "participant": "účastník",
+        "no_runs_joined": "Zatím jste se nepřipojili k žádnému běhu.",
+        "view_your_runs": "Zobrazit mé běhy",
+        "profile_settings": "Nastavení profilu",
+        "profile_description": "Spravujte své údaje, aktualizujte nastavení nebo změňte heslo.",
+        "edit_profile": "Upravit profil"
+    },
+    "de": {
+        "stats": "Ihre Laufstatistiken",
+        "stats_desc": "Ein schneller Überblick über Ihre Leistung im letzten Monat:",
+        "distance": "Gesamtdistanz",
+        "time": "Gesamtzeit",
+        "pace": "Durchschnittstempo",
+        "best": "Beste Zeit",
+        "see_full_stats": "Alle Statistiken ansehen",
+        "runs_count": "Anzahl deiner Läufe",
+        "title": "Willkommen",
+        "description": "Dies ist Ihr Dashboard-Überblick.",
+        "upcoming_runs": "Ihre bevorstehenden Läufe",
+        "creator": "Ersteller",
+        "participant": "Teilnehmer",
+        "no_runs_joined": "Sie haben sich noch keinen Läufen angeschlossen.",
+        "view_your_runs": "Zeige deine Läufe",
+        "profile_settings": "Profileinstellungen",
+        "profile_description": "Verwalten Sie Ihre Profildaten, aktualisieren Sie Ihre Einstellungen oder ändern Sie Ihr Passwort.",
+        "edit_profile": "Profil bearbeiten"
+    }
+},
         "races": {
             "en": {
                 "title": "Races",
